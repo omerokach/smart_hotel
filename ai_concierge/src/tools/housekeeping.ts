@@ -2,7 +2,6 @@ import { z } from 'zod';
 import type { HousekeepingRequest } from '../types.js';
 
 export const housekeepingSchema = z.object({
-  roomNumber: z.string().describe('The guest room number'),
   serviceType: z.enum(['full-clean', 'quick-tidy', 'turndown']).describe(
     'Type of service: full-clean (complete room cleaning), quick-tidy (light tidying), or turndown (evening service)'
   ),
@@ -23,7 +22,6 @@ export async function requestHousekeeping(params: z.infer<typeof housekeepingSch
   const requestId = generateRequestId();
   
   const request: HousekeepingRequest = {
-    roomNumber: params.roomNumber,
     serviceType: params.serviceType,
     preferredTime: params.preferredTime || 'As soon as possible',
     requestId,

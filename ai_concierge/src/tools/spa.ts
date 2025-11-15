@@ -1,8 +1,23 @@
 import { z } from 'zod';
 import type { SpaAppointment } from '../types.js';
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load the spa menu
+let spaMenu: any = null;
+export function getSpaMenu() {
+  if (!spaMenu) {
+    const menuPath = join(__dirname, '../data/spa-menu.json');
+    spaMenu = JSON.parse(readFileSync(menuPath, 'utf-8'));
+  }
+  return spaMenu;
+}
 
 export const spaBookingSchema = z.object({
-  roomNumber: z.string().describe('The guest room number'),
   treatment: z.string().describe('Type of spa treatment (e.g., massage, facial, manicure, body wrap)'),
   preferredTime: z.string().describe('Preferred appointment time (e.g., "3:00 PM tomorrow", "this afternoon")'),
   duration: z.enum(['30', '60', '90', '120']).nullable().optional().describe('Treatment duration in minutes (30, 60, 90, or 120)'),
@@ -24,7 +39,6 @@ export async function bookSpaAppointment(params: z.infer<typeof spaBookingSchema
   const defaultDuration = params.duration || inferDuration(params.treatment);
   
   const appointment: SpaAppointment = {
-    roomNumber: params.roomNumber,
     treatment: params.treatment,
     preferredTime: params.preferredTime,
     duration: `${defaultDuration} minutes`,

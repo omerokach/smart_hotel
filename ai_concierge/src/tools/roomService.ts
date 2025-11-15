@@ -18,7 +18,6 @@ export function getMenu() {
 }
 
 export const roomServiceSchema = z.object({
-  roomNumber: z.string().describe('The guest room number'),
   items: z.array(z.string()).describe('List of food/drink items to order'),
   specialInstructions: z.string().nullable().optional().describe('Any special requests or dietary restrictions'),
 });
@@ -37,7 +36,6 @@ export async function orderRoomService(params: z.infer<typeof roomServiceSchema>
   const estimatedTime = calculateEstimatedTime(params.items.length);
   
   const order: RoomServiceOrder = {
-    roomNumber: params.roomNumber,
     items: params.items,
     specialInstructions: params.specialInstructions,
     estimatedTime,
