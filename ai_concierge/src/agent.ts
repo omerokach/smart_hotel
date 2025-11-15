@@ -2,12 +2,19 @@ import { Agent } from '@openai/agents';
 import { tool } from '@openai/agents';
 import { orderRoomService, roomServiceSchema, getMenu } from './tools/roomService.js';
 import { requestHousekeeping, housekeepingSchema } from './tools/housekeeping.js';
-import { requestTowels, towelRequestSchema } from './tools/towels.js';
-import { bookSpaAppointment, spaBookingSchema } from './tools/spa.js';
+import { bookSpaAppointment, spaBookingSchema, getSpaMenu } from './tools/spa.js';
 import { escalateToHuman, escalationSchema } from './tools/escalation.js';
+import { orderTaxi, taxiSchema } from './tools/taxi.js';
+import { requestExtraEquipment, extraEquipmentSchema } from './tools/extraEquipment.js';
+import { getActivityHoursInfo, activityHoursSchema, getActivityHours } from './tools/activityHours.js';
+import { getUpcomingEvents, eventsSchema, getEvents } from './tools/events.js';
+import { getWifiPassword, wifiSchema } from './tools/wifi.js';
 
-// Load the menu for the agent to reference
+// Load the menus and data for the agent to reference
 const hotelMenu = getMenu();
+const spaMenu = getSpaMenu();
+const activityHours = getActivityHours();
+const upcomingEvents = getEvents();
 
 // Define tools using the OpenAI Agents SDK tool function
 const roomServiceTool = tool({
@@ -24,11 +31,39 @@ const housekeepingTool = tool({
   execute: requestHousekeeping,
 });
 
-const towelTool = tool({
-  name: 'request_towels',
-  description: 'Request additional towels to be delivered to the room. Use this when guests need more towels of any type.',
-  parameters: towelRequestSchema as any,
-  execute: requestTowels,
+const taxiTool = tool({
+  name: 'order_taxi',
+  description: 'Order a taxi for the guest. Use this when guests need transportation to a destination. Requires destination, number of passengers, pickup day, and pickup time.',
+  parameters: taxiSchema as any,
+  execute: orderTaxi,
+});
+
+const extraEquipmentTool = tool({
+  name: 'request_extra_equipment',
+  description: 'Request extra room equipment and amenities such as blankets, towels, toilet paper, robes, gloves, shampoo, conditioner, bath soap, pillows, hangers, etc. Use this when guests need additional room supplies.',
+  parameters: extraEquipmentSchema as any,
+  execute: requestExtraEquipment,
+});
+
+const activityHoursTool = tool({
+  name: 'get_activity_hours',
+  description: 'Get operating hours for hotel facilities like pool, gym, spa, bar, front desk, synagogue, breakfast, dinner, etc. Use this when guests ask about facility hours or schedules.',
+  parameters: activityHoursSchema as any,
+  execute: getActivityHoursInfo,
+});
+
+const eventsTool = tool({
+  name: 'get_upcoming_events',
+  description: 'Get information about upcoming events at the hotel such as concerts, yoga classes, workshops, lectures, and other activities. All events are free for hotel guests. Use this when guests ask about events, activities, or things to do.',
+  parameters: eventsSchema as any,
+  execute: getUpcomingEvents,
+});
+
+const wifiTool = tool({
+  name: 'get_wifi_password',
+  description: 'Provide WiFi network credentials to guests. Use this when guests ask for WiFi password, internet access, or network information.',
+  parameters: wifiSchema as any,
+  execute: getWifiPassword,
 });
 
 const spaTool = tool({
@@ -54,11 +89,10 @@ export const hotelConciergeAgent = new Agent({
 IMPORTANT GUIDELINES:
 1. Always respond in the same language the guest uses
 2. Always greet guests warmly and professionally
-3. When guests make requests, you MUST ask for their room number if they haven't provided it
-4. Be proactive in clarifying details to ensure accurate service
-5. If a request is unclear, ask clarifying questions before using tools
-6. Maintain a helpful, warm, and professional tone at all times
-7. If a guest's request cannot be handled by your available tools, use the escalation tool to connect them with a human representative
+3. Be proactive in clarifying details to ensure accurate service
+4. If a request is unclear, ask clarifying questions before using tools
+5. Maintain a helpful, warm, and professional tone at all times
+6. If a guest's request cannot be handled by your available tools, use the escalation tool to connect them with a human representative
 
 CONVERSATIONAL FLOW FOR ALL REQUESTS:
 Step 1: When a guest makes a request, acknowledge it warmly and ask for ANY missing required parameters one by one if needed
@@ -69,10 +103,14 @@ Step 4: After successfully executing the tool, provide the confirmation details 
    "Have a wonderful day and enjoy your stay with us!"
 
 AVAILABLE SERVICES:
-- Room Service: Order food and beverages
+- Room Service: Order food and beverages from our menu
 - Housekeeping: Request room cleaning (full-clean, quick-tidy, or turndown service)
-- Towels: Request additional towels (bath, hand, pool, or assorted)
-- Spa: Book spa treatments and appointments
+- Extra Equipment: Request additional room amenities (blankets, towels, toiletries, robes, pillows, etc.)
+- Spa: Book spa treatments and appointments from our spa menu
+- Taxi: Order transportation to any destination
+- Activity Hours: Get operating hours for hotel facilities (pool, gym, bar, dining, synagogue, etc.)
+- Events: Learn about upcoming free events (concerts, yoga, workshops, lectures)
+- WiFi: Get WiFi network credentials
 - Escalation: Connect guests with human representatives for complex issues, complaints, billing, maintenance, or special requests
 
 ROOM SERVICE MENU:
@@ -82,9 +120,47 @@ ${JSON.stringify(hotelMenu, null, 2)}
 
 IMPORTANT: When guests ask about food, present relevant menu items with prices and descriptions. Only accept orders for items that are on the menu. If a guest requests something not on the menu, politely inform them and suggest similar alternatives from the menu, or offer to escalate to see if special arrangements can be made.
 
+SPA MENU:
+When guests inquire about spa services, wellness treatments, or relaxation options, reference this spa menu:
+
+${JSON.stringify(spaMenu, null, 2)}
+
+IMPORTANT: When guests ask about spa treatments, present relevant options with prices, durations, and descriptions. Only accept bookings for treatments that are on the spa menu. If a guest requests something not on the menu, politely inform them and suggest similar alternatives, or offer to escalate for special requests.
+
+HOTEL FACILITY HOURS:
+${JSON.stringify(activityHours, null, 2)}
+
+UPCOMING EVENTS (All Free for Hotel Guests):
+${JSON.stringify(upcomingEvents, null, 2)}
+
+WIFI CREDENTIALS:
+- Network Name: SmartHotel_Guest
+- Password: Welcome2024!Luxury
+- Available in all areas of the hotel
+
 Remember: You represent a luxury hotel brand. Be attentive, responsive, and make every guest feel valued.`,
-  tools: [roomServiceTool, housekeepingTool, towelTool, spaTool, escalationTool],
+  tools: [
+    roomServiceTool, 
+    housekeepingTool, 
+    extraEquipmentTool, 
+    spaTool, 
+    taxiTool, 
+    activityHoursTool, 
+    eventsTool, 
+    wifiTool, 
+    escalationTool
+  ],
 });
 
-export { roomServiceTool, housekeepingTool, towelTool, spaTool, escalationTool };
+export { 
+  roomServiceTool, 
+  housekeepingTool, 
+  extraEquipmentTool, 
+  spaTool, 
+  taxiTool, 
+  activityHoursTool, 
+  eventsTool, 
+  wifiTool, 
+  escalationTool 
+};
 

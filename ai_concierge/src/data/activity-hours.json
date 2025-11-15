@@ -1,0 +1,102 @@
+{
+  "facilities": [
+    {
+      "name": "Swimming Pool",
+      "hours": {
+        "weekdays": "6:00 AM - 10:00 PM",
+        "weekends": "6:00 AM - 11:00 PM"
+      },
+      "notes": "Heated year-round. Towels provided."
+    },
+    {
+      "name": "Bar",
+      "hours": {
+        "daily": "4:00 PM - 2:00 AM"
+      },
+      "notes": "Happy hour 5:00 PM - 7:00 PM daily"
+    },
+    {
+      "name": "Front Desk",
+      "hours": {
+        "daily": "24 hours"
+      },
+      "notes": "Always available to assist you"
+    },
+    {
+      "name": "Fitness Center / Gym",
+      "hours": {
+        "daily": "24 hours"
+      },
+      "notes": "Access with room key. Personal trainers available 6:00 AM - 8:00 PM"
+    },
+    {
+      "name": "Spa & Wellness Center",
+      "hours": {
+        "monday_to_saturday": "9:00 AM - 9:00 PM",
+        "sunday": "10:00 AM - 8:00 PM"
+      },
+      "notes": "Last appointments accepted 1 hour before closing. Reservations recommended."
+    },
+    {
+      "name": "Synagogue",
+      "hours": {
+        "weekdays": {
+          "morning": "6:30 AM - 8:00 AM",
+          "evening": "6:00 PM - 7:30 PM"
+        },
+        "friday": {
+          "evening": "Varies by sunset (check front desk)"
+        },
+        "saturday": {
+          "morning": "9:00 AM - 12:00 PM",
+          "evening": "Varies by sunset (check front desk)"
+        }
+      },
+      "notes": "Prayer books and tallit provided. Kosher meals available upon request."
+    },
+    {
+      "name": "Hotel Dining Room - Breakfast",
+      "hours": {
+        "weekdays": "6:30 AM - 10:30 AM",
+        "weekends": "7:00 AM - 11:00 AM"
+      },
+      "notes": "Continental and American breakfast options. Kosher section available."
+    },
+    {
+      "name": "Hotel Dining Room - Dinner",
+      "hours": {
+        "daily": "6:00 PM - 10:30 PM"
+      },
+      "notes": "Reservations recommended for parties of 6 or more. Dress code: Smart casual"
+    },
+    {
+      "name": "Business Center",
+      "hours": {
+        "daily": "24 hours"
+      },
+      "notes": "Printing services available. Computers, copier, and fax machine provided."
+    },
+    {
+      "name": "Concierge Desk",
+      "hours": {
+        "daily": "7:00 AM - 11:00 PM"
+      },
+      "notes": "Available for tour bookings, restaurant reservations, and local recommendations"
+    },
+    {
+      "name": "Gift Shop",
+      "hours": {
+        "daily": "8:00 AM - 8:00 PM"
+      },
+      "notes": "Souvenirs, snacks, toiletries, and magazines available"
+    },
+    {
+      "name": "Valet Parking",
+      "hours": {
+        "daily": "24 hours"
+      },
+      "notes": "Self-parking also available"
+    }
+  ]
+}
+

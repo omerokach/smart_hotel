@@ -2,7 +2,6 @@ import { z } from 'zod';
 import type { EscalationRequest } from '../types.js';
 
 export const escalationSchema = z.object({
-  roomNumber: z.string().describe('The guest room number'),
   requestType: z.string().describe('Brief category of the request (e.g., "billing issue", "maintenance", "special accommodation")'),
   description: z.string().describe('Detailed description of what the guest needs help with'),
   urgency: z.enum(['low', 'medium', 'high']).describe('How urgent is this request: low (can wait), medium (same day), high (immediate attention needed)'),
@@ -23,7 +22,6 @@ export async function escalateToHuman(params: z.infer<typeof escalationSchema>):
   const estimatedResponse = getEstimatedResponseTime(params.urgency);
   
   const escalation: EscalationRequest = {
-    roomNumber: params.roomNumber,
     requestType: params.requestType,
     description: params.description,
     urgency: params.urgency,
