@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MILEY · Tasks Dashboard</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/tasks.css">
+
+</head>
+
+<body>
+  <section id="tasks" class="screen">
+
+    <div class="dashboard-layout">
+      
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <img src="assets/logo/miley-logo.png" alt="Miley logo" class="logo">
+        </div>
+
+        <nav class="menu">
+          <a href="home.html" class="menu-item">
+            <img src="assets/icons/home.png" alt="Home icon">
+            <span>Home</span>
+          </a>
+          <a href="guests.html" class="menu-item">
+            <img src="assets/icons/guests.png" alt="Guests icon">
+            <span>Guests</span>
+          </a>
+          <a href="rooms.html" class="menu-item">
+            <img src="assets/icons/rooms.png" alt="Rooms icon">
+            <span>Rooms</span>
+          </a>
+          <a href="tasks.html" class="menu-item active">
+            <img src="assets/icons/tasks.png" alt="Tasks icon">
+            <span>Tasks</span>
+          </a>
+          <a href="reports.html" class="menu-item">
+            <img src="assets/icons/reports.png" alt="Reports icon">
+            <span>Reports</span>
+          </a>
+          <a href="messages.html" class="menu-item">
+            <img src="assets/icons/messages.png" alt="Messages icon">
+            <span>Messages</span>
+          </a>
+          <a href="settings.html" class="menu-item">
+            <img src="assets/icons/settings.png" alt="Settings icon">
+            <span>Settings</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Dashboard -->
+      <main class="content">
+        <div class="dashboard-wrapper">
+
+          <!-- Header -->
+          <header class="header">
+            <div>
+              <h2>Tasks</h2>
+              <p class="sub">Your Weekly Tasks</p>
+            </div>
+          </header>
+
+          <!-- Filters -->
+          <div class="filters">
+            <select>
+              <option>All statuses</option>
+              <option>Done</option>
+              <option>In Progress</option>
+              <option>Not Started</option>
+            </select>
+
+            <select>
+              <option>Urgency level</option>
+              <option>Low</option>
+              <option>Medium</option>
+              <option>High</option>
+              <option>Urgent</option>
+            </select>
+          </div>
+
+          <!-- Task Table -->
+          <section class="task-table">
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Task type</th>
+                  <th>Room number</th>
+                  <th>Time submitted</th>
+                  <th>Status</th>
+                  <th>Urgency level</th>
+                  <th></th>
+                </tr>
+              </thead>
+    <tbody></tbody>
+
+            </table>
+          </section>
+        </div>
+      </main>
+
+    </div>
+  </section>
+<button class="view-btn" data-id="201">View Task</button>
+
+<script>
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;       // קורא את ה-id מה-HTML
+      console.log("Opening task:", id);
+      window.location.href = `task-details.html?id=${id}`;
+    });
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const supabaseUrl = "https://qqskgyvlanenscbpwxdz.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFxc2tneXZsYW5lbnNjYnB3eGR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjMyMTEyMDQsImV4cCI6MjA3ODc4NzIwNH0.JhYFRrpDGXZLix9vrl1zaNFMOmupxMSp3kgaLvqOdE8";
+  window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
+</script>
+
+<script src="tasks.js"></script>
+
+</body>
+</html>

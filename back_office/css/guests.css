@@ -1,0 +1,29 @@
+/* Guests table styling (same as Tasks) */
+.table-section {
+  margin-top: 40px;
+}
+
+.table-section table {
+  width: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  border-collapse: collapse;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+.table-section thead {
+  background: #eef3ff;
+  font-weight: 600;
+}
+
+.table-section th,
+.table-section td {
+  padding: 16px 20px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.table-section tbody tr:nth-child(even) {
+  background: #f8faff;
+}

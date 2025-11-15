@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MILEY · messages</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/messages.css">
+</head>
+
+<body>
+<section class="screen">
+
+  <div class="dashboard-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <img src="assets/logo/miley-logo.png" class="logo">
+      </div>
+
+      <nav class="menu">
+        <a href="home.html" class="menu-item">
+          <img src="assets/icons/home.png"><span>Home</span>
+        </a>
+        <a href="guests.html" class="menu-item">
+          <img src="assets/icons/guests.png"><span>Guests</span>
+        </a>
+        <a href="rooms.html" class="menu-item">
+          <img src="assets/icons/rooms.png"><span>Rooms</span>
+        </a>
+        <a href="tasks.html" class="menu-item">
+          <img src="assets/icons/tasks.png"><span>Tasks</span>
+        </a>
+        <a href="reports.html" class="menu-item">
+          <img src="assets/icons/reports.png"><span>Reports</span>
+        </a>
+        <a href="messages.html" class="menu-item active">
+          <img src="assets/icons/messages.png"><span>Messages</span>
+        </a>
+        <a href="settings.html" class="menu-item">
+          <img src="assets/icons/settings.png"><span>Settings</span>
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="content">
+      <div class="dashboard-wrapper">
+
+        <!-- messages Header -->
+        <header class="messages-header">
+          <div>
+            <h2 id="messages-client-name">Guest: Emma Stone</h2>
+            <p class="sub" id="messages-status">Online now</p>
+          </div>
+        </header>
+
+        <!-- messages Container -->
+        <div class="messages-box" id="messages-box">
+
+          <!-- Example messages -->
+          <div class="msg msg-client">
+            <p>Hello, I need towels please 🙂</p>
+            <span>12:58</span>
+          </div>
+
+          <div class="msg msg-staff">
+            <p>Of course! Sending someone now.</p>
+            <span>13:00</span>
+          </div>
+
+        </div>
+
+        <!-- Input -->
+        <div class="messages-input">
+          <input type="text" id="messages-input" placeholder="Write a message..." />
+          <button id="send-btn">Send</button>
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+</section>
+
+<script src="messages.js"></script>
+</body>
+</html>
