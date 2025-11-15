@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MILEY · Reception Dashboard</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/home.css">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <section id="home" class="screen">
+
+    <div class="dashboard-layout">
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <img src="assets/logo/miley-logo.png" alt="Miley logo" class="logo">
+  </div>
+
+  <nav class="menu">
+  <a href="home.html" class="menu-item active">
+      <img src="assets/icons/home.png" alt="Home icon">
+      <span>Home</span>
+    </a>
+    <a href="guests.html" class="menu-item">
+      <img src="assets/icons/guests.png" alt="Guests icon">
+      <span>Guests</span>
+    </a>
+    <a href="rooms.html" class="menu-item">
+      <img src="assets/icons/rooms.png" alt="Rooms icon">
+      <span>Rooms</span>
+    </a>
+    <a href="tasks.html" class="menu-item">
+      <img src="assets/icons/tasks.png" alt="Tasks icon">
+      <span>Tasks</span>
+    </a>
+    <a href="reports.html" class="menu-item">
+      <img src="assets/icons/reports.png" alt="Reports icon">
+      <span>Reports</span>
+    </a>
+    <a href="messages.html" class="menu-item">
+      <img src="assets/icons/messages.png">
+      <span>Messages</span>
+    </a>
+    <a href="settings.html" class="menu-item">
+      <img src="assets/icons/settings.png" alt="Settings icon">
+      <span>Settings</span>
+    </a>
+  </nav>
+</aside>
+
+
+      <!-- Main Dashboard -->
+      <main class="content">
+        <div class="dashboard-wrapper">
+
+          <!-- Header -->
+          <header class="header">
+            <div>
+              <h2>Good morning, Dana 🌤️</h2>
+              <p class="sub">Reception Desk – Lisbon Miley Hotel</p>
+              <a href="#" class="shift">Today’s shift: 08:00–16:00</a>
+            </div>
+
+            <div class="search-bar">
+              <input type="text" placeholder="Search" />
+            </div>
+          </header>
+
+          <!-- Top Stats -->
+          <section class="stats">
+            <div class="stat-card">
+              <h3>Occupied Rooms</h3>
+              <canvas id="occupancyChart"></canvas>
+            </div>
+            <div class="stat-card guests-table">
+  <h3>Guests Arriving Today</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Guest</th>
+        <th>Room</th>
+        <th>Check-in</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Emma Stone</td>
+        <td>204</td>
+        <td>11:00</td>
+      </tr>
+      <tr>
+        <td>Liam Brown</td>
+        <td>306</td>
+        <td>12:30</td>
+      </tr>
+      <tr>
+        <td>Olivia Smith</td>
+        <td>411</td>
+        <td>14:00</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+            <div class="stat-card">
+              <h3>Pending Requests</h3>
+              <p class="big-number">4</p>
+            </div>
+          </section>
+
+          <!-- Action Buttons -->
+<section class="actions-row">
+
+  <button class="action-card pink" onclick="window.location.href='tasks.html'">
+    <div class="icon-bubble">
+      <img src="assets/icons/tasks.png" alt="Tasks icon">
+    </div>
+    <h3>Handle Tasks</h3>
+  </button>
+
+  <button class="action-card blue" onclick="window.location.href='messages.html'">
+    <div class="icon-bubble">
+      <img src="assets/icons/messages.png" alt="Messages icon">
+    </div>
+    <h3>Reply to Messages</h3>
+  </button>
+
+</section>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <script src="home.js"></script>
+</body>
+</html>
