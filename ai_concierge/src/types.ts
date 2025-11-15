@@ -39,7 +39,7 @@ export interface TaxiOrder {
 export interface ExtraEquipmentRequest {
   equipmentType: string;
   quantity: number;
-  specificItem?: string;
+  specificItem?: string | null;
   requestId: string;
 }
 

@@ -17,8 +17,8 @@ export function getEvents() {
 }
 
 export const eventsSchema = z.object({
-  eventType: z.string().optional().describe('Type of event to filter (e.g., "concert", "yoga", "workshop", "lecture") or leave empty for all events'),
-  day: z.string().optional().describe('Specific day to filter (e.g., "Monday", "Sunday", "today", "tomorrow") or leave empty for all days'),
+  eventType: z.string().optional().nullable().describe('Type of event to filter (e.g., "concert", "yoga", "workshop", "lecture") or leave empty for all events'),
+  day: z.string().optional().nullable().describe('Specific day to filter (e.g., "Monday", "Sunday", "today", "tomorrow") or leave empty for all days'),
 });
 
 export async function getUpcomingEvents(params: z.infer<typeof eventsSchema>): Promise<any> {

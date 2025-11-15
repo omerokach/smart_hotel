@@ -19,7 +19,7 @@ export function getMenu() {
 
 export const roomServiceSchema = z.object({
   items: z.array(z.string()).describe('List of food/drink items to order'),
-  specialInstructions: z.string().nullable().optional().describe('Any special requests or dietary restrictions'),
+  specialInstructions: z.string().optional().nullable().describe('Any special requests or dietary restrictions'),
 });
 
 export async function orderRoomService(params: z.infer<typeof roomServiceSchema>): Promise<RoomServiceOrder> {

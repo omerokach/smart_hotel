@@ -5,7 +5,7 @@ export const housekeepingSchema = z.object({
   serviceType: z.enum(['full-clean', 'quick-tidy', 'turndown']).describe(
     'Type of service: full-clean (complete room cleaning), quick-tidy (light tidying), or turndown (evening service)'
   ),
-  preferredTime: z.string().nullable().optional().describe('Preferred time for service (e.g., "2:00 PM", "now", "this afternoon")'),
+  preferredTime: z.string().optional().nullable().describe('Preferred time for service (e.g., "2:00 PM", "now", "this afternoon")'),
 });
 
 export async function requestHousekeeping(params: z.infer<typeof housekeepingSchema>): Promise<HousekeepingRequest> {

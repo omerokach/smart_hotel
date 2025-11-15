@@ -20,7 +20,7 @@ export function getSpaMenu() {
 export const spaBookingSchema = z.object({
   treatment: z.string().describe('Type of spa treatment (e.g., massage, facial, manicure, body wrap)'),
   preferredTime: z.string().describe('Preferred appointment time (e.g., "3:00 PM tomorrow", "this afternoon")'),
-  duration: z.enum(['30', '60', '90', '120']).nullable().optional().describe('Treatment duration in minutes (30, 60, 90, or 120)'),
+  duration: z.enum(['30', '60', '90', '120']).optional().nullable().describe('Treatment duration in minutes (30, 60, 90, or 120)'),
 });
 
 export async function bookSpaAppointment(params: z.infer<typeof spaBookingSchema>): Promise<SpaAppointment> {

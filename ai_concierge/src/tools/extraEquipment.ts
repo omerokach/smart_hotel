@@ -23,7 +23,7 @@ export const extraEquipmentSchema = z.object({
     'other'
   ]).describe('Type of equipment needed'),
   quantity: z.number().min(1).max(4).describe('Number of items needed (1-4)'),
-  specificItem: z.string().optional().describe('Specify if "other" is selected'),
+  specificItem: z.string().optional().nullable().describe('Specify if "other" is selected'),
 });
 
 export async function requestExtraEquipment(params: z.infer<typeof extraEquipmentSchema>): Promise<ExtraEquipmentRequest> {
