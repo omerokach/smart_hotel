@@ -8,6 +8,82 @@ This repository contains the foundations of a **Smart Hotel System**, built arou
 *   **Tasks API** – a Node.js + Express REST service for hotel tasks, backed by Supabase.
     
 *   **Back Office Dashboard** – a web-based dashboard for hotel staff.
+
+🚀 Fast Start
+
+This quick guide helps you run all three components of the Smart Hotel System in just a few minutes.
+
+1️⃣ Clone the repository
+```bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+```
+
+2️⃣ Start the AI Concierge
+```bash
+cd ai_concierge
+npm install
+```
+
+Create an .env file:
+```bash
+OPENAI_API_KEY=your_openai_api_key
+```
+
+Run the web interface:
+
+npm run web
+
+
+Or run the CLI version:
+```bash
+npm run chat
+```
+3️⃣ Start the Tasks API
+```bash
+cd tasks_api
+npm install
+```
+
+Create .env:
+```bash
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+PORT=3001
+```
+
+Start the server:
+```bash
+npm start
+```
+
+API default URL:
+```arduino
+http://localhost:3001
+```
+4️⃣ Start the Back Office Dashboard
+
+From the project root:
+```bash
+cd back_office
+npx serve .
+```
+
+Open:
+
+http://localhost:3000/home.html
+
+✔ You're Ready!
+
+You now have:
+
+AI Concierge → running and accepting guest requests
+
+Tasks API → operational backend connected to Supabase
+
+Back Office → dashboard UI for hotel staff
+
+The system is fully modular — each part can run alone or together.
     
 
 Each component lives in its own folder and can be developed and deployed independently.
