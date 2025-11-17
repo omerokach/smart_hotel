@@ -4,6 +4,7 @@ const cors = require('cors');
 require('dotenv').config();
 const { supabase } = require('./supabaseClient');
 const tasksRouter = require('./routes/tasks');
+const roomsRouter = require('./routes/rooms');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -18,6 +19,7 @@ app.get('/health', (req, res) => {
 
 // כל הראוטים של המשימות
 app.use('/api/tasks', tasksRouter);
+app.use('/api/rooms', roomsRouter);
 
 // אם תרצה בהמשך endpoint אחד לבוט:
 // app.post('/api/tasks/handle', handleTaskAction);
