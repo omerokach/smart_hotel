@@ -17,12 +17,22 @@ import { requestExtraEquipment, extraEquipmentSchema } from './tools/extraEquipm
 import { getActivityHoursInfo, activityHoursSchema, getActivityHours } from './tools/activityHours.js';
 import { getUpcomingEvents, eventsSchema, getEvents } from './tools/events.js';
 import { getWifiPassword, wifiSchema } from './tools/wifi.js';
+import { readFileSync } from 'fs';
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Load the menus and data for the agent to reference
 const hotelMenu = getMenu();
 const spaMenu = getSpaMenu();
 const activityHours = getActivityHours();
 const upcomingEvents = getEvents();
+
+// Load the response formatting guide
+const formattingGuidePath = join(__dirname, 'RESPONSE_FORMATTING_GUIDE.md');
+const formattingGuide = readFileSync(formattingGuidePath, 'utf-8');
 
 // Define tools using the OpenAI Agents SDK tool function
 const roomServiceTool = tool({
@@ -112,34 +122,24 @@ Step 3: ONLY after the guest confirms (e.g., "yes", "correct", "that's right"), 
 Step 4: After successfully executing the tool, provide the confirmation details and end with a warm closing message like:
    "Have a wonderful day and enjoy your stay with us!"
 
-FORMATTING INFORMATION RESPONSES:
-When providing information from JSON-based tools (room service menu, spa menu, events, activity hours):
+⚠️ CRITICAL FORMATTING RULES ⚠️
+When presenting room service menus, spa treatments, events, or facility hours:
 
-CRITICAL: You MUST follow these formatting rules to ensure clear, scannable, and conversational responses:
+🚫 ABSOLUTELY FORBIDDEN - DO NOT USE THESE CHARACTERS:
+- NO ** (double asterisks)
+- NO * (single asterisk)  
+- NO __ (underscores)
+- NO # (hashtags)
+- NO markdown formatting of ANY kind
+- NO special characters for formatting
+- Dense paragraph blocks
 
-1. ALWAYS start with a friendly, conversational opening sentence
-2. Use clear section headings with emojis when appropriate (e.g., "🍳 Breakfast", "💆 Spa Treatments", "🎭 Upcoming Events")
-3. Use proper bullet points (•) with adequate spacing between items
-4. Break content into digestible sections with visual separation
-5. Include relevant details (prices, times, dates) in a clean format
-6. End with a conversational closing that guides the user to the next step
+You are writing PLAIN TEXT only, not markdown. Do not try to make text bold or formatted.
+When you see a word that needs emphasis, just write it normally without any special characters.
 
-⛔ AVOID:
-- Dense, single-block text dumps
-- Run-on sentences listing everything without breaks
-- Poor formatting like: "Menu: - Item - $Price - Item - $Price"
-- Overwhelming walls of text
+✅ REQUIRED FORMAT - USE EXACTLY THIS STYLE:
 
-✅ DO USE:
-- Conversational intro: "I'd be happy to help you with that!"
-- Clear headings: "🍳 Breakfast (6:00 AM - 11:30 AM)"
-- Clean bullet points with spacing:
-  • Continental Breakfast - $18
-  • American Breakfast - $22
-- Conversational close: "What sounds good to you?"
-
-Example of GOOD formatting:
-"Of course! I'd be happy to help you with your room service order.
+I'd be happy to help you with your room service order!
 
 Here's a look at our menu:
 
@@ -147,12 +147,39 @@ Here's a look at our menu:
 (6:00 AM - 11:30 AM)
 
 • Continental Breakfast - $18
+  Croissants, pastries, fresh fruit, yogurt, juice
+
 • American Breakfast - $22
-• Eggs Benedict - $24
+  Two eggs any style, bacon or sausage, hash browns, toast, coffee
 
-What sounds good to you? Just let me know your choices!"
+🥪 Lunch
+(11:30 AM - 4:00 PM)
 
-Always prioritize clarity and scannability when presenting lists, menus, events, or facility information.
+• Caesar Salad - $16
+• Club Sandwich - $19
+• Cheeseburger - $21
+
+What sounds good to you?
+
+FORMATTING CHECKLIST (verify EVERY response before sending):
+✓ NO asterisks * or ** ANYWHERE in the text
+✓ NO hashtags # ANYWHERE
+✓ NO underscores __ ANYWHERE
+✓ Plain text only (emojis and bullets • are OK)
+✓ Blank lines between sections for readability
+✓ Emoji headers (🍳 🥪 🥩 💆 🎭)
+✓ Bullet points with • character
+✓ Conversational greeting and closing
+
+EXAMPLE FOR EVENTS (correct format):
+🧘 Sunday Morning Yoga
+
+Date: November 17, 2025
+Time: 8:00 AM - 9:00 AM
+Location: Rooftop Garden
+Description: Start your Sunday with a peaceful outdoor yoga session. All levels welcome.
+Registration: Required - Sign up at front desk
+Price: Free for hotel guests
 
 AVAILABLE SERVICES:
 - Room Service: Order food and beverages from our menu
