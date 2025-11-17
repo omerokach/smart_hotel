@@ -5,6 +5,7 @@ require('dotenv').config();
 const { supabase } = require('./supabaseClient');
 const tasksRouter = require('./routes/tasks');
 const roomsRouter = require('./routes/rooms');
+const reservationsRouter = require('./routes/reservations');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -17,11 +18,12 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'tasks-api' });
 });
 
-// כל הראוטים של המשימות
+// Primary API Routes:
 app.use('/api/tasks', tasksRouter);
 app.use('/api/rooms', roomsRouter);
+app.use('/api/reservations', reservationsRouter);
 
-// אם תרצה בהמשך endpoint אחד לבוט:
+// Potential future endpoint for bot interaction:
 // app.post('/api/tasks/handle', handleTaskAction);
 
 app.listen(PORT, () => {
