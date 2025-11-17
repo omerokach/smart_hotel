@@ -347,6 +347,8 @@ router.patch('/:task_id', async (req, res) => {
       updatePayload.request_details = request_details;
     if (opening_channel !== undefined)
       updatePayload.opening_channel = opening_channel;
+    if (internal_notes !== undefined)
+      updatePayload.internal_notes = internal_notes;
     if (closed_at !== undefined) updatePayload.closed_at = closed_at;
 
     // Always update updated_at when patching
