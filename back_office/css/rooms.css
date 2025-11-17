@@ -81,3 +81,8 @@
   background: #e0e7ff;
   color: #3a47d5;
 }
+
+td:last-child {
+  font-weight: 600;
+  color: #000624;
+}
