@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MILEY · Reports</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/reports.css">
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <img src="assets/logo/miley-logo.png" alt="Miley logo" class="logo">
+    </div>
+
+    <nav class="menu">
+      <a href="home.html" class="menu-item">
+        <img src="assets/icons/home.png" alt="Home icon">
+        <span>Home</span>
+      </a>
+      <a href="guests.html" class="menu-item">
+        <img src="assets/icons/guests.png" alt="Guests icon">
+        <span>Guests</span>
+      </a>
+      <a href="rooms.html" class="menu-item">
+        <img src="assets/icons/rooms.png" alt="Rooms icon">
+        <span>Rooms</span>
+      </a>
+      <a href="tasks.html" class="menu-item">
+        <img src="assets/icons/tasks.png" alt="Tasks icon">
+        <span>Tasks</span>
+      </a>
+      <a href="reports.html" class="menu-item active">
+        <img src="assets/icons/reports.png" alt="Reports icon">
+        <span>Reports</span>
+      </a>
+      <a href="messages.html" class="menu-item">
+        <img src="assets/icons/messages.png" alt="Messages icon">
+        <span>Messages</span>
+      </a>
+      <a href="settings.html" class="menu-item">
+        <img src="assets/icons/settings.png" alt="Settings icon">
+        <span>Settings</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main content -->
+  <main class="content reports-page">
+    <div class="dashboard-wrapper">
+
+      <!-- כותרת דף + פילטרים -->
+      <div class="reports-header">
+        <div>
+          <h2>Reports</h2>
+          <p class="reports-subtitle">View performance, occupancy, tasks and guest experience</p>
+        </div>
+
+        <div class="reports-controls">
+          <div class="reports-date-range">
+            <label for="fromDate">From</label>
+            <input type="date" id="fromDate" />
+          </div>
+          <div class="reports-date-range">
+            <label for="toDate">To</label>
+            <input type="date" id="toDate" />
+          </div>
+
+          <div class="reports-chip-group">
+            <button class="reports-chip reports-chip-active">This week</button>
+            <button class="reports-chip">This month</button>
+            <button class="reports-chip">Last 30 days</button>
+          </div>
+
+          <button class="reports-btn reports-btn-primary">Export</button>
+        </div>
+      </div>
+
+      <!-- כרטיסי KPI עליונים -->
+      <section class="reports-kpi-grid">
+        <div class="reports-kpi-card">
+          <p class="reports-kpi-label">Occupancy rate</p>
+          <p class="reports-kpi-value">82%</p>
+          <p class="reports-kpi-trend positive">+5% vs last week</p>
+        </div>
+
+        <div class="reports-kpi-card">
+          <p class="reports-kpi-label">Average daily rate (ADR)</p>
+          <p class="reports-kpi-value">€145</p>
+          <p class="reports-kpi-trend neutral">Similar to last week</p>
+        </div>
+
+        <div class="reports-kpi-card">
+          <p class="reports-kpi-label">Open tasks</p>
+          <p class="reports-kpi-value">27</p>
+          <p class="reports-kpi-trend warning">12 overdue</p>
+        </div>
+
+        <div class="reports-kpi-card">
+          <p class="reports-kpi-label">Guest satisfaction</p>
+          <p class="reports-kpi-value">4.6 / 5</p>
+          <p class="reports-kpi-trend positive">↑ Service score improved</p>
+        </div>
+      </section>
+
+      <!-- גרפים וסטטיסטיקות -->
+      <section class="reports-section">
+        <div class="reports-section-header">
+          <h3 class="reports-section-title">Trends overview</h3>
+          <p class="reports-section-subtitle">High-level trends for the selected period</p>
+        </div>
+
+        <div class="reports-trend-grid">
+          <!-- גרף: תפוסה לפי יום -->
+          <article class="reports-trend-card">
+            <div class="reports-trend-header">
+              <h4 class="reports-trend-title">Occupancy by day</h4>
+              <span class="reports-trend-caption">Last 7 days</span>
+            </div>
+
+            <div class="reports-bars">
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Mon</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 78%;"></div>
+                </div>
+                <span class="reports-bar-value">78%</span>
+              </div>
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Tue</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 83%;"></div>
+                </div>
+                <span class="reports-bar-value">83%</span>
+              </div>
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Wed</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 85%;"></div>
+                </div>
+                <span class="reports-bar-value">85%</span>
+              </div>
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Thu</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 80%;"></div>
+                </div>
+                <span class="reports-bar-value">80%</span>
+              </div>
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Fri</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 88%;"></div>
+                </div>
+                <span class="reports-bar-value">88%</span>
+              </div>
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Sat</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 90%;"></div>
+                </div>
+                <span class="reports-bar-value">90%</span>
+              </div>
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Sun</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 79%;"></div>
+                </div>
+                <span class="reports-bar-value">79%</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- גרף: משימות נפתחות / נסגרות -->
+          <article class="reports-trend-card">
+            <div class="reports-trend-header">
+              <h4 class="reports-trend-title">Tasks created vs completed</h4>
+              <span class="reports-trend-caption">Last 7 days</span>
+            </div>
+
+            <div class="reports-legend">
+              <span class="reports-dot created"></span>
+              <span class="reports-legend-label">Created</span>
+              <span class="reports-dot completed"></span>
+              <span class="reports-legend-label">Completed</span>
+            </div>
+
+            <div class="reports-bars">
+              <div class="reports-bar-row dual">
+                <span class="reports-bar-label">Mon</span>
+                <div class="reports-bar-dual">
+                  <div class="reports-bar-fill created" style="width: 65%;"></div>
+                  <div class="reports-bar-fill completed" style="width: 58%;"></div>
+                </div>
+              </div>
+              <div class="reports-bar-row dual">
+                <span class="reports-bar-label">Tue</span>
+                <div class="reports-bar-dual">
+                  <div class="reports-bar-fill created" style="width: 72%;"></div>
+                  <div class="reports-bar-fill completed" style="width: 70%;"></div>
+                </div>
+              </div>
+              <div class="reports-bar-row dual">
+                <span class="reports-bar-label">Wed</span>
+                <div class="reports-bar-dual">
+                  <div class="reports-bar-fill created" style="width: 60%;"></div>
+                  <div class="reports-bar-fill completed" style="width: 68%;"></div>
+                </div>
+              </div>
+              <div class="reports-bar-row dual">
+                <span class="reports-bar-label">Thu</span>
+                <div class="reports-bar-dual">
+                  <div class="reports-bar-fill created" style="width: 80%;"></div>
+                  <div class="reports-bar-fill completed" style="width: 75%;"></div>
+                </div>
+              </div>
+              <div class="reports-bar-row dual">
+                <span class="reports-bar-label">Fri</span>
+                <div class="reports-bar-dual">
+                  <div class="reports-bar-fill created" style="width: 90%;"></div>
+                  <div class="reports-bar-fill completed" style="width: 82%;"></div>
+                </div>
+              </div>
+              <div class="reports-bar-row dual">
+                <span class="reports-bar-label">Sat</span>
+                <div class="reports-bar-dual">
+                  <div class="reports-bar-fill created" style="width: 55%;"></div>
+                  <div class="reports-bar-fill completed" style="width: 60%;"></div>
+                </div>
+              </div>
+              <div class="reports-bar-row dual">
+                <span class="reports-bar-label">Sun</span>
+                <div class="reports-bar-dual">
+                  <div class="reports-bar-fill created" style="width: 48%;"></div>
+                  <div class="reports-bar-fill completed" style="width: 52%;"></div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- גרף: עומס מחלקות -->
+          <article class="reports-trend-card">
+            <div class="reports-trend-header">
+              <h4 class="reports-trend-title">Department workload</h4>
+              <span class="reports-trend-caption">Open tasks by department</span>
+            </div>
+
+            <div class="reports-bars">
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Housekeeping</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 76%;"></div>
+                </div>
+                <span class="reports-bar-value">16</span>
+              </div>
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Maintenance</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 55%;"></div>
+                </div>
+                <span class="reports-bar-value">11</span>
+              </div>
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Front desk</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 40%;"></div>
+                </div>
+                <span class="reports-bar-value">8</span>
+              </div>
+              <div class="reports-bar-row">
+                <span class="reports-bar-label">Food & beverage</span>
+                <div class="reports-bar-bg">
+                  <div class="reports-bar-fill" style="width: 32%;"></div>
+                </div>
+                <span class="reports-bar-value">6</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- דוחות עיקריים -->
+      <section class="reports-section">
+        <div class="reports-section-header">
+          <h3 class="reports-section-title">Key reports</h3>
+          <p class="reports-section-subtitle">Frequently used, ready to export</p>
+        </div>
+
+        <div class="reports-card-grid">
+          <article class="reports-card">
+            <div class="reports-card-body">
+              <h4 class="reports-card-title">Daily occupancy report</h4>
+              <p class="reports-card-text">
+                Breakdown of occupied vs available rooms by day, floor and room type.
+              </p>
+              <p class="reports-card-meta">Updated every morning at 06:00</p>
+            </div>
+            <div class="reports-card-actions">
+              <button class="reports-btn reports-btn-secondary">View</button>
+              <button class="reports-btn reports-btn-ghost">Download CSV</button>
+            </div>
+          </article>
+
+          <article class="reports-card">
+            <div class="reports-card-body">
+              <h4 class="reports-card-title">Monthly revenue summary</h4>
+              <p class="reports-card-text">
+                Room revenue, extras and taxes by channel (direct, OTA, corporate).
+              </p>
+              <p class="reports-card-meta">Updated daily at 02:00</p>
+            </div>
+            <div class="reports-card-actions">
+              <button class="reports-btn reports-btn-secondary">View</button>
+              <button class="reports-btn reports-btn-ghost">Download PDF</button>
+            </div>
+          </article>
+
+          <article class="reports-card">
+            <div class="reports-card-body">
+              <h4 class="reports-card-title">Task performance</h4>
+              <p class="reports-card-text">
+                Average resolution time and backlog by department and request type.
+              </p>
+              <p class="reports-card-meta">Updated every 15 minutes</p>
+            </div>
+            <div class="reports-card-actions">
+              <button class="reports-btn reports-btn-secondary">View</button>
+              <button class="reports-btn reports-btn-ghost">Download CSV</button>
+            </div>
+          </article>
+
+          <article class="reports-card">
+            <div class="reports-card-body">
+              <h4 class="reports-card-title">Guest feedback & NPS</h4>
+              <p class="reports-card-text">
+                Survey results, ratings and comments from the guest portal and email.
+              </p>
+              <p class="reports-card-meta">Updated in real time</p>
+            </div>
+            <div class="reports-card-actions">
+              <button class="reports-btn reports-btn-secondary">View</button>
+              <button class="reports-btn reports-btn-ghost">Export</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- דוחות מתוזמנים -->
+      <section class="reports-section">
+        <div class="reports-section-header">
+          <h3 class="reports-section-title">Scheduled reports</h3>
+          <p class="reports-section-subtitle">Reports automatically sent to your team</p>
+        </div>
+
+        <div class="reports-table-wrapper">
+          <table class="reports-table">
+            <thead>
+              <tr>
+                <th>Report name</th>
+                <th>Frequency</th>
+                <th>Delivery</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Weekly occupancy & ADR</td>
+                <td>Every Monday · 08:00</td>
+                <td>management@mileyhotel.com</td>
+                <td><span class="reports-status reports-status-active">Active</span></td>
+              </tr>
+              <tr>
+                <td>Daily open tasks</td>
+                <td>Every day · 07:30</td>
+                <td>ops@mileyhotel.com</td>
+                <td><span class="reports-status reports-status-active">Active</span></td>
+              </tr>
+              <tr>
+                <td>Monthly revenue PDF</td>
+                <td>1st of the month · 09:00</td>
+                <td>finance@mileyhotel.com</td>
+                <td><span class="reports-status reports-status-paused">Paused</span></td>
+              </tr>
+              <tr>
+                <td>Guest satisfaction snapshot</td>
+                <td>Every Sunday · 18:00</td>
+                <td>frontdesk@mileyhotel.com</td>
+                <td><span class="reports-status reports-status-active">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+</div>
+
+</body>
+</html>
