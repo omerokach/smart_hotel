@@ -1,3 +1,11 @@
+/**
+ * Hotel Concierge Agent
+ * 
+ * This agent uses JSON-based tools for room service, spa bookings, events, and facility information.
+ * For response formatting guidelines when presenting information from these tools,
+ * see: src/RESPONSE_FORMATTING_GUIDE.md
+ */
+
 import { Agent } from '@openai/agents';
 import { tool } from '@openai/agents';
 import { orderRoomService, roomServiceSchema, getMenu } from './tools/roomService.js';
@@ -105,13 +113,46 @@ Step 4: After successfully executing the tool, provide the confirmation details 
    "Have a wonderful day and enjoy your stay with us!"
 
 FORMATTING INFORMATION RESPONSES:
-When providing information from tools (events, activity hours, facility information):
-- Format the response in a natural, conversational, easy-to-read way
-- Use proper paragraphs and line breaks for clarity
-- Present events/activities as a friendly list with clear date, time, and location
-- DO NOT use raw formatting markers like ** or ###
-- Make it flow naturally as if you're speaking to the guest
-Example: "We have several exciting events this week! On Monday at 7:00 PM, join us for Wine Tasting at the Hotel Bar..."
+When providing information from JSON-based tools (room service menu, spa menu, events, activity hours):
+
+CRITICAL: You MUST follow these formatting rules to ensure clear, scannable, and conversational responses:
+
+1. ALWAYS start with a friendly, conversational opening sentence
+2. Use clear section headings with emojis when appropriate (e.g., "🍳 Breakfast", "💆 Spa Treatments", "🎭 Upcoming Events")
+3. Use proper bullet points (•) with adequate spacing between items
+4. Break content into digestible sections with visual separation
+5. Include relevant details (prices, times, dates) in a clean format
+6. End with a conversational closing that guides the user to the next step
+
+⛔ AVOID:
+- Dense, single-block text dumps
+- Run-on sentences listing everything without breaks
+- Poor formatting like: "Menu: - Item - $Price - Item - $Price"
+- Overwhelming walls of text
+
+✅ DO USE:
+- Conversational intro: "I'd be happy to help you with that!"
+- Clear headings: "🍳 Breakfast (6:00 AM - 11:30 AM)"
+- Clean bullet points with spacing:
+  • Continental Breakfast - $18
+  • American Breakfast - $22
+- Conversational close: "What sounds good to you?"
+
+Example of GOOD formatting:
+"Of course! I'd be happy to help you with your room service order.
+
+Here's a look at our menu:
+
+🍳 Breakfast
+(6:00 AM - 11:30 AM)
+
+• Continental Breakfast - $18
+• American Breakfast - $22
+• Eggs Benedict - $24
+
+What sounds good to you? Just let me know your choices!"
+
+Always prioritize clarity and scannability when presenting lists, menus, events, or facility information.
 
 AVAILABLE SERVICES:
 - Room Service: Order food and beverages from our menu

@@ -107,18 +107,29 @@ Agent: "Wonderful! What time would work best for you tomorrow afternoon?"
 ```
 smartHotel/
 ├── src/
-│   ├── agent.ts              # Main AI agent configuration
-│   ├── index.ts              # Simple demo entry point
-│   ├── chat-cli.ts           # CLI chat interface
-│   ├── server.ts             # Web server with REST API
-│   ├── types.ts              # TypeScript type definitions
+│   ├── agent.ts                      # Main AI agent configuration
+│   ├── index.ts                      # Simple demo entry point
+│   ├── chat-cli.ts                   # CLI chat interface
+│   ├── server.ts                     # Web server with REST API
+│   ├── types.ts                      # TypeScript type definitions
+│   ├── RESPONSE_FORMATTING_GUIDE.md  # Agent response formatting guidelines
+│   ├── data/                         # JSON data files
+│   │   ├── menu.json                 # Room service menu
+│   │   ├── spa-menu.json             # Spa treatments menu
+│   │   ├── events.json               # Hotel events
+│   │   └── activity-hours.json       # Facility hours
 │   └── tools/
-│       ├── roomService.ts    # Room service tool
-│       ├── housekeeping.ts   # Housekeeping tool
-│       ├── towels.ts         # Towel request tool
-│       └── spa.ts            # Spa booking tool
+│       ├── roomService.ts            # Room service tool
+│       ├── housekeeping.ts           # Housekeeping tool
+│       ├── extraEquipment.ts         # Extra equipment/towels tool
+│       ├── spa.ts                    # Spa booking tool
+│       ├── taxi.ts                   # Taxi ordering tool
+│       ├── activityHours.ts          # Facility hours tool
+│       ├── events.ts                 # Events information tool
+│       ├── wifi.ts                   # WiFi credentials tool
+│       └── escalation.ts             # Human escalation tool
 ├── public/
-│   └── index.html            # Web chat UI
+│   └── index.html                    # Web chat UI
 ├── package.json
 ├── tsconfig.json
 └── README.md
@@ -248,6 +259,17 @@ const hotelConciergeAgent = new Agent({
 ### Modifying Agent Behavior
 
 Edit the `instructions` field in `src/agent.ts` to change how the agent responds and behaves.
+
+### Response Formatting Guidelines
+
+The agent follows specific formatting rules when presenting information from JSON-based tools (menus, events, facility hours). These guidelines ensure responses are clear, scannable, and conversational rather than dense text blocks.
+
+See `src/RESPONSE_FORMATTING_GUIDE.md` for detailed examples of:
+- ✅ Good response formatting (with proper spacing, bullet points, and structure)
+- ⛔ Bad response formatting (dense text blocks to avoid)
+- Best practices for presenting lists and menus
+
+The agent is configured to automatically follow these guidelines when using tools that return structured data.
 
 ## 🔐 Security Best Practices
 
