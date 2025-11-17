@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 ================================ */
 
 async function loadTasks() {
+  showLoader();
   const status = document.getElementById("filter-status").value;
   const urgency = document.getElementById("filter-urgency").value;
   const department = document.getElementById("filter-department").value;
@@ -29,6 +30,7 @@ async function loadTasks() {
 
   // API מחזיר { tasks: [...] }
   renderTasks(data.tasks || []);
+  hideLoader()
 }
 
 /* ===============================
