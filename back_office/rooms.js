@@ -20,6 +20,8 @@ async function loadRooms() {
 }
 
 function renderRooms(rooms) {
+      showLoader(); // 👈 מפעיל לואדר גלובלי
+
   const tbody = document.querySelector("table tbody");
 
   tbody.innerHTML = "";
@@ -29,15 +31,21 @@ function renderRooms(rooms) {
       <tr>
         <td>${room.room_number}</td>
         <td>${room.room_type || "N/A"}</td>
+
         <td>
           <span class="room-status ${mapRoomStatus(room.room_status)}">
             ${formatRoomStatus(room.room_status)}
           </span>
         </td>
+
+        <td>${room.capacity !== undefined ? room.capacity : "-"}</td>
       </tr>
     `;
+      hideLoader(); // 👈 מכבה לואדר
+
   });
 }
+
 
 
 
