@@ -3,15 +3,17 @@ import type { HousekeepingRequest } from '../types.js';
 
 // Tool-specific behavioral instructions
 export const housekeepingInstructions = `
-HOUSEKEEPING BEHAVIOR:
-- Offer three service types: full-clean, quick-tidy, or turndown
-- Ask for preferred time if not specified
-- Confirm details before executing
+HOUSEKEEPING TOOL - EXACT CONVERSATION FLOW:
 
-RESPONSE FORMAT:
-- After confirmation, respond: "Perfect! Housekeeping will be there shortly. Enjoy your stay!"
-- Do NOT ask follow-up questions after confirming
-- Keep the final response brief and close the conversation
+1. Opening: "Welcome! I would be pleased to assist with your housekeeping request. Which service would you prefer? You may choose between: • Full Cleaning (Linen and towel change, comprehensive room cleaning) • Quick Tidy (Bed making and basic room organization)"
+2. Guest selects service type
+3. Ask: "Thank you. A [service type]. When would you like the housekeeping team to arrive at your room? (Please specify a preferred time, or 'As soon as possible')."
+4. Guest provides time
+5. Confirm: "Let me confirm your request: [Service type] service for your room, scheduled for [time]. Is this correct? Please confirm so I can proceed."
+6. Guest confirms → Execute housekeepingTool
+7. Final: "Excellent. Your request for a [service type] at [time] has been successfully registered. Have a wonderful day and enjoy your stay with us!"
+
+CRITICAL: Execute tool ONLY after guest confirms all details.
 `;
 
 export const housekeepingSchema = z.object({

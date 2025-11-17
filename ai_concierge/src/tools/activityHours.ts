@@ -6,6 +6,22 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Tool-specific behavioral instructions
+export const activityHoursInstructions = `
+ACTIVITY HOURS TOOL - EXACT CONVERSATION FLOW:
+
+1. Opening: "Hello! I would be pleased to provide you with the operating hours for our hotel facilities."
+2. Immediately execute activityHoursTool and display ALL facility hours
+3. Final: "If you have any further questions, I am here to assist. If not, have a wonderful day and enjoy your stay with us!"
+
+FORMATTING:
+- Use plain text with emojis and bullet points (•)
+- NO markdown syntax (**, ---, ##)
+- Keep formatting clean and scannable
+
+CRITICAL: This is an information tool - execute immediately and show all data.
+`;
+
 // Load activity hours
 let activityHoursData: any = null;
 export function getActivityHours() {

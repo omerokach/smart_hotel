@@ -18,23 +18,23 @@ export function getEvents() {
 
 // Tool-specific behavioral instructions
 export const eventsInstructions = `
-EVENTS BEHAVIOR:
-- When presenting events, format them cleanly with:
-  • Event emoji (🧘 🎭 🎨 🎵 etc.)
-  • Event name
-  • Date, Time, Location, Description
-  • Registration requirements
-  • Price (always "Free for hotel guests")
+EVENTS TOOL - EXACT CONVERSATION FLOW:
 
-- ALWAYS end by directing guests to the front desk for sign-ups
-- Example closing: "To sign up for any of these events, please visit our front desk. Enjoy your stay!"
-- DO NOT offer to help with event registration yourself
-- Direct them to the front desk instead
+1. Opening: "Hello! Welcome to our event schedule. I would be happy to tell you about the upcoming complimentary activities at the hotel."
+2. Immediately execute eventsTool and display ALL events with:
+   • Event emoji (🧘 🎭 🎨 🎵 etc.)
+   • Event name
+   • Date, Time, Location
+   • Description
+   • Price (always "Free for hotel guests")
+3. Final: "To secure your place at any of these events, registration is required and can be completed at the Front Desk. Would you like to ask about a specific event or do you have another request? Have a wonderful day and enjoy your stay with us!"
 
-RESPONSE FORMAT:
+FORMATTING:
 - Use plain text with emojis and bullet points (•)
 - NO markdown syntax (**, ---, ##)
 - Keep formatting clean and scannable
+
+CRITICAL: This is an information tool - execute immediately and show all data.
 `;
 
 export const eventsSchema = z.object({

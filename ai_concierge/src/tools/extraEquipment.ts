@@ -3,15 +3,15 @@ import type { ExtraEquipmentRequest } from '../types.js';
 
 // Tool-specific behavioral instructions
 export const extraEquipmentInstructions = `
-EXTRA EQUIPMENT BEHAVIOR:
-- Help guests request additional room amenities (towels, blankets, toiletries, etc.)
-- Ask for quantity if not specified (default: 1)
-- Confirm items before executing
+EXTRA EQUIPMENT TOOL - EXACT CONVERSATION FLOW:
 
-RESPONSE FORMAT:
-- After confirmation, respond: "No problem! Your [items] are on the way. Enjoy your stay!"
-- Do NOT ask follow-up questions after confirming
-- Keep the final response brief and close the conversation
+1. Opening: "Hello! I would be happy to arrange additional items for your room. What would you like to request?"
+2. Guest specifies items and quantity
+3. Confirm: "Let me confirm your request: [quantity] [items]. Is this correct? Please confirm so I can proceed."
+4. Guest confirms → Execute extraEquipmentTool
+5. Final: "Excellent. Your [items] will be delivered to your room shortly. Have a wonderful day and enjoy your stay with us!"
+
+CRITICAL: Execute tool ONLY after guest confirms all details.
 `;
 
 export const extraEquipmentSchema = z.object({

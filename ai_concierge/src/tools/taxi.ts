@@ -1,6 +1,21 @@
 import { z } from 'zod';
 import type { TaxiOrder } from '../types.js';
 
+// Tool-specific behavioral instructions
+export const taxiInstructions = `
+TAXI TOOL - EXACT CONVERSATION FLOW:
+
+1. Opening: "Hello! I would be happy to order a taxi for you. Please specify your exact destination, the time of pickup, and the number of passengers."
+2. Guest provides destination, time, and number of passengers
+3. Ask: "Thank you. A taxi to [destination], for [time], for [number] passengers. Would you like to add any specific notes for the driver?"
+4. Guest responds (yes/no to additional notes)
+5. Confirm: "Let me confirm your request: Ordering a taxi to [destination], for [time], for [number] passengers. Is this correct? Please confirm so I can proceed."
+6. Guest confirms → Execute taxiTool
+7. Final: "Great. Your taxi has been booked and will be waiting for you at the hotel entrance at [time]. Have a wonderful day and enjoy your stay with us!"
+
+CRITICAL: Execute tool ONLY after guest confirms all details.
+`;
+
 export const taxiSchema = z.object({
   destination: z.string().describe('Where the guest wants to go (e.g., "airport", "downtown", "123 Main St")'),
   numberOfPassengers: z.number().min(1).max(8).describe('Number of passengers (1-8)'),

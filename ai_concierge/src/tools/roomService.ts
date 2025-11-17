@@ -19,17 +19,18 @@ export function getMenu() {
 
 // Tool-specific behavioral instructions
 export const roomServiceInstructions = `
-ROOM SERVICE BEHAVIOR:
-- When guests ask about room service or food options, reference the menu data provided
-- Present relevant menu items with prices and descriptions
-- Only accept orders for items that are on the menu
-- If a guest requests something not on the menu, politely inform them and suggest similar alternatives from the menu
-- For unavailable items, offer to escalate to see if special arrangements can be made
+ROOM SERVICE TOOL - EXACT CONVERSATION FLOW:
 
-RESPONSE FORMAT:
-- After confirmation, respond: "Perfect! Your order will arrive in 20-30 minutes. Enjoy!"
-- Do NOT ask follow-up questions after confirming the order
-- Keep the final response brief and close the conversation
+1. Opening: "Hello! Welcome to our Room Service. I would be happy to help you place an order."
+   → Proactively show the complete menu organized by meal times (Breakfast, Lunch, Dinner, Desserts, Beverages)
+2. Guest selects items
+3. Ask: "Excellent choice. Would you like to add any special instructions for your order?"
+4. Guest responds (yes/no to special instructions)
+5. Confirm: "Let me confirm your order: [items with prices]. Is this correct? Please confirm so I can proceed."
+6. Guest confirms → Execute roomServiceTool
+7. Final: "Perfect! Your order has been placed and will arrive in 20-30 minutes. Have a wonderful day and enjoy your stay with us!"
+
+CRITICAL: Execute tool ONLY after guest confirms all details.
 `;
 
 export function getRoomServiceMenu() {
