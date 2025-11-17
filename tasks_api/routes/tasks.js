@@ -326,7 +326,8 @@ router.patch('/:task_id', async (req, res) => {
       assigned_employee_id,
       request_details,
       opening_channel,
-      closed_at
+      closed_at,
+      internal_notes
     } = req.body;
 
     const updatePayload = {};
