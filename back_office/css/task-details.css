@@ -29,6 +29,22 @@
   margin-top: 25px;
 }
 
+.left-col,
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.full-col {
+  grid-column: 1 / 3; /* תופס את שתי העמודות */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+
 .task-grid label {
   font-weight: 600;
   margin-bottom: 6px;
@@ -42,6 +58,7 @@
   border-radius: 10px;
   padding: 12px;
   font-size: 14px;
+  font-family: "Wix Madefor Text", sans-serif; 
   outline: none;
 }
 
@@ -76,3 +93,87 @@ textarea {
   cursor: pointer;
 }
 
+.readonly-box {
+  background: #ffffff;
+  border: 1px solid #e4e9f7;
+  border-radius: 10px;
+  padding: 14px;
+  min-height: 60px;
+  font-size: 14px;
+  color: #1a1a1a;
+  white-space: pre-line;
+}
+
+textarea::placeholder {
+  font-family: 'Wix Madefor Text', sans-serif;
+  color: #999;
+  font-size: 14px;
+}
+
+ 
+.status-pill {
+  text-transform: capitalize;
+  font-weight: 600;
+  background: #eef3ff;
+}
+
+.request-text {
+  margin: 0;
+  font-size: 14px;
+  color: #555;
+  padding: 4px 0;
+}
+
+.task-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.15);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal.hidden {
+  display: none;
+}
+
+.modal-content {
+  background: white;
+  padding: 28px 34px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  text-align: center;
+  min-width: 280px;
+  font-family: 'Wix Madefor Text', sans-serif;
+}
+
+.modal-content p {
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000624;
+}
+
+#modal-close {
+  background: #116dff;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#modal-close:hover {
+  background: #0a56cc;
+}

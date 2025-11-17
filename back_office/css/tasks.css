@@ -43,6 +43,11 @@
   color: #207520;
 }
 
+.status.open {
+  background: #babdba;
+  color: #020202fc;
+}
+
 .status.progress {
   background: #fff3cd;
   color: #856404;
@@ -70,17 +75,25 @@
 }
 
 /* ====== פילטרים ====== */
-.filters {
-  display: flex;
-  gap: 10px;
-  margin-top: 20px;
+.filters-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-bottom: 12px;
 }
 
-.filters select {
-  border: 1px solid #d8dee6;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 14px;
-  outline: none;
-  cursor: pointer;
+.filter-select {
+    padding: 10px 16px;
+    border-radius: 22px;
+    border: 1.5px solid #BFD3F2;
+    background-color: white;
+    font-size: 14px;
+    color: #4a4a4a;
+    cursor: pointer;
+    min-width: 160px;
+
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 14px center;
 }
