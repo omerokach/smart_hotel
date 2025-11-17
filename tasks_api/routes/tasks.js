@@ -337,6 +337,8 @@ router.patch('/:task_id', async (req, res) => {
     if (request_type !== undefined) updatePayload.request_type = request_type;
     if (assigned_department !== undefined)
       updatePayload.assigned_department = assigned_department;
+    if (internal_notes !== undefined)
+    updatePayload.internal_notes = internal_notes;
     if (status !== undefined) updatePayload.status = status;
     if (priority !== undefined) updatePayload.priority = priority;
     if (assigned_employee_id !== undefined)
