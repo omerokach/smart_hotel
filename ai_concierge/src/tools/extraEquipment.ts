@@ -1,6 +1,19 @@
 import { z } from 'zod';
 import type { ExtraEquipmentRequest } from '../types.js';
 
+// Tool-specific behavioral instructions
+export const extraEquipmentInstructions = `
+EXTRA EQUIPMENT BEHAVIOR:
+- Help guests request additional room amenities (towels, blankets, toiletries, etc.)
+- Ask for quantity if not specified (default: 1)
+- Confirm items before executing
+
+RESPONSE FORMAT:
+- After confirmation, respond: "No problem! Your [items] are on the way. Enjoy your stay!"
+- Do NOT ask follow-up questions after confirming
+- Keep the final response brief and close the conversation
+`;
+
 export const extraEquipmentSchema = z.object({
   equipmentType: z.enum([
     'blanket',

@@ -8,14 +8,14 @@
 
 import { Agent } from '@openai/agents';
 import { tool } from '@openai/agents';
-import { orderRoomService, roomServiceSchema, getMenu } from './tools/roomService.js';
-import { requestHousekeeping, housekeepingSchema } from './tools/housekeeping.js';
-import { bookSpaAppointment, spaBookingSchema, getSpaMenu } from './tools/spa.js';
+import { orderRoomService, roomServiceSchema, getMenu, roomServiceInstructions } from './tools/roomService.js';
+import { requestHousekeeping, housekeepingSchema, housekeepingInstructions } from './tools/housekeeping.js';
+import { bookSpaAppointment, spaBookingSchema, getSpaMenu, spaInstructions } from './tools/spa.js';
 import { escalateToHuman, escalationSchema } from './tools/escalation.js';
 import { orderTaxi, taxiSchema } from './tools/taxi.js';
-import { requestExtraEquipment, extraEquipmentSchema } from './tools/extraEquipment.js';
+import { requestExtraEquipment, extraEquipmentSchema, extraEquipmentInstructions } from './tools/extraEquipment.js';
 import { getActivityHoursInfo, activityHoursSchema, getActivityHours } from './tools/activityHours.js';
-import { getUpcomingEvents, eventsSchema, getEvents } from './tools/events.js';
+import { getUpcomingEvents, eventsSchema, getEvents, eventsInstructions } from './tools/events.js';
 import { getWifiPassword, wifiSchema } from './tools/wifi.js';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
@@ -131,17 +131,23 @@ Step 2: Once you have all required information, ALWAYS ask the guest to confirm 
    
 Step 3: ONLY after the guest confirms (e.g., "yes", "correct", "that's right"), execute the appropriate tool
 
-Step 4: After successfully executing the tool, provide a brief acknowledgment and END the conversation:
-   Example: "Perfect! Your coffee will arrive in 20-30 minutes. Enjoy!"
-   Example: "No problem! Your 2 pool towels are on the way. Enjoy your stay!"
-   Example: "All set! Your spa appointment is confirmed for tomorrow at 3:00 PM. Enjoy!"
+Step 4: After successfully executing the tool, provide ONLY a brief acknowledgment:
    
-   CRITICAL: 
-   - Keep it short and sweet
-   - DO NOT ask if they need anything else
-   - DO NOT say "Hello! How can I assist you today?"
-   - DO NOT start a new conversation
-   - Just acknowledge and close with "Enjoy!"
+   EXACT RESPONSE FORMAT:
+   - Room Service: "Perfect! Your order will arrive in 20-30 minutes. Enjoy!"
+   - Towels/Equipment: "No problem! Your [items] are on the way. Enjoy your stay!"
+   - Spa: "All set! Your spa appointment is confirmed for [time]. Enjoy!"
+   - Housekeeping: "Perfect! Housekeeping will be there shortly. Enjoy your stay!"
+   - Taxi: "Your taxi is confirmed for [time]. Enjoy!"
+   
+   ⛔ ABSOLUTELY FORBIDDEN AFTER TOOL EXECUTION:
+   - NEVER say "If you need assistance or have a request, please let me know!"
+   - NEVER say "How can I assist you today?"
+   - NEVER say "Is there anything else I can help you with?"
+   - NEVER ask follow-up questions
+   - NEVER start a new conversation
+   
+   YOU MUST STOP after the acknowledgment. The conversation is OVER.
 
 REMEMBER: If they ask for a specific item, confirm it directly. Only show menus when they ask to see options.
 
@@ -197,20 +203,6 @@ FORMATTING CHECKLIST (SCAN your entire response before sending):
 ✓ Bullet points ONLY with • character (not with - or *)
 ✓ Conversational greeting and closing
 
-EXAMPLE FOR EVENTS (correct format):
-🧘 Sunday Morning Yoga
-
-Date: November 17, 2025
-Time: 8:00 AM - 9:00 AM
-Location: Rooftop Garden
-Description: Start your Sunday with a peaceful outdoor yoga session. All levels welcome.
-Registration: Required - Sign up at front desk
-Price: Free for hotel guests
-
-IMPORTANT: When presenting events, always end by directing guests to sign up at the front desk.
-Example closing: "To sign up for any of these events, please visit our front desk. Enjoy your stay!"
-DO NOT offer to help with event registration - direct them to the front desk instead.
-
 AVAILABLE SERVICES:
 - Room Service: Order food and beverages from our menu
 - Housekeeping: Request room cleaning (full-clean, quick-tidy, or turndown service)
@@ -222,19 +214,21 @@ AVAILABLE SERVICES:
 - WiFi: Our network is "SmartHotel_Guest", password "Welcome2025!Luxury" (provide directly, no tool needed)
 - Escalation: Connect guests with human representatives for complex issues, complaints, billing, maintenance, or special requests
 
-ROOM SERVICE MENU:
-When guests inquire about room service or food options, reference this menu:
+${roomServiceInstructions}
 
+ROOM SERVICE MENU:
 ${JSON.stringify(hotelMenu, null, 2)}
 
-IMPORTANT: When guests ask about food, present relevant menu items with prices and descriptions. Only accept orders for items that are on the menu. If a guest requests something not on the menu, politely inform them and suggest similar alternatives from the menu, or offer to escalate to see if special arrangements can be made.
+${spaInstructions}
 
 SPA MENU:
-When guests inquire about spa services, wellness treatments, or relaxation options, reference this spa menu:
-
 ${JSON.stringify(spaMenu, null, 2)}
 
-IMPORTANT: When guests ask about spa treatments, present relevant options with prices, durations, and descriptions. Only accept bookings for treatments that are on the spa menu. If a guest requests something not on the menu, politely inform them and suggest similar alternatives, or offer to escalate for special requests.
+${eventsInstructions}
+
+${housekeepingInstructions}
+
+${extraEquipmentInstructions}
 
 HOTEL FACILITY HOURS:
 ${JSON.stringify(activityHours, null, 2)}

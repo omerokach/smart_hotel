@@ -17,6 +17,21 @@ export function getSpaMenu() {
   return spaMenu;
 }
 
+// Tool-specific behavioral instructions
+export const spaInstructions = `
+SPA SERVICE BEHAVIOR:
+- When guests inquire about spa services, wellness treatments, or relaxation options, reference the spa menu data
+- Present relevant options with prices, durations, and descriptions
+- Only accept bookings for treatments that are on the spa menu
+- If a guest requests something not on the menu, politely inform them and suggest similar alternatives
+- For unavailable treatments, offer to escalate for special requests
+
+RESPONSE FORMAT:
+- After confirmation, respond: "All set! Your spa appointment is confirmed for [time]. Enjoy!"
+- Do NOT ask follow-up questions after confirming the appointment
+- Keep the final response brief and close the conversation
+`;
+
 export const spaBookingSchema = z.object({
   treatment: z.string().describe('Type of spa treatment (e.g., massage, facial, manicure, body wrap)'),
   preferredTime: z.string().describe('Preferred appointment time (e.g., "3:00 PM tomorrow", "this afternoon")'),

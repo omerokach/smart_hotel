@@ -17,6 +17,25 @@ export function getMenu() {
   return menu;
 }
 
+// Tool-specific behavioral instructions
+export const roomServiceInstructions = `
+ROOM SERVICE BEHAVIOR:
+- When guests ask about room service or food options, reference the menu data provided
+- Present relevant menu items with prices and descriptions
+- Only accept orders for items that are on the menu
+- If a guest requests something not on the menu, politely inform them and suggest similar alternatives from the menu
+- For unavailable items, offer to escalate to see if special arrangements can be made
+
+RESPONSE FORMAT:
+- After confirmation, respond: "Perfect! Your order will arrive in 20-30 minutes. Enjoy!"
+- Do NOT ask follow-up questions after confirming the order
+- Keep the final response brief and close the conversation
+`;
+
+export function getRoomServiceMenu() {
+  return getMenu();
+}
+
 export const roomServiceSchema = z.object({
   items: z.array(z.string()).describe('List of food/drink items to order'),
   specialInstructions: z.string().optional().nullable().describe('Any special requests or dietary restrictions'),

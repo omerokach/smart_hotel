@@ -1,6 +1,19 @@
 import { z } from 'zod';
 import type { HousekeepingRequest } from '../types.js';
 
+// Tool-specific behavioral instructions
+export const housekeepingInstructions = `
+HOUSEKEEPING BEHAVIOR:
+- Offer three service types: full-clean, quick-tidy, or turndown
+- Ask for preferred time if not specified
+- Confirm details before executing
+
+RESPONSE FORMAT:
+- After confirmation, respond: "Perfect! Housekeeping will be there shortly. Enjoy your stay!"
+- Do NOT ask follow-up questions after confirming
+- Keep the final response brief and close the conversation
+`;
+
 export const housekeepingSchema = z.object({
   serviceType: z.enum(['full-clean', 'quick-tidy', 'turndown']).describe(
     'Type of service: full-clean (complete room cleaning), quick-tidy (light tidying), or turndown (evening service)'
