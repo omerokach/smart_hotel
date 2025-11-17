@@ -1,28 +1,83 @@
+/* ====== Table wrapper ====== */
 .table-section {
   margin-top: 40px;
 }
 
+/* ====== Table ====== */
 .table-section table {
   width: 100%;
   background: #ffffff;
   border-radius: 16px;
-  border-collapse: collapse;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  border-collapse: separate;
+  border-spacing: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   overflow: hidden;
 }
 
-.table-section thead {
-  background: #eef3ff;
-  font-weight: 600;
+/* ====== Header ====== */
+.table-section thead tr {
+  background: #f4f7ff;
 }
 
-.table-section th,
-.table-section td {
-  padding: 16px 20px;
+.table-section th {
+  padding: 18px 22px;
   text-align: left;
   font-size: 15px;
+  font-weight: 600;
+  color: #000624;
+  border-bottom: 2px solid #e6ebff;
 }
 
+/* ====== Rows ====== */
+.table-section td {
+  padding: 16px 22px;
+  font-size: 15px;
+  color: #1b1b1b;
+  border-bottom: 1px solid #f0f2f8;
+}
+
+/* צבע רקע שורה עדין */
 .table-section tbody tr:nth-child(even) {
-  background: #f8faff;
+  background: #fafcff;
+}
+
+/* הובר על שורה */
+.table-section tbody tr:hover {
+  background: #f1f6ff;
+  transition: 0.2s ease;
+}
+
+.room-status {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: capitalize;
+  min-width: 90px;
+  text-align: center;
+}
+
+/* Ready */
+.room-status.ready {
+  background: #dcf7e2;
+  color: #1f7a22;
+}
+
+/* Dirty */
+.room-status.dirty {
+  background: #ffe6e6;
+  color: #b32626;
+}
+
+/* Maintenance */
+.room-status.maintenance {
+  background: #fff3cd;
+  color: #856404;
+}
+
+/* Occupied */
+.room-status.occupied {
+  background: #e0e7ff;
+  color: #3a47d5;
 }
