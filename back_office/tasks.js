@@ -1,21 +1,41 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("task page loaded successfully ✅");
-  loadtask();   // מפעיל את הפונקציה
+  console.log("Task page loaded successfully");
+  loadTasks();
 });
 
-async function loadtask() {
-  const { data: task, error } = await supabase
-    .from('task')
-    .select('*')
-    .order('task_id', { ascending: true });
+/* ===============================
+   LOAD TASKS FROM API
+================================ */
 
-  if (error) {
-    console.error("Error loading task:", error);
-    return;
-  }
+async function loadTasks() {
+  const status = document.getElementById("filter-status").value;
+  const urgency = document.getElementById("filter-urgency").value;
+  const department = document.getElementById("filter-department").value;
 
-  console.log("Loaded task:", task);
+  let url = "https://smart-hotel-tasks-api.onrender.com/api/tasks";
 
+  const params = new URLSearchParams();
+
+  if (status !== "all") params.append("status", status);
+  if (urgency !== "all") params.append("priority", urgency);
+  if (department !== "all") params.append("assigned_department", department);
+
+  if (params.toString()) url += "?" + params.toString();
+
+  console.log("Fetching:", url);
+
+  const response = await fetch(url);
+  const data = await response.json();
+
+  // API מחזיר { tasks: [...] }
+  renderTasks(data.tasks || []);
+}
+
+/* ===============================
+   RENDER TABLE
+================================ */
+
+function renderTasks(tasks) {
   const tbody = document.querySelector(".task-table tbody");
   if (!tbody) {
     console.error("Error: .task-table tbody not found");
@@ -24,19 +44,26 @@ async function loadtask() {
 
   tbody.innerHTML = "";
 
-  task.forEach(task => {
+  tasks.forEach(task => {
     tbody.innerHTML += `
       <tr>
         <td><input type="checkbox"></td>
-        <td>${task.request_type}</td>
+
+        <!-- Department במקום Task type -->
+        <td>${task.assigned_department || "-"}</td>
+
         <td>${task.room_number}</td>
+
         <td>${formatDate(task.created_at)}</td>
+
         <td>
           <span class="status ${mapStatus(task.status)}">
             ${formatStatus(task.status)}
           </span>
         </td>
-        <td>${task.priority || "Medium"}</td>
+
+        <td>${task.priority || "Normal"}</td>
+
         <td>
           <button class="view-btn" onclick="openTask(${task.task_id})">
             View Task
@@ -46,6 +73,10 @@ async function loadtask() {
     `;
   });
 }
+
+/* ===============================
+   HELPERS
+================================ */
 
 function formatDate(dateStr) {
   if (!dateStr) return "-";
@@ -72,6 +103,18 @@ function formatStatus(status) {
   return "Open";
 }
 
+/* ===============================
+   OPEN TASK DETAILS
+================================ */
+
 function openTask(id) {
   window.location.href = `task-details.html?id=${id}`;
 }
+
+/* ===============================
+   FILTER EVENTS
+================================ */
+
+document.getElementById("filter-status").addEventListener("change", loadTasks);
+document.getElementById("filter-urgency").addEventListener("change", loadTasks);
+document.getElementById("filter-department").addEventListener("change", loadTasks);

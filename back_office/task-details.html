@@ -13,6 +13,14 @@
   <link rel="stylesheet" href="css/task-details.css">
 </head>
 
+<!-- Success Modal -->
+<div id="success-modal" class="modal hidden">
+  <div class="modal-content">
+    <p id="modal-message">Task updated successfully!</p>
+    <button id="modal-close">OK</button>
+  </div>
+</div>
+
 <body>
 <section class="screen">
 
@@ -63,34 +71,62 @@
 
         <!-- Task View -->
         <section id="task-details" class="task-details-card">
-          <h3 id="task-title">Loading...</h3>
-          <span id="task-status-pill" class="status-pill">Loading</span>
 
+          <!-- Title + Status bubble -->
+          <div class="task-header">
+            <h3 id="task-title">Loading...</h3>
+            <span id="task-status-pill" class="status-pill">Loading</span>
+          </div>
+
+          <!-- Grid -->
           <div class="task-grid">
 
-            <!-- Left Side -->
-            <div>
-              <label>Task type</label>
-              <select id="task-type"></select>
+            <!-- Left column -->
+            <div class="left-col">
+              <label>Department</label>
+              <select id="department">
+                <option value="Housekeeping">Housekeeping</option>
+                <option value="Maintenance">Maintenance</option>
+                <option value="FrontDesk">Front Desk</option>
+              </select>
 
               <label>Urgency level</label>
-              <select id="urgency"></select>
-
-              <label>Internal notes</label>
-              <textarea id="notes" placeholder="Write any clarifications if there are"></textarea>
+              <select id="urgency">
+                <option value="Low">Low</option>
+                <option value="Normal">Normal</option>
+                <option value="High">High</option>
+                <option value="Urgent">Urgent</option>
+              </select>
             </div>
 
-            <!-- Right Side -->
-            <div>
+            <!-- Right column -->
+            <div class="right-col">
               <label>Status</label>
-              <select id="status"></select>
+              <select id="status">
+                <option value="open">Open</option>
+                <option value="in_progress">In Progress</option>
+                <option value="manager_approval">Manager Approval</option>
+                <option value="done">Done</option>
+              </select>
+
+              <label>Guest request description</label>
+              <p id="request-description" class="request-text"></p>
             </div>
+
+            <!-- Internal notes -->
+            <div class="full-col">
+              <label>Internal notes</label>
+              <textarea id="notes" placeholder="Write any clarifications if needed"></textarea>
+            </div>
+
           </div>
 
+          <!-- Actions -->
           <div class="task-actions">
-            <button class="secondary-btn">Send to Department</button>
-            <button class="primary-btn">Update Status</button>
+            <button class="secondary-btn" id="btn-return">Return</button>
+            <button class="primary-btn" id="btn-update">Update Task</button>
           </div>
+
         </section>
 
       </div>

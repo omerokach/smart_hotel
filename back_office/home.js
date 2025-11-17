@@ -1,3 +1,4 @@
+
 const ctx = document.getElementById('occupancyChart');
 
 const occupied = 34;  // חדרים תפוסים
@@ -54,3 +55,5 @@ document.querySelector('#occupancyChart').insertAdjacentHTML(
   </div>
   `
 );
+
+

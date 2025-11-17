@@ -1,0 +1,162 @@
+.login-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  height: 100vh;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* צד שמאל */
+.login-left {
+  background: #BDD7D5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; 
+  padding: 80px 50px 40px; 
+}
+
+.login-logo {
+  max-width: 180px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.signup-text {
+  margin: 8px 0 24px;
+  font-size: 15px;
+}
+
+.signup-text .link {
+  color: #116DFF;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 280px;
+}
+
+.login-form label {
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  color: #090909;
+  gap: 6px;
+}
+
+.login-form input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+}
+
+.login-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.login-options .remember {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.forgot {
+  color: #116DFF;
+  text-decoration: none;
+}
+
+.btn.primary {
+  margin-top: 10px;
+  background: #116DFF;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 24px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn.primary:hover {
+  background: #0d58cc;
+}
+
+/* צד ימין */
+/* צד ימין */
+.login-right {
+  background: #FAFCFC;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 40px;
+  text-align: center;
+}
+
+/* גריד מדויק של תמונות */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: 180px;
+  gap: 16px;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto 32px;
+}
+
+/* כל תמונה */
+.image-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.image-grid img:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
+
+/* גדלים מעט שונים לשבירת הסימטריה */
+.image-grid img:nth-child(1) { grid-row: span 2; height: 380px; }
+.image-grid img:nth-child(4) { grid-column: span 2; height: 200px; }
+
+.right-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 8px;
+  color: #090909;
+}
+
+.terms {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 13px;
+  margin-top: 16px;
+}
+
+.terms a {
+  color: #116DFF;
+  text-decoration: none;
+}
+
+/* התאמה למסכים קטנים */
+@media (max-width: 850px) {
+  .login-container {
+    grid-template-columns: 1fr;
+  }
+  .login-right {
+    display: none;
+  }
+}
