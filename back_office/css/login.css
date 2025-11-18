@@ -91,7 +91,6 @@
 }
 
 /* צד ימין */
-/* צד ימין */
 .login-right {
   background: #FAFCFC;
   display: flex;
@@ -127,7 +126,7 @@
   box-shadow: 0 8px 16px rgba(0,0,0,0.12);
 }
 
-/* גדלים מעט שונים לשבירת הסימטריה */
+/* גדלים קצת שונים לשבירת הסימטריה */
 .image-grid img:nth-child(1) { grid-row: span 2; height: 380px; }
 .image-grid img:nth-child(4) { grid-column: span 2; height: 200px; }
 

@@ -1,9 +1,9 @@
-/* ====== Table wrapper ====== */
+/* Table wrapper */
 .table-section {
   margin-top: 40px;
 }
 
-/* ====== Table ====== */
+/* Table */
 .table-section table {
   width: 100%;
   background: #ffffff;
@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-/* ====== Header ====== */
+/* Header */
 .table-section thead tr {
   background: #f4f7ff;
 }
@@ -28,7 +28,7 @@
   border-bottom: 2px solid #e6ebff;
 }
 
-/* ====== Rows ====== */
+/* Rows */
 .table-section td {
   padding: 16px 22px;
   font-size: 15px;

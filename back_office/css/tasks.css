@@ -1,4 +1,4 @@
-/* ====== עיצוב טבלת המשימות ====== */
+/* עיצוב טבלת המשימות */
 .task-table {
   background: #fff;
   border-radius: 16px;
@@ -30,7 +30,7 @@
   background-color: #f8faff;
 }
 
-/* ====== סטטוסים ====== */
+/* סטטוסים */
 .status {
   padding: 4px 10px;
   border-radius: 8px;
@@ -58,7 +58,7 @@
   color: #0052cc;
 }
 
-/* ====== כפתור View ====== */
+/* כפתור View */
 .view-btn {
   background: #e9eeff;
   border: none;
@@ -74,7 +74,7 @@
   background: #d8e0ff;
 }
 
-/* ====== פילטרים ====== */
+/* פילטרים */
 .filters-container {
     display: flex;
     justify-content: flex-end;

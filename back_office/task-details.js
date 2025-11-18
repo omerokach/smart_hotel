@@ -1,14 +1,10 @@
-/* ========================================
-   GET TASK ID FROM URL
-======================================== */
+/* GET TASK ID FROM URL */
 
 const params = new URLSearchParams(window.location.search);
 const taskId = params.get("id");
 
 
-/* ========================================
-   LOAD TASK FROM API
-======================================== */
+/* LOAD TASK FROM API */
 
 async function loadTask() {
   showLoader();
@@ -24,30 +20,30 @@ async function loadTask() {
       return;
     }
 
-    /* ===== Title ===== */
+    /* Title */
     document.getElementById("task-title").textContent =
       `${task.assigned_department} — Room ${task.room_number}`;
 
-    /* ===== Status Pill ===== */
+    /* Status Pill */
     updateStatusPill(task.status);
 
-    /* ===== Department ===== */
+    /* Department */
     document.getElementById("department").value =
       task.assigned_department || "Housekeeping";
 
-    /* ===== Urgency ===== */
+    /* Urgency */
     document.getElementById("urgency").value =
       task.priority || "Normal";
 
-    /* ===== Status ===== */
+    /* Status */
     document.getElementById("status").value =
       task.status || "open";
 
-    /* ===== Guest Description (not editable) ===== */
+    /* Guest Description (not editable) */
     document.getElementById("request-description").textContent =
       task.request_details || "No description provided.";
 
-    /* ===== Internal notes ===== */
+    /* Internal notes */
     const notesField = document.getElementById("notes");
 
     if (task.internal_notes && task.internal_notes.trim() !== "") {
@@ -68,9 +64,7 @@ async function loadTask() {
 }
 
 
-/* ========================================
-   UPDATE TASK
-======================================== */
+/* UPDATE TASK */
 
 async function updateTask() {
   showLoader()
@@ -105,16 +99,13 @@ async function updateTask() {
 }
 
 
-/* ========================================
-   STATUS PILL UI
-======================================== */
+/* STATUS PILL UI */
 
 function updateStatusPill(status) {
   const pill = document.getElementById("task-status-pill");
 
   pill.textContent = status;
 
-  // reset
   pill.style.background = "";
   pill.style.color = "";
 
@@ -133,10 +124,7 @@ function updateStatusPill(status) {
   }
 }
 
-
-/* ========================================
-   SUCCESS MODAL
-======================================== */
+/* SUCCESS MODAL */
 
 function showSuccess(message) {
   document.getElementById("modal-message").textContent = message;
@@ -153,18 +141,14 @@ document.getElementById("modal-close").addEventListener("click", () => {
 });
 
 
-/* ========================================
-   RETURN BUTTON
-======================================== */
+/* RETURN BUTTON */
 
 document.getElementById("btn-return")?.addEventListener("click", () => {
   window.location.href = "tasks.html";
 });
 
 
-/* ========================================
-   INIT
-======================================== */
+/* INIT */
 
 document.addEventListener("DOMContentLoaded", () => {
   loadTask();

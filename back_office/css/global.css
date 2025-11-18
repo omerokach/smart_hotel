@@ -23,7 +23,7 @@ body {
   background-color: var(--main-bg);
 }
 
-/* ====== Sidebar ====== */
+/* Sidebar */
 .sidebar {
   background-color: #bdd7d5;
   width: 230px;
@@ -32,15 +32,15 @@ body {
   align-items: center;
   border-radius: 0 20px 20px 0;
   padding-top: 28px;
-  height: 100vh; /* ✅ מבטיח שהsidebar מגיע עד הסוף */
-  position: fixed; /* שומר עליו צמוד לשמאל */
+  height: 100vh;
+  position: fixed; 
   top: 0;
   left: 0;
 }
 .content {
   flex: 1;
   padding: 40px 60px;
-  margin-left: 230px; /* ✅ דוחף את התוכן ימינה בדיוק לפי רוחב ה-sidebar */
+  margin-left: 230px; 
   display: flex;
   flex-direction: column;
 }
@@ -78,10 +78,10 @@ body {
   background: #ffffff;
   border-radius: 12px 0 0 12px;
 }
-/* ====== תיקון יישור עמודים ====== */
+/* תיקון יישור עמודים */
 .dashboard-layout {
   display: flex;
-  align-items: flex-start; /* יישר את התוכן למעלה */
+  align-items: flex-start; 
   height: 100vh;
 }
 
@@ -90,16 +90,16 @@ body {
   padding: 40px 60px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* שומר שהתוכן יתחיל למעלה */
+  justify-content: flex-start;
 }
 
 .dashboard-wrapper {
   width: 100%;
   max-width: 1100px;
-  margin-top: 0; /* מבטל כל דחיפה מיותרת למטה */
+  margin-top: 0; 
 }
 
-/* ===== Global Loader ===== */
+/* Global Loader */
 
 .loader {
   position: fixed;

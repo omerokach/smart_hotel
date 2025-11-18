@@ -3,8 +3,7 @@
   /* hook לסגנון הדף */
 }
 
-/* ====== כותרת עליונה ====== */
-
+/* כותרת עליונה */
 .settings-page .settings-header {
   display: flex;
   align-items: center;
@@ -19,10 +18,10 @@
 .settings-page .settings-subtitle {
   margin: 4px 0 0;
   font-size: 0.9rem;
-  color: rgba(60, 60, 67, 0.6); /* var(--text-muted) */
+  color: rgba(60, 60, 67, 0.6); 
 }
 
-/* ====== כפתורים ====== */
+/* כפתורים */
 
 .settings-page .settings-btn {
   border-radius: 999px;
@@ -56,7 +55,7 @@
   font-size: 0.8rem;
 }
 
-/* ====== גריד וכרטיסים ====== */
+/* גריד וכרטיסים */
 
 .settings-page .settings-grid {
   display: grid;
@@ -83,7 +82,7 @@
   color: rgba(60, 60, 67, 0.6);
 }
 
-/* ====== טפסים ====== */
+/* טפסים */
 
 .settings-page .settings-form {
   margin-top: 4px;
@@ -138,7 +137,7 @@
   gap: 12px;
 }
 
-/* ====== טוגל והתראות ====== */
+/* טוגל והתראות */
 
 .settings-page .settings-toggle-row {
   display: flex;
@@ -159,7 +158,7 @@
   color: rgba(60, 60, 67, 0.6);
 }
 
-/* ====== סוויצ'ים ====== */
+/* סוויצ'ים */
 
 .settings-page .settings-switch {
   position: relative;
@@ -203,7 +202,7 @@
   transform: translateX(18px);
 }
 
-/* ====== DIV ויציאה ====== */
+/* DIV ויציאה */
 
 .settings-page .settings-divider {
   margin: 16px 0;

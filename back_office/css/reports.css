@@ -1,10 +1,9 @@
-/* ====== דף דוחות כללי ====== */
 
 .reports-page {
   /* hook לסגנון הדף */
 }
 
-/* ====== כותרת דף ופילטרים ====== */
+/* כותרת דף ופילטרים */
 
 .reports-page .reports-header {
   display: flex;
@@ -48,7 +47,7 @@
   background: #ffffff;
 }
 
-/* ====== טווחים מהירים ====== */
+/* טווחים מהירים */
 
 .reports-page .reports-chip-group {
   display: flex;
@@ -72,7 +71,7 @@
   background: #e5f0ff;
 }
 
-/* ====== כפתורי דוחות ====== */
+/* כפתורי דוחות */
 
 .reports-page .reports-btn {
   border-radius: 999px;
@@ -99,7 +98,7 @@
   color: var(--ink);
 }
 
-/* ====== כרטיסי KPI ====== */
+/* כרטיסי KPI */
 
 .reports-page .reports-kpi-grid {
   display: grid;
@@ -144,7 +143,7 @@
   color: rgba(60, 60, 67, 0.6);
 }
 
-/* ====== מקטעי דוחות ====== */
+/* מקטעי דוחות */
 
 .reports-page .reports-section {
   margin-bottom: 32px;
@@ -169,7 +168,7 @@
   color: rgba(60, 60, 67, 0.6);
 }
 
-/* ====== גרפים / טרנדים ====== */
+/* גרפים / טרנדים */
 
 .reports-page .reports-trend-grid {
   display: grid;
@@ -300,7 +299,7 @@
   color: rgba(60, 60, 67, 0.8);
 }
 
-/* ====== כרטיסי דוחות ====== */
+/* כרטיסי דוחות */
 
 .reports-page .reports-card-grid {
   display: grid;
@@ -342,7 +341,7 @@
   margin-top: 12px;
 }
 
-/* ====== טבלת דוחות מתוזמנים ====== */
+/* טבלת דוחות מתוזמנים */
 
 .reports-page .reports-table-wrapper {
   background: var(--card-bg);
@@ -401,7 +400,7 @@
   color: #b54708;
 }
 
-/* ====== רספונסיביות קלה ====== */
+/* רספונסיביות קלה */
 
 @media (max-width: 768px) {
   .reports-page .reports-header {

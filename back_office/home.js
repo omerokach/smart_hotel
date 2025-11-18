@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(monitorNewTasks, 5000); // כל 5 שניות
 });
 
-/* ========= טוען סטטוס חדרים לגרף ========= */
+/* טוען סטטוס חדרים לגרף */
 async function loadRoomStats() {
   try {
     const res = await fetch("https://smart-hotel-tasks-api.onrender.com/api/rooms");
@@ -29,7 +29,7 @@ async function loadRoomStats() {
   }
 }
 
-/* ========= מצייר גרף Chart.js ========= */
+/* מצייר גרף Chart.js */
 function drawOccupancyChart(counts) {
   const ctx = document.getElementById("occupancyChart").getContext("2d");
 
@@ -77,7 +77,7 @@ function drawOccupancyChart(counts) {
   });
 }
 
-/* ========= טוען מספר בקשות פתוחות ========= */
+/* טוען מספר בקשות פתוחות */
 async function loadPendingRequests() {
   try {
     const res = await fetch("https://smart-hotel-tasks-api.onrender.com/api/tasks");
@@ -98,7 +98,7 @@ async function loadPendingRequests() {
 
 
 let lastPendingCount = null;
-let firstRun = true; // 👈 כדי שלא נקפיץ התראה בטעינה הראשונה
+let firstRun = true; // מונע מההתראה לקפוץ בפעם ראשונה 
 
 async function monitorNewTasks() {
   try {
@@ -109,22 +109,22 @@ async function monitorNewTasks() {
 
     console.log("Monitoring → current:", currentPending, "last:", lastPendingCount);
 
-    // דילוג על הריצה הראשונה כדי לא לקפוץ התראה סתם
+    // דילוג על הריצה הראשונה כדי לא לקפוץ התראה 
     if (firstRun) {
       lastPendingCount = currentPending;
       firstRun = false;
       return;
     }
 
-    // ✔ זיהוי משימה חדשה (pending עלה)
+    //  זיהוי משימה חדשה (pending עלה)
     if (currentPending > lastPendingCount) {
       showNewTaskToast();
     }
 
-    // ✔ עדכון בכל מקרה
+    //  עדכון בכל מקרה 
     document.querySelector(".big-number").textContent = currentPending;
 
-    // ✔ שמירה לעתיד
+    //  שמירה לעתיד 
     lastPendingCount = currentPending;
 
   } catch (err) {
@@ -135,7 +135,7 @@ async function monitorNewTasks() {
 
 
 
-/* ========= Toast ========= */
+/* Toast */
 function showNewTaskToast() {
   const toast = document.getElementById("new-task-toast");
   toast.classList.add("show");
