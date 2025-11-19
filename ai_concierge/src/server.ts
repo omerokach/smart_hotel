@@ -35,8 +35,27 @@ app.post('/api/chat', async (req, res) => {
     // Add user message to history
     session.messages.push({ role: 'user', content: message });
     
-    // Run the agent
-    const result = await run(hotelConciergeAgent, message);
+    // Run the agent with the FULL conversation history
+    console.log('Running agent with history length:', session.messages.length);
+    
+    // Ensure proper format for SDK:
+    // - User messages: String content is fine
+    // - Assistant messages: Content MUST be an array of { type: 'output_text', text: ... }
+    const historyForAgent = session.messages.map(msg => {
+      if (msg.role === 'user') {
+        return { role: 'user', content: msg.content || "" };
+      } else if (msg.role === 'assistant') {
+        return { 
+          role: 'assistant', 
+          content: [{ type: 'output_text', text: msg.content || "" }] 
+        };
+      }
+      return msg;
+    });
+
+    const result = await run(hotelConciergeAgent, historyForAgent as any);
+    
+    console.log('Agent result:', JSON.stringify(result, null, 2));
     
     // Add assistant response to history
     session.messages.push({ role: 'assistant', content: result.finalOutput });
