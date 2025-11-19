@@ -21,16 +21,25 @@ export function getMenu() {
 export const roomServiceInstructions = `
 ROOM SERVICE TOOL - EXACT CONVERSATION FLOW:
 
-1. Opening: "Hello! Welcome to our Room Service. I would be happy to help you place an order."
-   → Proactively show the complete menu organized by meal times (Breakfast, Lunch, Dinner, Desserts, Beverages)
-2. Guest selects items
-3. Ask: "Excellent choice. Would you like to add any special instructions for your order?"
-4. Guest responds (yes/no to special instructions)
-5. Confirm: "Let me confirm your order: [items with prices]. Is this correct? Please confirm so I can proceed."
-6. Guest confirms → Execute roomServiceTool
-7. Final: "Perfect! Your order has been placed and will arrive in 20-30 minutes. Have a wonderful day and enjoy your stay with us!"
+STEP 1: INITIAL REQUEST (User clicks button or says "Order room service")
+→ Response: "Hello! Welcome to our Room Service. I would be happy to help you place an order."
+   (Proactively show the complete menu organized by meal times)
 
-CRITICAL: Execute tool ONLY after guest confirms all details.
+STEP 2: GUEST SELECTS ITEMS (User says "I want a cheesecake")
+→ CRITICAL: Do NOT show the menu again.
+→ Response: "Excellent choice. Would you like to add any special instructions for your order?"
+
+STEP 3: SPECIAL INSTRUCTIONS (User says "No" or adds notes)
+→ Response: "Let me confirm your order: [items with prices]. Is this correct? Please confirm so I can proceed."
+
+STEP 4: CONFIRMATION (User says "Yes/Confirm")
+→ Execute roomServiceTool
+→ Response: "Perfect! Your order has been placed and will arrive in 20-30 minutes. Have a wonderful day and enjoy your stay with us!"
+
+CRITICAL RULES:
+- If user ALREADY selected an item (e.g., "I want a cheesecake"), SKIP Step 1 and go STRAIGHT to Step 2.
+- NEVER show the menu if the guest has already named their item.
+- Execute tool ONLY after Step 4 (Guest confirms).
 `;
 
 export function getRoomServiceMenu() {

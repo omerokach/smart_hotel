@@ -21,16 +21,25 @@ export function getSpaMenu() {
 export const spaInstructions = `
 SPA TOOL - EXACT CONVERSATION FLOW:
 
-1. Opening: "Hello! Welcome to our Spa. I would be happy to help you select and schedule a treatment. Which treatment would you like to book?"
-   → Proactively show the spa menu with treatments, prices, and durations
-2. Guest selects treatment
-3. Ask: "A [treatment name] is an excellent choice. When would you like to book this treatment? All slots are currently available for your convenience. (Please state your preferred date and time)."
-4. Guest provides time
-5. Confirm: "Let me confirm your request: A [treatment name], at [time]. Is this correct? Please confirm so I can proceed with the reservation."
-6. Guest confirms → Execute spaTool
-7. Final: "Wonderful. Your treatment has been successfully booked for [time]. We look forward to seeing you. Have a wonderful day and enjoy your stay with us!"
+STEP 1: INITIAL REQUEST (User clicks button or says "Book Spa")
+→ Response: "Hello! Welcome to our Spa. I would be happy to help you select and schedule a treatment. Which treatment would you like to book?"
+   (Proactively show the spa menu with treatments, prices, and durations)
 
-CRITICAL: Execute tool ONLY after guest confirms all details.
+STEP 2: GUEST SELECTS TREATMENT (User says "Deep Tissue Massage")
+→ CRITICAL: Do NOT show the menu again.
+→ Response: "A [treatment name] is an excellent choice. When would you like to book this treatment? All slots are currently available for your convenience. (Please state your preferred date and time)."
+
+STEP 3: GUEST PROVIDES TIME (User says "6:30 PM")
+→ Response: "Let me confirm your request: A [treatment name], at [time]. Is this correct? Please confirm so I can proceed with the reservation."
+
+STEP 4: CONFIRMATION (User says "Yes/Confirm")
+→ Execute spaTool
+→ Response: "Wonderful. Your treatment has been successfully booked for [time]. We look forward to seeing you. Have a wonderful day and enjoy your stay with us!"
+
+CRITICAL RULES:
+- If user ALREADY selected treatment (e.g., "I want a massage"), SKIP Step 1 and go STRAIGHT to Step 2.
+- NEVER show the menu if the guest has already named their treatment.
+- Execute tool ONLY after Step 4 (Guest confirms).
 `;
 
 export const spaBookingSchema = z.object({

@@ -5,13 +5,19 @@ import type { ExtraEquipmentRequest } from '../types.js';
 export const extraEquipmentInstructions = `
 EXTRA EQUIPMENT TOOL - EXACT CONVERSATION FLOW:
 
-1. Opening: "Hello! I would be happy to arrange additional items for your room. What would you like to request?"
-2. Guest specifies items and quantity
-3. Confirm: "Let me confirm your request: [quantity] [items]. Is this correct? Please confirm so I can proceed."
-4. Guest confirms → Execute extraEquipmentTool
-5. Final: "Excellent. Your [items] will be delivered to your room shortly. Have a wonderful day and enjoy your stay with us!"
+STEP 1: INITIAL REQUEST (User clicks button or says "Extra items")
+→ Response: "Hello! I would be happy to arrange additional items for your room. What would you like to request?"
 
-CRITICAL: Execute tool ONLY after guest confirms all details.
+STEP 2: GUEST SPECIFIES ITEMS (User says "I need 2 towels")
+→ Response: "Let me confirm your request: [quantity] [items]. Is this correct? Please confirm so I can proceed."
+
+STEP 3: CONFIRMATION (User says "Yes/Confirm")
+→ Execute extraEquipmentTool
+→ Response: "Excellent. Your [items] will be delivered to your room shortly. Have a wonderful day and enjoy your stay with us!"
+
+CRITICAL RULES:
+- If user requests specific items immediately (e.g., "I need 2 towels"), SKIP Step 1 and go STRAIGHT to Step 2.
+- Execute tool ONLY after Step 3 (Guest confirms).
 `;
 
 export const extraEquipmentSchema = z.object({
