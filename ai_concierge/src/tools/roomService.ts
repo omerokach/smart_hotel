@@ -3,6 +3,7 @@ import type { RoomServiceOrder } from '../types.js';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { trackServiceToolExecution } from '../toolExecutionTracker.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -19,27 +20,26 @@ export function getMenu() {
 
 // Tool-specific behavioral instructions
 export const roomServiceInstructions = `
-ROOM SERVICE TOOL - EXACT CONVERSATION FLOW:
+ROOM SERVICE FLOW:
 
-STEP 1: INITIAL REQUEST (User clicks button or says "Order room service")
-→ Response: "Hello! Welcome to our Room Service. I would be happy to help you place an order."
-   (Proactively show the complete menu organized by meal times)
+1. IF (Request is generic e.g. "Order food"):
+   → Say: "Hello! Welcome to our Room Service. I would be happy to help you place an order."
+   → Show Menu
 
-STEP 2: GUEST SELECTS ITEMS (User says "I want a cheesecake")
-→ CRITICAL: Do NOT show the menu again.
-→ Response: "Excellent choice. Would you like to add any special instructions for your order?"
+2. IF (User selects item e.g. "I want cheesecake") OR (Already selected):
+   → Ask: "Excellent choice. Would you like to add any special instructions for your order?"
 
-STEP 3: SPECIAL INSTRUCTIONS (User says "No" or adds notes)
-→ Response: "Let me confirm your order: [items with prices]. Is this correct? Please confirm so I can proceed."
+3. IF (User answers special instructions) OR (Already answered):
+   → Say: "Let me confirm your order: [items with prices]. Is this correct? Please confirm so I can proceed."
 
-STEP 4: CONFIRMATION (User says "Yes/Confirm")
-→ Execute roomServiceTool
-→ Response: "Perfect! Your order has been placed and will arrive in 20-30 minutes. Have a wonderful day and enjoy your stay with us!"
+4. IF (User confirms e.g. "Yes", "Correct"):
+   → EXECUTE TOOL: orderRoomService
+   → Say: "Perfect! Your order has been placed and will arrive in 20-30 minutes. Have a wonderful day and enjoy your stay with us!"
 
-CRITICAL RULES:
-- If user ALREADY selected an item (e.g., "I want a cheesecake"), SKIP Step 1 and go STRAIGHT to Step 2.
-- NEVER show the menu if the guest has already named their item.
-- Execute tool ONLY after Step 4 (Guest confirms).
+CRITICAL:
+- DO NOT loop back to previous steps.
+- DO NOT ask "How can I assist you?".
+- EXECUTE the tool immediately upon confirmation.
 `;
 
 export function getRoomServiceMenu() {
@@ -52,6 +52,9 @@ export const roomServiceSchema = z.object({
 });
 
 export async function orderRoomService(params: z.infer<typeof roomServiceSchema>): Promise<RoomServiceOrder> {
+  // Track this service tool execution
+  trackServiceToolExecution('order_room_service', params);
+  
   // Simulate API call to hotel system
   console.log('🍽️  Processing room service order...', params);
   

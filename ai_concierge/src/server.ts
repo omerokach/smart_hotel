@@ -4,6 +4,8 @@ import express from 'express';
 import cors from 'cors';
 import { run } from '@openai/agents';
 import { hotelConciergeAgent } from './agent.js';
+import { getAndClearLastServiceToolExecution } from './toolExecutionTracker.js';
+import { getMenu } from './tools/roomService.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,36 +37,159 @@ app.post('/api/chat', async (req, res) => {
     // Add user message to history
     session.messages.push({ role: 'user', content: message });
     
-    // Run the agent with the FULL conversation history
-    console.log('Running agent with history length:', session.messages.length);
+    // The SDK has conflicts between runtime and serialization formats for history
+    // Workaround: Build context string with conversation summary
+    console.log('Session has', session.messages.length, 'messages');
     
-    // Ensure proper format for SDK:
-    // - User messages: String content is fine
-    // - Assistant messages: Content MUST be an array of { type: 'output_text', text: ... }
-    const historyForAgent = session.messages.map(msg => {
-      if (msg.role === 'user') {
-        return { role: 'user', content: msg.content || "" };
-      } else if (msg.role === 'assistant') {
-        return { 
-          role: 'assistant', 
-          content: [{ type: 'output_text', text: msg.content || "" }] 
-        };
-      }
-      return msg;
-    });
-
-    const result = await run(hotelConciergeAgent, historyForAgent as any);
+    // Create context from recent history (last 4 messages)
+    const recentHistory = session.messages.slice(-5, -1); // Exclude current message
+    let contextPrefix = "";
+    if (recentHistory.length > 0) {
+      contextPrefix = "[Previous conversation context:\n";
+      recentHistory.forEach(msg => {
+        const role = msg.role === 'user' ? 'Guest' : 'Agent';
+        contextPrefix += `${role}: ${msg.content}\n`;
+      });
+      contextPrefix += "]\n\nGuest's current message: ";
+    }
     
-    console.log('Agent result:', JSON.stringify(result, null, 2));
+    const messageWithContext = contextPrefix + message;
+    const result = await run(hotelConciergeAgent, messageWithContext);
     
     // Add assistant response to history
-    session.messages.push({ role: 'assistant', content: result.finalOutput });
+    session.messages.push({ role: 'assistant', content: result.finalOutput || '' });
+    
+    // Check if any service tool was executed using our tracker
+    const serviceExecution = getAndClearLastServiceToolExecution();
+    
+    let chatEnded = false;
+    let taskId: number | null = null;
+    
+    // If a service tool was executed, automatically create a task and end chat
+    if (serviceExecution) {
+      console.log('🔔 Service tool detected - automatically creating task and ending chat');
+      console.log('Tool:', serviceExecution.toolName, 'Args:', serviceExecution.args);
+      
+      // Map tool names to request types
+      const requestTypeMap: Record<string, string> = {
+        'order_room_service': 'Room Service',
+        'request_housekeeping': 'Housekeeping',
+        'book_spa_appointment': 'Spa Service',
+        'order_taxi': 'Transportation',
+        'request_extra_equipment': 'Equipment Request',
+      };
+      
+      const requestType = requestTypeMap[serviceExecution.toolName] || 'General Request';
+      
+      // Create a human-readable summary of the request
+      let requestDetails = 'Service request from guest';
+      try {
+        const args = serviceExecution.args;
+        
+        switch (serviceExecution.toolName) {
+          case 'order_room_service':
+            const items = args.items || [];
+            const menu = getMenu();
+            let totalPrice = 0;
+            
+            // Build item list with prices
+            const itemDescriptions = items.map((item: string) => {
+              // Search for the item in all menu categories
+              let price = 0;
+              let foundItem = null;
+              
+              for (const category of Object.values(menu) as any[]) {
+                foundItem = category.items?.find((menuItem: any) => 
+                  menuItem.name.toLowerCase() === item.toLowerCase()
+                );
+                if (foundItem) {
+                  price = foundItem.price;
+                  totalPrice += price;
+                  break;
+                }
+              }
+              
+              return price > 0 ? `${item} ($${price})` : item;
+            });
+            
+            const itemList = itemDescriptions.join(', ');
+            const specialInstr = args.specialInstructions ? `, ${args.specialInstructions}` : ', no special instructions';
+            requestDetails = `${itemList}${specialInstr}`;
+            break;
+            
+          case 'request_housekeeping':
+            const serviceType = args.serviceType === 'full-clean' ? 'Full Cleaning' : 
+                               args.serviceType === 'quick-tidy' ? 'Quick Tidy' : 'Turndown Service';
+            const time = args.preferredTime || 'ASAP';
+            requestDetails = `${serviceType} requested for ${time}`;
+            break;
+            
+          case 'book_spa_appointment':
+            const treatment = args.treatment || 'spa treatment';
+            const appointmentTime = args.preferredTime || 'TBD';
+            const duration = args.duration ? `${args.duration} minutes` : '';
+            requestDetails = `${treatment} appointment at ${appointmentTime}${duration ? `, ${duration}` : ''}`;
+            break;
+            
+          case 'order_taxi':
+            const destination = args.destination || 'unknown';
+            const passengers = args.numberOfPassengers || 1;
+            const pickup = `${args.pickupDay || 'today'} at ${args.pickupTime || 'TBD'}`;
+            requestDetails = `Taxi to ${destination} for ${passengers} passenger${passengers !== 1 ? 's' : ''}, pickup ${pickup}`;
+            break;
+            
+          case 'request_extra_equipment':
+            const equipType = args.equipmentType || 'item';
+            const qty = args.quantity || 1;
+            requestDetails = `${qty} ${equipType}${qty !== 1 ? 's' : ''}`;
+            break;
+            
+          default:
+            requestDetails = JSON.stringify(args).substring(0, 200);
+        }
+      } catch (e) {
+        console.error('Error formatting request details:', e);
+        requestDetails = 'Service request from guest';
+      }
+      
+      // Create task via API
+      try {
+        const API_URL = process.env.TASKS_API_URL || 'http://localhost:3001';
+        const taskPayload = {
+          room_number: "103",
+          request_type: requestType,
+          assigned_department: "Maintenance",
+          status: "open",
+          priority: "Normal",
+          request_details: requestDetails,
+          opening_channel: "app",
+        };
+        
+        const taskResponse = await fetch(`${API_URL}/api/tasks`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(taskPayload),
+        });
+        
+        if (taskResponse.ok) {
+          const taskResult = await taskResponse.json() as any;
+          taskId = taskResult.task_id || taskResult.id;
+          chatEnded = true;
+          console.log('✅ Task created successfully:', taskId);
+        } else {
+          console.error('❌ Failed to create task:', taskResponse.status);
+        }
+      } catch (error) {
+        console.error('❌ Error creating task:', error);
+      }
+    }
     
     // Return response
     res.json({
-      response: result.finalOutput,
-      toolCalls: result.toolCalls || [],
+      response: result.finalOutput || '',
       sessionId,
+      chatEnded,
+      taskId,
     });
     
   } catch (error) {

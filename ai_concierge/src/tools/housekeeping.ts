@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { HousekeepingRequest } from '../types.js';
+import { trackServiceToolExecution } from '../toolExecutionTracker.js';
 
 // Tool-specific behavioral instructions
 export const housekeepingInstructions = `
@@ -31,6 +32,9 @@ export const housekeepingSchema = z.object({
 });
 
 export async function requestHousekeeping(params: z.infer<typeof housekeepingSchema>): Promise<HousekeepingRequest> {
+  // Track this service tool execution
+  trackServiceToolExecution('request_housekeeping', params);
+  
   // Simulate API call to housekeeping management system
   console.log('🧹 Processing housekeeping request...', params);
   

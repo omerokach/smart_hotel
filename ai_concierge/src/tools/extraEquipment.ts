@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { ExtraEquipmentRequest } from '../types.js';
+import { trackServiceToolExecution } from '../toolExecutionTracker.js';
 
 // Tool-specific behavioral instructions
 export const extraEquipmentInstructions = `
@@ -46,6 +47,9 @@ export const extraEquipmentSchema = z.object({
 });
 
 export async function requestExtraEquipment(params: z.infer<typeof extraEquipmentSchema>): Promise<ExtraEquipmentRequest> {
+  // Track this service tool execution
+  trackServiceToolExecution('request_extra_equipment', params);
+  
   // Simulate API call to housekeeping/supplies management
   console.log('📦 Processing extra equipment request...', params);
   

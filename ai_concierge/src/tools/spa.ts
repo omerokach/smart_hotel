@@ -3,6 +3,7 @@ import type { SpaAppointment } from '../types.js';
 import { readFileSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { trackServiceToolExecution } from '../toolExecutionTracker.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,6 +50,9 @@ export const spaBookingSchema = z.object({
 });
 
 export async function bookSpaAppointment(params: z.infer<typeof spaBookingSchema>): Promise<SpaAppointment> {
+  // Track this service tool execution
+  trackServiceToolExecution('book_spa_appointment', params);
+  
   // Simulate API call to spa booking system
   console.log('💆 Processing spa booking...', params);
   

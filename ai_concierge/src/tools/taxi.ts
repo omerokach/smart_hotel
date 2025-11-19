@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { TaxiOrder } from '../types.js';
+import { trackServiceToolExecution } from '../toolExecutionTracker.js';
 
 // Tool-specific behavioral instructions
 export const taxiInstructions = `
@@ -31,6 +32,9 @@ export const taxiSchema = z.object({
 });
 
 export async function orderTaxi(params: z.infer<typeof taxiSchema>): Promise<TaxiOrder> {
+  // Track this service tool execution
+  trackServiceToolExecution('order_taxi', params);
+  
   // Simulate API call to taxi service
   console.log('🚕 Processing taxi order...', params);
   
