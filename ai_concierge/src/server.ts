@@ -141,7 +141,19 @@ app.post('/api/chat', async (req, res) => {
           case 'request_extra_equipment':
             const equipType = args.equipmentType || 'item';
             const qty = args.quantity || 1;
-            requestDetails = `${qty} ${equipType}${qty !== 1 ? 's' : ''}`;
+            // Handle pluralization - special cases for items that are already plural
+            let displayItem = equipType;
+            if (qty === 1) {
+              // Convert plural to singular for quantity 1
+              if (equipType === 'towels') displayItem = 'towel';
+              else if (equipType === 'gloves') displayItem = 'glove';
+              else if (equipType === 'slippers') displayItem = 'slipper';
+              else if (equipType === 'hangers') displayItem = 'hanger';
+            } else {
+              // For quantity > 1, pluralize if not already plural
+              if (!equipType.endsWith('s')) displayItem = `${equipType}s`;
+            }
+            requestDetails = `${qty} ${displayItem}`;
             break;
             
           default:
@@ -152,13 +164,24 @@ app.post('/api/chat', async (req, res) => {
         requestDetails = 'Service request from guest';
       }
       
+      // Map tool names to departments
+      const departmentMap: Record<string, string> = {
+        'request_housekeeping': 'Maintenance',
+        'request_extra_equipment': 'Maintenance',
+        'order_room_service': 'Restaurant',
+        'book_spa_appointment': 'Wellness',
+        'order_taxi': 'Front Desk',
+      };
+      
+      const assignedDepartment = departmentMap[serviceExecution.toolName] || 'Front Desk';
+      
       // Create task via API
       try {
         const API_URL = process.env.TASKS_API_URL || 'http://localhost:3001';
         const taskPayload = {
           room_number: "103",
           request_type: requestType,
-          assigned_department: "Maintenance",
+          assigned_department: assignedDepartment,
           status: "open",
           priority: "Normal",
           request_details: requestDetails,

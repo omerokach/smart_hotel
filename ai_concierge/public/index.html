@@ -386,6 +386,10 @@
                     <div class="service-chip" onclick="sendQuickMessage('I need housekeeping')">🧹 Housekeeping</div>
                     <div class="service-chip" onclick="sendQuickMessage('I need extra equipment')">📦 Extra Equipment</div>
                     <div class="service-chip" onclick="sendQuickMessage('I want to book a spa treatment')">💆 Spa Booking</div>
+                    <div class="service-chip" onclick="sendQuickMessage('I need to order a taxi')">🚕 Taxi Service</div>
+                    <div class="service-chip" onclick="sendQuickMessage('What are the facility hours?')">🕐 Facility Hours</div>
+                    <div class="service-chip" onclick="sendQuickMessage('What events are happening?')">🎭 Hotel Events</div>
+                    <div class="service-chip" onclick="sendQuickMessage('What is the WiFi password?')">📶 WiFi Info</div>
                 </div>
             </div>
         </div>
@@ -495,7 +499,7 @@
                     console.log('✅ Chat ended. Task ID:', data.taskId);
                     setTimeout(() => {
                         showChatEndedOverlay();
-                    }, 3000); // 3 second delay for better UX
+                    }, 9000); // 5 second delay for better UX
                 }
                 
             } catch (error) {
