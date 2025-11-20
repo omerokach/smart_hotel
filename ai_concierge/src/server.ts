@@ -113,7 +113,7 @@ app.post('/api/chat', async (req, res) => {
             });
             
             const itemList = itemDescriptions.join(', ');
-            const specialInstr = args.specialInstructions ? `, ${args.specialInstructions}` : ', no special instructions';
+            const specialInstr = args.specialInstructions ? `, Special instructions: ${args.specialInstructions}` : '';
             requestDetails = `${itemList}${specialInstr}`;
             break;
             
