@@ -527,7 +527,7 @@
                 const data = await response.json();
                 
                 hideTypingIndicator();
-                addMessage(data.reply, 'assistant');
+                addMessage(data.response, 'assistant');
                 
                 // Check if chat should end (server automatically detects service tools)
                 if (data.chatEnded) {
