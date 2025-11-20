@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "_dev_disabled": "tsx src/index.ts",
-    "build": "tsc",
-    "start": "node dist/server.js",
+    "build": "tsc && cp -r src/data dist/data",
+    "start": "node dist/server.js"
     "_chat_disabled": "tsx src/chat-cli.ts",
     "web": "tsx src/server.ts"
   },
