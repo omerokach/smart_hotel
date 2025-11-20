@@ -5,10 +5,8 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "dev": "tsx src/index.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
-    "chat": "tsx src/chat-cli.ts"
+    "start": "node dist/server.js"
   },
   "keywords": [
     "ai",
