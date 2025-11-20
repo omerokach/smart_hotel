@@ -70,6 +70,13 @@
       "notes": "Reservations recommended for parties of 6 or more. Dress code: Smart casual"
     },
     {
+      "name": "Room Service",
+      "hours": {
+        "daily": "24 hours"
+      },
+      "notes": "Full menu available 6:00 AM - 11:00 PM. Limited late-night menu 11:00 PM - 6:00 AM"
+    },
+    {
       "name": "Business Center",
       "hours": {
         "daily": "24 hours"
