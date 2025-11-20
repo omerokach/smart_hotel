@@ -53,6 +53,8 @@ function renderTasks(tasks) {
 
         <!-- Department במקום Task type -->
         <td>${task.assigned_department || "-"}</td>
+            
+        <td>${task.request_type || '-'}</td>
 
         <td>${task.room_number}</td>
 
