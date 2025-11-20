@@ -1,3 +1,6 @@
+let allTasks = []; 
+let sortDirection = 'asc';
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Task page loaded successfully");
   loadTasks();
@@ -29,7 +32,8 @@ async function loadTasks() {
   const data = await response.json();
 
   // API מחזיר { tasks: [...] }
-  renderTasks(data.tasks || []);
+  allTasks = data.tasks || [];
+  renderTasks(allTasks);
   hideLoader()
 }
 
@@ -122,3 +126,18 @@ function openTask(id) {
 document.getElementById("filter-status").addEventListener("change", loadTasks);
 document.getElementById("filter-urgency").addEventListener("change", loadTasks);
 document.getElementById("filter-department").addEventListener("change", loadTasks);
+
+function sortByTime() {
+  allTasks.sort((a, b) => {
+    const da = new Date(a.created_at);
+    const db = new Date(b.created_at);
+
+    return sortDirection === 'asc' ? da - db : db - da;
+  });
+}
+
+document.getElementById("sort-time").addEventListener("click", () => {
+  sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+  sortByTime();
+  renderTasks(allTasks);
+});
