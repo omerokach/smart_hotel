@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MILEY · Staff Login</title>
+
+  <!-- Fonts & Styles -->
+  <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+  <section class="login-container">
+
+    <!-- צד שמאל: טופס -->
+    <div class="login-left">
+      <img src="assets/logo/miley-logo.png" alt="MILEY Logo" class="login-logo">
+
+      <p class="signup-text">
+        Don’t have an account?
+        <a href="#" class="link">Sign Up</a>
+      </p>
+
+      <form class="login-form">
+        <label>
+          Username
+          <input type="text" placeholder="e.g. SarahC" required>
+        </label>
+
+        <label>
+          Password
+          <input type="password" placeholder="********" required>
+        </label>
+
+        <label>
+          Role
+          <input type="text" placeholder="e.g. Housekeeping" required>
+        </label>
+
+        <div class="login-options">
+          <label class="remember">
+            <input type="checkbox"> Remember me
+          </label>
+          <a href="#" class="forgot">Forgot Password or Email?</a>
+        </div>
+
+        <button type="submit" class="btn primary">Log In</button>
+      </form>
+    </div>
+
+    <!-- צד ימין: תמונות -->
+    <div class="login-right">
+      <div class="image-grid">
+        <img src="assets/images/lisbon1.png" alt="Lisbon view">
+        <img src="assets/images/lisbon2.png" alt="Lisbon rooftops">
+        <img src="assets/images/lisbon3.png" alt="Lisbon sky">
+        <img src="assets/images/lisbon4.png" alt="Lisbon at night">
+      </div>
+
+      <h2 class="right-title">Find Your Perfect Stay in <br>Miley Lisbon</h2>
+
+      <div class="terms">
+        <a href="#">Terms of Use</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+  </section>
+  <script>
+  document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault(); // מונע ריענון דף
+    window.location.href = 'home.html'; // מעביר לדף הבית
+  });
+</script>
+
+</body>
+</html>
