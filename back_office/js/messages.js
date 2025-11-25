@@ -44,6 +44,9 @@ async function loadConversations() {
     listEl.innerHTML = "";
 
     openTasks.forEach(task => {
+      if (task.last_message_time) {
+        taskLastMessage[task.task_id] = task.last_message_time;
+      }
       const item = document.createElement("div");
       item.classList.add("conversation-item");
       item.dataset.taskId = task.task_id;
