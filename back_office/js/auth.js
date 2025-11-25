@@ -25,45 +25,41 @@ function showSuccess(text) {
 // Attach submit listener
 if (form) {
   form.addEventListener("submit", async (e) => {
-    e.preventDefault(); // prevent page refresh
+    e.preventDefault();
     clearMessage();
 
-    const roomInput = document.getElementById("room_number");
-    const phoneInput = document.getElementById("phone_number");
-
-    const room = roomInput.value.trim();
-    const phone = phoneInput.value.trim();
+    const room = document.getElementById("room_number").value.trim();
+    const phone = document.getElementById("phone_number").value.trim();
 
     if (!room || !phone) {
       showError("Please fill in both fields.");
       return;
     }
 
-    // Optional: disable button while sending
     const submitBtn = form.querySelector(".auth-button");
     if (submitBtn) submitBtn.disabled = true;
 
-       try {
-        const response = await fetch("https://smart-hotel-tasks-api.onrender.com/api/reservations/verify-guest"),
+    try {
+      const response = await fetch(
+        "https://smart-hotel-tasks-api.onrender.com/api/reservations/verify-guest",
         {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          room_number: room,
-          phone_number: phone
-        })
-      });
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            room_number: room,
+            phone_number: phone
+          })
+        }
+      );
 
       let result;
       try {
         result = await response.json();
       } catch {
-        // במקרה שיבוא משהו לא JSON
         showError("Unexpected server response. Please try again.");
         return;
       }
 
-      // If server returned success: false OR HTTP error
       if (!response.ok || !result.success) {
         showError(result.message || "Room or phone number not found. Please try again.");
         return;
@@ -72,9 +68,7 @@ if (form) {
       // SUCCESS
       showSuccess("Authentication successful. Redirecting...");
 
-      // Redirect to Concierge AI page
       setTimeout(() => {
-        // עדכן לנתיב האמיתי של מסך ה-AI שלך
         window.location.href = "https://smart-hotel-concierge.onrender.com/";
       }, 900);
 
