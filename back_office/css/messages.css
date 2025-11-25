@@ -140,3 +140,40 @@
   background-color: #eef4ff;
   border-color: #c9dcff;
 }
+
+/* מבנה פנימי מסודר יותר של פריט צ'אט */
+.conversation-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* עטיפה לטקסט */
+.conversation-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* שורה עליונה */
+.conversation-room {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* שורה תחתונה */
+.conversation-meta {
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+/* תגית NEW יפה ועדינה */
+.new-badge {
+  width: 10px;
+  height: 10px;
+  background-color: #1a73e8;
+  border-radius: 50%;
+  margin-left: 12px;
+}
+
