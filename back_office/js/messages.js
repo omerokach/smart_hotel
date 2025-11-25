@@ -94,9 +94,11 @@ function selectConversation(task) {
 
   highlightActiveConversation(task.task_id);
 
-  // Mark as seen → remove NEW badge
+  // Mark NEW as seen — remove from memory
   lastSeenTimestamp[task.task_id] = new Date().toISOString();
+  delete taskLastMessage[task.task_id]; 
 }
+
 
 /* ----------------------------------------------------------
    Highlight active conversation
