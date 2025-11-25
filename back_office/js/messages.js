@@ -5,14 +5,15 @@ const API_BASE = "https://smart-hotel-tasks-api.onrender.com";
 let activeTaskId = null;
 let pollingInterval = null;
 
+// Load conversations on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadConversations();
   setupSendButton();
 });
 
-/* -----------------------------------------
-   Load list of tasks with escalation=true
------------------------------------------ */
+/* ----------------------------------------------------------
+   Load list of open conversations (tasks with escalation=true)
+----------------------------------------------------------- */
 async function loadConversations() {
   const listEl = document.getElementById("conversations-list");
   listEl.innerHTML = "<p class='loading'>Loading...</p>";
@@ -20,8 +21,7 @@ async function loadConversations() {
   try {
     const res = await fetch(`${API_BASE}/api/tasks?escalation=true`);
     const data = await res.json();
-
-    const tasks = data.tasks; // because API returns { tasks: [...], total }
+    const tasks = data.tasks;
 
     if (!Array.isArray(tasks) || tasks.length === 0) {
       listEl.innerHTML = "<p>No conversations found.</p>";
@@ -51,9 +51,9 @@ async function loadConversations() {
   }
 }
 
-/* -----------------------------------------
-   Select conversation
------------------------------------------ */
+/* ----------------------------------------------------------
+   Select a conversation & load chat messages
+----------------------------------------------------------- */
 function selectConversation(task) {
   activeTaskId = task.task_id;
 
@@ -84,9 +84,9 @@ function highlightActiveConversation(taskId) {
   });
 }
 
-/* -----------------------------------------
-   Load messages of selected task
------------------------------------------ */
+/* ----------------------------------------------------------
+   Load messages
+----------------------------------------------------------- */
 async function loadMessages(taskId, silent = false) {
   if (!taskId) return;
 
@@ -120,9 +120,9 @@ async function loadMessages(taskId, silent = false) {
   }
 }
 
-/* -----------------------------------------
+/* ----------------------------------------------------------
    Send message
------------------------------------------ */
+----------------------------------------------------------- */
 function setupSendButton() {
   document.getElementById("send-btn").addEventListener("click", sendMessage);
   document.getElementById("messages-input").addEventListener("keypress", e => {
@@ -156,9 +156,9 @@ async function sendMessage() {
   }
 }
 
-/* -----------------------------------------
+/* ----------------------------------------------------------
    Helpers
------------------------------------------ */
+----------------------------------------------------------- */
 function formatTime(ts) {
   const d = new Date(ts);
   return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
