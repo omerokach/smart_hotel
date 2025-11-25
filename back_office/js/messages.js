@@ -19,7 +19,7 @@ async function loadConversations() {
   listEl.innerHTML = "<p class='loading'>Loading...</p>";
 
   try {
-    const res = await fetch("/api/tasks?escalation=true");
+    fetch(`${API_BASE}/api/tasks?escalation=true`)
     const tasks = await res.json();
 
     if (!Array.isArray(tasks)) {
@@ -99,7 +99,7 @@ async function loadMessages(taskId, silent = false) {
   if (!silent) box.innerHTML = "<p class='loading'>Loading...</p>";
 
   try {
-    const res = await fetch(`/api/tasks/${taskId}/messages`);
+    fetch(`${API_BASE}/api/tasks/${taskId}/messages`)
     const messages = await res.json();
 
     box.innerHTML = "";
@@ -147,7 +147,7 @@ async function sendMessage() {
   };
 
   try {
-    await fetch(`/api/tasks/${activeTaskId}/messages`, {
+    await fetch(`${API_BASE}/api/tasks/${activeTaskId}/messages`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
