@@ -100,6 +100,7 @@ router.post('/:task_id/messages', async (req, res) => {
           task_id: taskId,
           sender,
           message,
+          room_number,
           timestamp: new Date().toISOString()
         }
       ])
@@ -201,8 +202,9 @@ router.get('/', async (req, res) => {
     
     if (req.query.escalation === "true") {
       query = query.eq("escalation", true);
+      .neq("status", "closed");
     }
-    
+
     const sortField = ALLOWED_SORT_FIELDS.includes(sort_by)
       ? sort_by
       : 'task_id';
