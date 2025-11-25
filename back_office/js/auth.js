@@ -6,7 +6,7 @@
 const form = document.getElementById("guest-auth-form");
 const messageEl = document.getElementById("auth-message");
 
-// Helpers to manage message state
+// Helpers
 function clearMessage() {
   messageEl.textContent = "";
   messageEl.className = "auth-message";
@@ -17,34 +17,27 @@ function showErrorBubble(text = "Error") {
   if (!bubble) return;
 
   bubble.querySelector(".bubble-text").textContent = text;
-
   bubble.classList.add("show");
 
-  // Hide automatically
   setTimeout(() => {
     bubble.classList.remove("show");
   }, 4000);
 }
 
-
 function showSuccessBubble(text = "Success") {
   const bubble = document.getElementById("success-bubble");
   if (!bubble) return;
 
-  // Set message
   bubble.querySelector(".bubble-text").textContent = text;
-
-  // Show bubble
   bubble.classList.add("show");
 
-  // Auto hide after 1.3s
   setTimeout(() => {
     bubble.classList.remove("show");
   }, 1300);
 }
 
 
-// Attach submit listener
+// Submit Listener
 if (form) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -78,7 +71,7 @@ if (form) {
       try {
         result = await response.json();
       } catch {
-        showError("Unexpected server response. Please try again.");
+        showErrorBubble("Unexpected server response. Please try again.");
         return;
       }
 
@@ -89,6 +82,15 @@ if (form) {
 
       // SUCCESS
       showSuccessBubble("Authentication successful");
+
+      // SAVE DETAILS → LocalStorage
+      console.log("API RESULT:", result);
+      localStorage.setItem("guest_room_number", result.room_number);
+      localStorage.setItem("guest_name", result.guest_full_name || "");
+
+      // Debug logs
+      console.log("Saved room:", localStorage.getItem("guest_room_number"));
+      console.log("Saved name:", localStorage.getItem("guest_name"));
 
       setTimeout(() => {
         window.location.href = "https://smart-hotel-concierge.onrender.com/";
