@@ -5,6 +5,7 @@ let activeTaskId = null;
 let pollingMessages = null;
 let lastSeenTimestamp = {};   // { taskId: timestamp }
 let taskLastMessage = {};     // { taskId: timestamp }
+let lastConversations = [];
 
 // Load conversations + start polling
 document.addEventListener("DOMContentLoaded", () => {
