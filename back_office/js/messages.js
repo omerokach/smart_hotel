@@ -1,22 +1,22 @@
 // messages.js
-let lastConversations = [];
-
 const API_BASE = "https://smart-hotel-tasks-api.onrender.com";
 
 let activeTaskId = null;
-let pollingInterval = null;
+let pollingMessages = null;
+let lastSeenTimestamp = {};   // { taskId: timestamp }
+let taskLastMessage = {};     // { taskId: timestamp }
 
-// Load conversations on page load
+// Load conversations + start polling
 document.addEventListener("DOMContentLoaded", () => {
   loadConversations();
   setupSendButton();
 
-  // Poll for new conversations
+  // Poll for NEW conversations & updates
   setInterval(loadConversations, 3000);
 });
 
 /* ----------------------------------------------------------
-   Load list of open conversations (tasks with escalation=true)
+   Load list of conversations (escalation only)
 ----------------------------------------------------------- */
 async function loadConversations() {
   const listEl = document.getElementById("conversations-list");
@@ -28,12 +28,6 @@ async function loadConversations() {
 
     if (!Array.isArray(tasks)) return;
 
-    // Check if list changed
-    const changed = JSON.stringify(tasks) !== JSON.stringify(lastConversations);
-    if (!changed) return; // No update → don't re-render
-
-    lastConversations = tasks;
-
     listEl.innerHTML = "";
 
     tasks.forEach(task => {
@@ -41,10 +35,24 @@ async function loadConversations() {
       item.classList.add("conversation-item");
       item.dataset.taskId = task.task_id;
 
+      // Detect newest message timestamp known from DB (per room)
+      const latest = taskLastMessage[task.task_id];
+
       item.innerHTML = `
         <div class="conversation-room">Room ${task.room_number}</div>
         <div class="conversation-meta">Task #${task.task_id}</div>
       `;
+
+      // NEW indicator
+      const lastSeen = lastSeenTimestamp[task.task_id];
+      const isNew = latest && (!lastSeen || latest > lastSeen);
+
+      if (isNew) {
+        const badge = document.createElement("div");
+        badge.classList.add("new-badge");
+        badge.textContent = "NEW";
+        item.appendChild(badge);
+      }
 
       item.addEventListener("click", () => selectConversation(task));
 
@@ -59,29 +67,30 @@ async function loadConversations() {
 }
 
 /* ----------------------------------------------------------
-   Select a conversation & load chat messages
+   Select conversation
 ----------------------------------------------------------- */
 function selectConversation(task) {
   activeTaskId = task.task_id;
 
   document.getElementById("messages-client-name").textContent =
     `Room ${task.room_number}`;
-  document.getElementById("messages-status").textContent = "";
-
   document.getElementById("messages-input").disabled = false;
   document.getElementById("send-btn").disabled = false;
 
   loadMessages(activeTaskId);
 
-  if (pollingInterval) clearInterval(pollingInterval);
-
-  pollingInterval = setInterval(() => {
-    loadMessages(activeTaskId, true);
-  }, 3000);
+  if (pollingMessages) clearInterval(pollingMessages);
+  pollingMessages = setInterval(() => loadMessages(activeTaskId, true), 2000);
 
   highlightActiveConversation(task.task_id);
+
+  // Mark as seen
+  lastSeenTimestamp[task.task_id] = new Date().toISOString();
 }
 
+/* ----------------------------------------------------------
+   Highlight selected chat
+----------------------------------------------------------- */
 function highlightActiveConversation(taskId) {
   document.querySelectorAll(".conversation-item").forEach(item => {
     item.classList.toggle(
@@ -104,12 +113,19 @@ async function loadMessages(taskId, silent = false) {
     const res = await fetch(`${API_BASE}/api/tasks/${taskId}/messages`);
     const messages = await res.json();
 
+    if (!Array.isArray(messages)) return;
+
+    // Save latest message timestamp
+    if (messages.length > 0) {
+      const latest = messages[messages.length - 1].timestamp;
+      taskLastMessage[taskId] = latest;
+    }
+
     box.innerHTML = "";
 
     messages.forEach(msg => {
       const div = document.createElement("div");
-      div.classList.add("msg");
-      div.classList.add(msg.sender === "staff" ? "msg-staff" : "msg-client");
+      div.classList.add("msg", msg.sender === "staff" ? "msg-staff" : "msg-client");
 
       div.innerHTML = `
         <p>${msg.message}</p>
@@ -130,13 +146,6 @@ async function loadMessages(taskId, silent = false) {
 /* ----------------------------------------------------------
    Send message
 ----------------------------------------------------------- */
-function setupSendButton() {
-  document.getElementById("send-btn").addEventListener("click", sendMessage);
-  document.getElementById("messages-input").addEventListener("keypress", e => {
-    if (e.key === "Enter") sendMessage();
-  });
-}
-
 async function sendMessage() {
   const input = document.getElementById("messages-input");
   const text = input.value.trim();
