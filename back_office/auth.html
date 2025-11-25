@@ -33,7 +33,8 @@
           <p class="auth-subtitle">Please enter your room number and mobile phone.</p>
         </div>
 
-        <form class="auth-form" method="POST" action="/guest/auth">
+        <!-- שים לב: אין method / אין action -->
+        <form class="auth-form" id="guest-auth-form">
           <div class="field">
             <label for="room_number" class="field-label">Room number</label>
             <input
@@ -63,6 +64,9 @@
           <button type="submit" class="auth-button">Continue</button>
         </form>
 
+        <!-- כאן הודעת ההצלחה/שגיאה -->
+        <div id="auth-message" class="auth-message"></div>
+
         <div class="auth-footer">
           If the details do not match, please contact the front desk.
         </div>
@@ -71,5 +75,7 @@
     </div>
   </div>
 
+  <!-- חשוב: הנתיב צריך להתאים למיקום האמיתי של הקובץ -->
+  <script src="js/auth.js"></script>
 </body>
 </html>
