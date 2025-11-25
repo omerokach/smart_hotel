@@ -200,8 +200,8 @@ router.get('/', async (req, res) => {
     }
     
     if (req.query.escalation === "true") {
-  query = query.eq("escalation", true);
-    }ֿ
+      query = query.eq("escalation", true);ֿ
+    }
     
     const sortField = ALLOWED_SORT_FIELDS.includes(sort_by)
       ? sort_by
