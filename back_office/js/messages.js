@@ -3,21 +3,23 @@ const API_BASE = "https://smart-hotel-tasks-api.onrender.com";
 
 let activeTaskId = null;
 let pollingMessages = null;
+
 let lastSeenTimestamp = {};   // { taskId: timestamp }
 let taskLastMessage = {};     // { taskId: timestamp }
-let lastConversations = [];
 
-// Load conversations + start polling
+/* ----------------------------------------------------------
+   Load page
+----------------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
   loadConversations();
   setupSendButton();
 
-  // Poll for NEW conversations & updates
+  // Refresh conversation list continuously
   setInterval(loadConversations, 3000);
 });
 
 /* ----------------------------------------------------------
-   Load list of conversations (escalation only)
+   Load list of conversations
 ----------------------------------------------------------- */
 async function loadConversations() {
   const listEl = document.getElementById("conversations-list");
@@ -32,24 +34,18 @@ async function loadConversations() {
     // Filter out closed tasks
     const openTasks = tasks.filter(t => t.status !== "closed");
 
-    // Detect if there was any change
-    if (JSON.stringify(openTasks) === JSON.stringify(lastConversations)) {
-      return; // No changes → no re-render
-    }
-
-    // Save new list
-    lastConversations = openTasks;
-
-    // Clear UI and rebuild
+    // Always re-render (otherwise new ones לא יופיעו)
     listEl.innerHTML = "";
 
     openTasks.forEach(task => {
-      if (task.last_message_time) {
-        taskLastMessage[task.task_id] = task.last_message_time;
-      }
       const item = document.createElement("div");
       item.classList.add("conversation-item");
       item.dataset.taskId = task.task_id;
+
+      // Save latest msg timestamp from API (if provided)
+      if (task.last_message_time) {
+        taskLastMessage[task.task_id] = task.last_message_time;
+      }
 
       item.innerHTML = `
         <div class="conversation-room">Room ${task.room_number}</div>
@@ -98,12 +94,12 @@ function selectConversation(task) {
 
   highlightActiveConversation(task.task_id);
 
-  // Mark as seen
+  // Mark as seen → remove NEW badge
   lastSeenTimestamp[task.task_id] = new Date().toISOString();
 }
 
 /* ----------------------------------------------------------
-   Highlight selected chat
+   Highlight active conversation
 ----------------------------------------------------------- */
 function highlightActiveConversation(taskId) {
   document.querySelectorAll(".conversation-item").forEach(item => {
@@ -129,10 +125,9 @@ async function loadMessages(taskId, silent = false) {
 
     if (!Array.isArray(messages)) return;
 
-    // Save latest message timestamp
+    // Save latest timestamp
     if (messages.length > 0) {
-      const latest = messages[messages.length - 1].timestamp;
-      taskLastMessage[taskId] = latest;
+      taskLastMessage[taskId] = messages[messages.length - 1].timestamp;
     }
 
     box.innerHTML = "";
@@ -166,10 +161,7 @@ async function sendMessage() {
 
   if (!text || !activeTaskId) return;
 
-  const payload = {
-    sender: "staff",
-    message: text
-  };
+  const payload = { sender: "staff", message: text };
 
   try {
     await fetch(`${API_BASE}/api/tasks/${activeTaskId}/messages`, {
