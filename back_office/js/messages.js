@@ -51,7 +51,14 @@ async function loadConversations() {
       item.innerHTML = `
         <div class="conversation-room">Room ${task.room_number}</div>
         <div class="conversation-meta">Task #${task.task_id}</div>
-      `;
+      
+       item.innerHTML = `
+        <div class="conversation-title">
+          <span class="room">Room ${task.room_number}</span>
+          <span class="task">Task #${task.task_id}</span>
+        </div>
+        `;
+
 
       // NEW badge
       const lastSeen = lastSeenTimestamp[task.task_id];
