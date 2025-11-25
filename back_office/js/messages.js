@@ -179,6 +179,16 @@ async function sendMessage() {
     console.error("Failed sending message:", err);
   }
 }
+function setupSendButton() {
+  document.getElementById("send-btn").addEventListener("click", sendMessage);
+
+  // שולח גם עם Enter
+  document.getElementById("messages-input")
+    .addEventListener("keypress", e => {
+      if (e.key === "Enter") sendMessage();
+    });
+}
+
 
 /* ----------------------------------------------------------
    Helpers
