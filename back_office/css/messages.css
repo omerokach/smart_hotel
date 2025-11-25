@@ -172,3 +172,22 @@
 .messages-input button:hover {
   background: #0a57d4;
 }
+
+.new-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;               /* ריווח בין העיגול למילה */
+  background: transparent;
+  font-size: 12px;
+  font-weight: 500;
+  color: #3a3a3a;         /* כתיבה עדינה ולא שחור צורם */
+}
+
+.new-badge-dot {
+  width: 8px;
+  height: 8px;
+  background: #116dff;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
