@@ -35,11 +35,6 @@ async function loadConversations() {
     const openTasks = tasks.filter(t => t.status !== "closed");
     listEl.innerHTML = "";
 
-    openTasks.forEach(task => {
-      if (task.last_message_time) {
-        taskLastMessage[task.task_id] = task.last_message_time;
-      }
-
       const item = document.createElement("div");
       item.classList.add("conversation-item");
       item.dataset.taskId = task.task_id;
@@ -54,13 +49,13 @@ async function loadConversations() {
 
       // Bubble NEW 
       const lastSeen = lastSeenTimestamp[task.task_id];
-      const lastInfo = taskLastMessage[task.task_id];
-      
+      const info = taskLastMessage[task.task_id];
+
       const isNew =
-        lastInfo &&
-        lastInfo.sender === "guest" &&        // רק הודעת אורח!
-        (!lastSeen || lastInfo.timestamp > lastSeen);
-      
+        info &&
+        info.sender === "guest" &&
+        (!lastSeen || info.timestamp > lastSeen);
+
       if (isNew) {
         const badge = document.createElement("div");
         badge.classList.add("new-badge");
