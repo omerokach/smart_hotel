@@ -29,6 +29,24 @@ function parseCsvParam(value) {
 /* =====================================================================
    Messages API
    ===================================================================== */
+// GET /api/tasks/escalation  -> Only tasks with escalation = true
+router.get('/escalation', async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from(TABLE_NAME)
+      .select('*')
+      .eq('escalation', true)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+
+    return res.json(data);
+
+  } catch (err) {
+    console.error('GET /api/tasks/escalation error:', err);
+    return res.status(500).json({ error: 'Failed to load escalation tasks' });
+  }
+});
 
 /* 
  * GET /api/tasks/:task_id/messages
