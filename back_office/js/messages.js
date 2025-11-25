@@ -33,11 +33,9 @@ async function loadConversations() {
     if (!Array.isArray(tasks)) return;
 
     const openTasks = tasks.filter(t => t.status !== "closed");
-
     listEl.innerHTML = "";
 
     openTasks.forEach(task => {
-      // Save latest message time if exists
       if (task.last_message_time) {
         taskLastMessage[task.task_id] = task.last_message_time;
       }
@@ -46,7 +44,7 @@ async function loadConversations() {
       item.classList.add("conversation-item");
       item.dataset.taskId = task.task_id;
 
-      // Proper clean HTML template (NO duplication!)
+      // HTML  
       item.innerHTML = `
         <div class="conversation-title">
           <span class="room">Room ${task.room_number}</span>
@@ -54,12 +52,11 @@ async function loadConversations() {
         </div>
       `;
 
-      // NEW badge (blue dot)
+      // Bubble NEW — נקודה בלבד
       const lastSeen = lastSeenTimestamp[task.task_id];
       const newest = taskLastMessage[task.task_id];
-      const isNew = newest && (!lastSeen || newest > lastSeen);
 
-      if (isNew) {
+      if (newest && (!lastSeen || newest > lastSeen)) {
         const badge = document.createElement("div");
         badge.classList.add("new-badge");
         item.appendChild(badge);
@@ -76,6 +73,7 @@ async function loadConversations() {
     console.error("Failed loading tasks:", err);
   }
 }
+
 
 /* ----------------------------------------------------------
    Select conversation
