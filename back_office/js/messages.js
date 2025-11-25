@@ -1,5 +1,7 @@
 // messages.js
 
+const API_BASE = "https://smart-hotel-tasks-api.onrender.com";
+
 let activeTaskId = null;
 let pollingInterval = null;
 
