@@ -198,7 +198,11 @@ router.get('/', async (req, res) => {
         `request_details.ilike.${term},room_number.ilike.${term},request_type.ilike.${term}`
       );
     }
-
+    
+    if (req.query.escalation === "true") {
+  query = query.eq("escalation", true);
+    }ֿ
+    
     const sortField = ALLOWED_SORT_FIELDS.includes(sort_by)
       ? sort_by
       : 'task_id';
