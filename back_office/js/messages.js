@@ -5,24 +5,25 @@ const API_BASE = "https://smart-hotel-tasks-api.onrender.com";
 let activeTaskId = null;
 let pollingInterval = null;
 
-// Load conversations on page load
 document.addEventListener("DOMContentLoaded", () => {
   loadConversations();
   setupSendButton();
 });
 
-/* ----------------------------------------------------------
-   Load list of open conversations (tasks with escalation=true)
------------------------------------------------------------ */
+/* -----------------------------------------
+   Load list of tasks with escalation=true
+----------------------------------------- */
 async function loadConversations() {
   const listEl = document.getElementById("conversations-list");
   listEl.innerHTML = "<p class='loading'>Loading...</p>";
 
   try {
-    fetch(`${API_BASE}/api/tasks?escalation=true`)
-    const tasks = await res.json();
+    const res = await fetch(`${API_BASE}/api/tasks?escalation=true`);
+    const data = await res.json();
 
-    if (!Array.isArray(tasks)) {
+    const tasks = data.tasks; // because API returns { tasks: [...], total }
+
+    if (!Array.isArray(tasks) || tasks.length === 0) {
       listEl.innerHTML = "<p>No conversations found.</p>";
       return;
     }
@@ -50,33 +51,27 @@ async function loadConversations() {
   }
 }
 
-/* ----------------------------------------------------------
-   Select a conversation & load chat messages
------------------------------------------------------------ */
+/* -----------------------------------------
+   Select conversation
+----------------------------------------- */
 function selectConversation(task) {
   activeTaskId = task.task_id;
 
-  // Update header
   document.getElementById("messages-client-name").textContent =
     `Room ${task.room_number}`;
   document.getElementById("messages-status").textContent = "";
 
-  // Enable input
   document.getElementById("messages-input").disabled = false;
   document.getElementById("send-btn").disabled = false;
 
-  // Load messages
   loadMessages(activeTaskId);
 
-  // Remove old polling
   if (pollingInterval) clearInterval(pollingInterval);
 
-  // Poll every 3 seconds
   pollingInterval = setInterval(() => {
     loadMessages(activeTaskId, true);
   }, 3000);
 
-  // Highlight chosen conversation
   highlightActiveConversation(task.task_id);
 }
 
@@ -89,9 +84,9 @@ function highlightActiveConversation(taskId) {
   });
 }
 
-/* ----------------------------------------------------------
-   Load messages
------------------------------------------------------------ */
+/* -----------------------------------------
+   Load messages of selected task
+----------------------------------------- */
 async function loadMessages(taskId, silent = false) {
   if (!taskId) return;
 
@@ -99,7 +94,7 @@ async function loadMessages(taskId, silent = false) {
   if (!silent) box.innerHTML = "<p class='loading'>Loading...</p>";
 
   try {
-    fetch(`${API_BASE}/api/tasks/${taskId}/messages`)
+    const res = await fetch(`${API_BASE}/api/tasks/${taskId}/messages`);
     const messages = await res.json();
 
     box.innerHTML = "";
@@ -125,9 +120,9 @@ async function loadMessages(taskId, silent = false) {
   }
 }
 
-/* ----------------------------------------------------------
+/* -----------------------------------------
    Send message
------------------------------------------------------------ */
+----------------------------------------- */
 function setupSendButton() {
   document.getElementById("send-btn").addEventListener("click", sendMessage);
   document.getElementById("messages-input").addEventListener("keypress", e => {
@@ -161,9 +156,9 @@ async function sendMessage() {
   }
 }
 
-/* ----------------------------------------------------------
+/* -----------------------------------------
    Helpers
------------------------------------------------------------ */
+----------------------------------------- */
 function formatTime(ts) {
   const d = new Date(ts);
   return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
