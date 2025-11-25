@@ -1,4 +1,5 @@
 // messages.js
+let lastConversations = [];
 
 const API_BASE = "https://smart-hotel-tasks-api.onrender.com";
 
@@ -9,6 +10,9 @@ let pollingInterval = null;
 document.addEventListener("DOMContentLoaded", () => {
   loadConversations();
   setupSendButton();
+
+  // Poll for new conversations
+  setInterval(loadConversations, 3000);
 });
 
 /* ----------------------------------------------------------
@@ -16,17 +20,19 @@ document.addEventListener("DOMContentLoaded", () => {
 ----------------------------------------------------------- */
 async function loadConversations() {
   const listEl = document.getElementById("conversations-list");
-  listEl.innerHTML = "<p class='loading'>Loading...</p>";
 
   try {
     const res = await fetch(`${API_BASE}/api/tasks?escalation=true`);
     const data = await res.json();
     const tasks = data.tasks;
 
-    if (!Array.isArray(tasks) || tasks.length === 0) {
-      listEl.innerHTML = "<p>No conversations found.</p>";
-      return;
-    }
+    if (!Array.isArray(tasks)) return;
+
+    // Check if list changed
+    const changed = JSON.stringify(tasks) !== JSON.stringify(lastConversations);
+    if (!changed) return; // No update → don't re-render
+
+    lastConversations = tasks;
 
     listEl.innerHTML = "";
 
@@ -45,9 +51,10 @@ async function loadConversations() {
       listEl.appendChild(item);
     });
 
+    highlightActiveConversation(activeTaskId);
+
   } catch (err) {
     console.error("Failed loading tasks:", err);
-    listEl.innerHTML = "<p>Error loading conversations.</p>";
   }
 }
 
