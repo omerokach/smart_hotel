@@ -12,15 +12,37 @@ function clearMessage() {
   messageEl.className = "auth-message";
 }
 
-function showError(text) {
-  messageEl.textContent = text;
-  messageEl.className = "auth-message error";
+function showErrorBubble(text = "Error") {
+  const bubble = document.getElementById("error-bubble");
+  if (!bubble) return;
+
+  bubble.querySelector(".bubble-text").textContent = text;
+
+  bubble.classList.add("show");
+
+  // Hide automatically
+  setTimeout(() => {
+    bubble.classList.remove("show");
+  }, 4000);
 }
 
-function showSuccess(text) {
-  messageEl.textContent = text;
-  messageEl.className = "auth-message success";
+
+function showSuccessBubble(text = "Success") {
+  const bubble = document.getElementById("success-bubble");
+  if (!bubble) return;
+
+  // Set message
+  bubble.querySelector(".bubble-text").textContent = text;
+
+  // Show bubble
+  bubble.classList.add("show");
+
+  // Auto hide after 1.3s
+  setTimeout(() => {
+    bubble.classList.remove("show");
+  }, 1300);
 }
+
 
 // Attach submit listener
 if (form) {
@@ -32,7 +54,7 @@ if (form) {
     const phone = document.getElementById("phone_number").value.trim();
 
     if (!room || !phone) {
-      showError("Please fill in both fields.");
+      showErrorBubble("Please fill in both fields.");
       return;
     }
 
@@ -61,12 +83,12 @@ if (form) {
       }
 
       if (!response.ok || !result.success) {
-        showError(result.message || "Room or phone number not found. Please try again.");
+        showErrorBubble(result.message || "Room or phone number not found. Please try again.");
         return;
       }
 
       // SUCCESS
-      showSuccess("Authentication successful. Redirecting...");
+      showSuccessBubble("Authentication successful");
 
       setTimeout(() => {
         window.location.href = "https://smart-hotel-concierge.onrender.com/";
@@ -74,7 +96,7 @@ if (form) {
 
     } catch (err) {
       console.error("Auth request error:", err);
-      showError("Server error. Please try again.");
+      showErrorBubble("Server error. Please try again.");
     } finally {
       if (submitBtn) submitBtn.disabled = false;
     }
