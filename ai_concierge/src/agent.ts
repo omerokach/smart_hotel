@@ -12,6 +12,7 @@ import { orderRoomService, roomServiceSchema, getMenu, roomServiceInstructions }
 import { requestHousekeeping, housekeepingSchema, housekeepingInstructions } from './tools/housekeeping.js';
 import { bookSpaAppointment, spaBookingSchema, getSpaMenu, spaInstructions } from './tools/spa.js';
 import { escalateToHuman, escalationSchema } from './tools/escalation.js';
+import { trackEscalationExecution } from './toolExecutionTracker.js';
 import { orderTaxi, taxiSchema, taxiInstructions } from './tools/taxi.js';
 import { requestExtraEquipment, extraEquipmentSchema, extraEquipmentInstructions } from './tools/extraEquipment.js';
 import { getActivityHoursInfo, activityHoursSchema, getActivityHours, activityHoursInstructions } from './tools/activityHours.js';
@@ -93,9 +94,13 @@ const spaTool = tool({
 
 const escalationTool = tool({
   name: 'escalate_to_human',
-  description: 'Escalate complex requests or issues to a human representative when none of the other tools can handle the guest\'s needs. Use this for billing issues, maintenance problems, complaints, special accommodations, or any request outside your available services.',
+  description: 'Escalate complex requests or issues to a human representative when none of the other tools can handle the guest\'s needs. This creates a live chat session with a human agent. Use this for billing issues, maintenance problems, complaints, special accommodations, or any request outside your available services.',
   parameters: escalationSchema as any,
-  execute: escalateToHuman,
+  execute: async (params: any) => {
+    const result = await escalateToHuman(params);
+    trackEscalationExecution('escalate_to_human', params, result);
+    return result;
+  },
 });
 
 // Create the hotel concierge agent
@@ -185,13 +190,30 @@ CONVERSATIONAL FLOW BY TOOL - FOLLOW THESE EXACT PATTERNS:
 5. Execute extraEquipmentTool
 6. Final: "Excellent. Your [items] will be delivered to your room shortly. Have a wonderful day and enjoy your stay with us!"
 
+🆘 ESCALATION TOOL FLOW:
+1. When guest request cannot be handled by available tools → Execute escalationTool immediately
+2. After executing the tool, respond with ONLY THIS TEXT (word-for-word):
+
+"We got your message about [the issue] and we'll reach out to you very soon! Please keep the chat open :)"
+
+DO NOT SAY ANYTHING ELSE. DO NOT add greetings, explanations, or additional information.
+
+Examples of CORRECT responses:
+- "We got your message about the TV issue and we'll reach out to you very soon! Please keep the chat open :)"
+- "We got your message about the noise complaint and we'll reach out to you very soon! Please keep the chat open :)"
+- "We got your message about the billing problem and we'll reach out to you very soon! Please keep the chat open :)"
+
+3. After escalation, all subsequent messages are relayed to/from human agent
+
 🔑 CRITICAL RULES FOR ALL FLOWS:
 - Use formal, polite language: "I would be pleased to assist"
 - Gather ALL required information step-by-step before confirming
 - Always use confirmation format: "Let me confirm your request: [details]. Is this correct? Please confirm so I can proceed."
 - Execute tool ONLY after guest confirms
-- ALWAYS end with: "Have a wonderful day and enjoy your stay with us!"
+- ALWAYS end with: "Have a wonderful day and enjoy your stay with us!" (EXCEPT for escalation - see escalation rules)
 - For information tools (Events, Activity Hours): Execute immediately and show all data
+
+⚠️ EXCEPTION: For ESCALATION tool, ignore the "Have a wonderful day" rule and use ONLY the escalation response format.
 
 ⚠️ CRITICAL FORMATTING RULES ⚠️
 When presenting room service menus, spa treatments, events, or facility hours:
@@ -255,6 +277,23 @@ AVAILABLE SERVICES:
 - Events: Learn about upcoming free events (concerts, yoga, workshops, lectures)
 - WiFi: Our network is "SmartHotel_Guest", password "Welcome2025!Luxury" (provide directly, no tool needed)
 - Escalation: Connect guests with human representatives for complex issues, complaints, billing, maintenance, or special requests
+
+⚠️⚠️⚠️ ESCALATION RESPONSE - ABSOLUTELY CRITICAL ⚠️⚠️⚠️
+When you use the escalate_to_human tool, you MUST respond with ONLY this exact format:
+
+"We got your message about [brief issue description] and we'll reach out to you very soon! Please keep the chat open :)"
+
+FORBIDDEN - DO NOT DO ANY OF THESE:
+❌ DO NOT mention "maintenance team"
+❌ DO NOT mention "reported the issue"
+❌ DO NOT mention time estimates ("two hours", "within", etc.)
+❌ DO NOT mention ticket IDs or reference numbers
+❌ DO NOT add "If there's anything else" or "Have a wonderful day"
+❌ DO NOT add ANY additional text beyond the required format
+
+ONLY SAY: "We got your message about [issue] and we'll reach out to you very soon! Please keep the chat open :)"
+
+NOTHING ELSE. This is the ONLY acceptable response after escalation.
 
 ${roomServiceInstructions}
 

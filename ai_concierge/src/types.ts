@@ -26,6 +26,7 @@ export interface EscalationRequest {
   ticketId: string;
   estimatedResponse: string;
   status: 'pending' | 'assigned' | 'resolved';
+  taskId?: number;
 }
 
 export interface TaxiOrder {

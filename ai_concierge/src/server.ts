@@ -4,19 +4,105 @@ import express from 'express';
 import cors from 'cors';
 import { run } from '@openai/agents';
 import { hotelConciergeAgent } from './agent.js';
-import { getAndClearLastServiceToolExecution } from './toolExecutionTracker.js';
+import { getAndClearLastServiceToolExecution, getAndClearLastEscalationExecution } from './toolExecutionTracker.js';
 import { getMenu } from './tools/roomService.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const API_URL = process.env.TASKS_API_URL || 'http://localhost:3001';
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
+// Helper functions for TaskMessages API integration
+async function saveMessageToTask(taskId: number, sender: string, message: string, roomNumber: string = "103"): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_URL}/api/tasks/${taskId}/messages`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sender, message, room_number: roomNumber }),
+    });
+    
+    if (!response.ok) {
+      console.error('❌ Failed to save message to task:', response.status);
+      return false;
+    }
+    
+    const savedMessage = await response.json() as any;
+    const messageId = savedMessage.message_id || savedMessage.id;
+    
+    console.log('💬 Message saved to TaskMessages');
+    console.log('   📋 Task ID:', taskId);
+    console.log('   🆔 Message ID:', messageId);
+    console.log('   👤 Sender:', sender);
+    console.log('');
+    
+    return true;
+  } catch (error) {
+    console.error('❌ Error saving message to task:', error);
+    return false;
+  }
+}
+
+async function getNewAgentMessages(taskId: number, since: Date | null): Promise<Array<{ sender: string; message: string; timestamp: string }>> {
+  try {
+    const response = await fetch(`${API_URL}/api/tasks/${taskId}/messages`);
+    
+    if (!response.ok) {
+      console.error('❌ Failed to fetch messages:', response.status);
+      return [];
+    }
+    
+    const messages = await response.json() as Array<{ sender: string; message: string; timestamp: string }>;
+    
+    // Filter for staff messages that are newer than the last check
+    const agentMessages = messages.filter(msg => {
+      if (msg.sender !== 'staff') return false;
+      if (!since) return true;
+      return new Date(msg.timestamp) > since;
+    });
+    
+    return agentMessages;
+  } catch (error) {
+    console.error('❌ Error fetching messages:', error);
+    return [];
+  }
+}
+
+// Periodic polling for escalated sessions
+function startPollingForAgentMessages() {
+  setInterval(async () => {
+    for (const [sessionId, session] of sessions.entries()) {
+      if (session.escalated && session.taskId) {
+        try {
+          const newMessages = await getNewAgentMessages(session.taskId, session.lastMessageCheck);
+          
+          if (newMessages.length > 0) {
+            console.log(`📬 Background polling found ${newMessages.length} new staff message(s) for session ${sessionId} (waiting for frontend to fetch)`);
+            
+            // We don't add messages or update lastMessageCheck here
+            // The frontend polling will fetch and display them
+            // This prevents race conditions between background and frontend polling
+          }
+        } catch (error) {
+          console.error(`❌ Error polling messages for session ${sessionId}:`, error);
+        }
+      }
+    }
+  }, 4000); // Poll every 4 seconds
+}
+
 // Store conversation history per session (in production, use a proper database)
-const sessions = new Map<string, { messages: Array<{ role: string; content: string }> }>();
+interface Session {
+  messages: Array<{ role: string; content: string }>;
+  escalated: boolean;
+  taskId: number | null;
+  lastMessageCheck: Date | null;
+}
+
+const sessions = new Map<string, Session>();
 
 // Chat endpoint
 app.post('/api/chat', async (req, res) => {
@@ -29,7 +115,12 @@ app.post('/api/chat', async (req, res) => {
     
     // Get or create session
     if (!sessions.has(sessionId)) {
-      sessions.set(sessionId, { messages: [] });
+      sessions.set(sessionId, { 
+        messages: [], 
+        escalated: false, 
+        taskId: null, 
+        lastMessageCheck: null 
+      });
     }
     
     const session = sessions.get(sessionId)!;
@@ -37,8 +128,53 @@ app.post('/api/chat', async (req, res) => {
     // Add user message to history
     session.messages.push({ role: 'user', content: message });
     
-    // The SDK has conflicts between runtime and serialization formats for history
-    // Workaround: Build context string with conversation summary
+    // CHECK IF SESSION IS ESCALATED - Handle differently
+    if (session.escalated && session.taskId) {
+      console.log('');
+      console.log('🔄 ESCALATED SESSION - Relaying message');
+      console.log('📋 Task ID:', session.taskId);
+      console.log('');
+      
+      // Save guest message to TaskMessages
+      await saveMessageToTask(session.taskId, 'guest', message);
+      
+      // Check for new agent messages
+      const newAgentMessages = await getNewAgentMessages(session.taskId, session.lastMessageCheck);
+      
+      // Update last check time
+      session.lastMessageCheck = new Date();
+      
+      if (newAgentMessages.length > 0) {
+        // Return the latest agent message
+        const latestMessage = newAgentMessages[newAgentMessages.length - 1];
+        const agentResponse = latestMessage.message;
+        
+        // Add to session history
+        session.messages.push({ role: 'assistant', content: agentResponse });
+        
+        return res.json({
+          response: agentResponse,
+          sessionId,
+          chatEnded: false,
+          taskId: session.taskId,
+          escalated: true,
+        });
+      } else {
+        // No agent response yet
+        const waitingMessage = "Your message has been sent to our representative. They will respond shortly.";
+        session.messages.push({ role: 'assistant', content: waitingMessage });
+        
+        return res.json({
+          response: waitingMessage,
+          sessionId,
+          chatEnded: false,
+          taskId: session.taskId,
+          escalated: true,
+        });
+      }
+    }
+    
+    // NORMAL AI FLOW - Session not escalated
     console.log('Session has', session.messages.length, 'messages');
     
     // Create context from recent history (last 4 messages)
@@ -58,6 +194,45 @@ app.post('/api/chat', async (req, res) => {
     
     // Add assistant response to history
     session.messages.push({ role: 'assistant', content: result.finalOutput || '' });
+    
+    // Check if escalation tool was executed
+    const escalationExecution = getAndClearLastEscalationExecution();
+    
+    console.log('🔍 Checking for escalation execution:', escalationExecution ? 'FOUND' : 'NOT FOUND');
+    if (escalationExecution) {
+      console.log('📦 Escalation execution details:', JSON.stringify(escalationExecution, null, 2));
+    }
+    
+    if (escalationExecution && escalationExecution.result?.taskId) {
+      console.log('🚨 Escalation detected - switching to chat mode for task', escalationExecution.result.taskId);
+      
+      const escalatedTaskId = escalationExecution.result.taskId;
+      
+      console.log('🔧 Original AI response:', session.messages[session.messages.length - 1]?.content);
+      
+      // FORCE the correct response message - override whatever the AI said
+      const correctResponse = `We've got your message and one of our team will reach out to you very soon! Please keep the chat open :)`;
+      
+      console.log('✅ Forced correct response:', correctResponse);
+      
+      // Replace the last assistant message with the correct response
+      session.messages[session.messages.length - 1] = { role: 'assistant', content: correctResponse };
+      
+      // Save conversation history to TaskMessages (excluding the last assistant message which is the escalation response)
+      const historyToSave = session.messages.slice(0, -1); // Exclude the escalation response itself
+      console.log(`💾 Saving ${historyToSave.length} conversation messages to task ${escalatedTaskId}...`);
+      
+      for (const msg of historyToSave) {
+        await saveMessageToTask(escalatedTaskId, 'guest', msg.content);
+      }
+      
+      // Update session to escalated state
+      session.escalated = true;
+      session.taskId = escalatedTaskId;
+      session.lastMessageCheck = new Date();
+      
+      console.log('✅ Session escalated:', { sessionId, taskId: session.taskId });
+    }
     
     // Check if any service tool was executed using our tracker
     const serviceExecution = getAndClearLastServiceToolExecution();
@@ -207,9 +382,11 @@ app.post('/api/chat', async (req, res) => {
       }
     }
     
-    // Return response
+    // Return response - use the last message from session (which may have been corrected for escalation)
+    const responseToSend = session.messages[session.messages.length - 1]?.content || result.finalOutput || '';
+    
     res.json({
-      response: result.finalOutput || '',
+      response: responseToSend,
       sessionId,
       chatEnded,
       taskId,
@@ -221,6 +398,52 @@ app.post('/api/chat', async (req, res) => {
       error: 'Failed to process request',
       message: error instanceof Error ? error.message : 'Unknown error'
     });
+  }
+});
+
+// Check for new staff messages endpoint (for frontend polling)
+app.get('/api/check-messages/:sessionId', async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const session = sessions.get(sessionId);
+    
+    if (!session) {
+      return res.json({ newMessages: [] });
+    }
+    
+    // Only check if session is escalated
+    if (!session.escalated || !session.taskId) {
+      return res.json({ newMessages: [] });
+    }
+    
+    // Get new staff messages
+    const newMessages = await getNewAgentMessages(session.taskId, session.lastMessageCheck);
+    
+    if (newMessages.length > 0) {
+      // Update last check time
+      session.lastMessageCheck = new Date();
+      
+      // Add messages to session history (check for duplicates)
+      for (const msg of newMessages) {
+        const exists = session.messages.some(m => 
+          m.role === 'assistant' && m.content === msg.message
+        );
+        if (!exists) {
+          session.messages.push({ role: 'assistant', content: msg.message });
+        }
+      }
+      
+      console.log(`📬 Sent ${newMessages.length} new staff message(s) to frontend for session ${sessionId}`);
+    }
+    
+    return res.json({ 
+      newMessages: newMessages.map(m => m.message),
+      escalated: true 
+    });
+    
+  } catch (error) {
+    console.error('Error checking messages:', error);
+    res.status(500).json({ error: 'Failed to check messages' });
   }
 });
 
@@ -247,6 +470,10 @@ app.listen(PORT, () => {
   console.log(`🔌 API endpoint: http://localhost:${PORT}/api/chat`);
   console.log('');
   console.log('Press Ctrl+C to stop the server');
+  
+  // Start polling for agent messages in escalated sessions
+  startPollingForAgentMessages();
+  console.log('🔄 Polling started for escalated chat sessions');
 });
 
 export default app;
