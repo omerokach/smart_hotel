@@ -201,8 +201,9 @@ router.get('/', async (req, res) => {
     }
     
     if (req.query.escalation === "true") {
-      query = query.eq("escalation", true);
-      .neq("status", "closed");
+      query = query
+        .eq("escalation", true)
+        .neq("status", "closed");
     }
 
     const sortField = ALLOWED_SORT_FIELDS.includes(sort_by)
@@ -352,6 +353,7 @@ router.patch('/:task_id', async (req, res) => {
     if (assigned_employee_id !== undefined) updatePayload.assigned_employee_id = assigned_employee_id;
     if (request_details !== undefined) updatePayload.request_details = request_details;
     if (opening_channel !== undefined) updatePayload.opening_channel = opening_channel;
+    if (escalation !== undefined) updatePayload.escalation = escalation;
     if (closed_at !== undefined) updatePayload.closed_at = closed_at;
 
     updatePayload.updated_at = new Date().toISOString();
