@@ -4,10 +4,8 @@ const { supabase } = require('../supabaseClient');
 
 const router = express.Router();
 
-// Adjust this if your table name is different
 const TABLE_NAME = 'task';
 
-// Allowed sort fields to prevent arbitrary column access
 const ALLOWED_SORT_FIELDS = [
   'task_id',
   'room_number',
@@ -19,50 +17,94 @@ const ALLOWED_SORT_FIELDS = [
   'closed_at'
 ];
 
-// Helpers
 function parseCsvParam(value) {
   if (!value || typeof value !== 'string') return null;
   const items = value
     .split(',')
-    .map((v) => v.trim())
-    .filter((v) => v.length > 0);
+    .map(v => v.trim())
+    .filter(v => v.length > 0);
   return items.length ? items : null;
 }
 
-/**
+/* =====================================================================
+   Messages API
+   ===================================================================== */
+
+/* 
+ * GET /api/tasks/:task_id/messages
+ * Returns all messages associated with a specific task
+ */
+router.get('/:task_id/messages', async (req, res) => {
+  const taskId = Number(req.params.task_id);
+
+  if (Number.isNaN(taskId)) {
+    return res.status(400).json({ error: 'task_id must be a number' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('TaskMessages')
+      .select('*')
+      .eq('task_id', taskId)
+      .order('timestamp', { ascending: true });
+
+    if (error) {
+      return res.status(500).json({ error: 'Failed to fetch messages' });
+    }
+
+    return res.json(data);
+  } catch (err) {
+    return res.status(500).json({ error: 'Unexpected server error' });
+  }
+});
+
+/*
+ * POST /api/tasks/:task_id/messages
+ * Adds a new message to the task
+ */
+router.post('/:task_id/messages', async (req, res) => {
+  const taskId = Number(req.params.task_id);
+  const { sender, message } = req.body;
+
+  if (Number.isNaN(taskId)) {
+    return res.status(400).json({ error: 'task_id must be a number' });
+  }
+
+  if (!sender || !message) {
+    return res.status(400).json({ error: 'sender and message are required' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('TaskMessages')
+      .insert([
+        {
+          task_id: taskId,
+          sender,
+          message,
+          timestamp: new Date().toISOString()
+        }
+      ])
+      .select('*')
+      .single();
+
+    if (error) {
+      return res.status(500).json({ error: 'Failed to create message' });
+    }
+
+    return res.status(201).json(data);
+  } catch (err) {
+    return res.status(500).json({ error: 'Unexpected server error' });
+  }
+});
+
+/* =====================================================================
+   Tasks API 
+   ===================================================================== */
+
+/*
  * GET /api/tasks
- * Supports:
- *   Basic filters:
- *     - status
- *     - assigned_department
- *     - priority
- *     - room_number
- *     - request_type
- *
- *   Advanced filters:
- *     - status_in (comma-separated)
- *     - priority_in (comma-separated)
- *     - assigned_department_in (comma-separated)
- *     - assigned_employee_id
- *     - unassigned=true
- *     - is_open=true        (status IN [open, in_progress])
- *     - is_closed=true      (status = done)
- *
- *   Date ranges:
- *     - created_from / created_to
- *     - updated_from / updated_to
- *     - closed_from / closed_to
- *
- *   Text search:
- *     - search (on request_details, room_number, request_type)
- *
- *   Sorting:
- *     - sort_by  (one of ALLOWED_SORT_FIELDS)
- *     - sort_dir (asc | desc)
- *
- *   Pagination:
- *     - limit
- *     - offset
+ * Supports filters, search, sorting and pagination
  */
 router.get('/', async (req, res) => {
   try {
@@ -95,161 +137,103 @@ router.get('/', async (req, res) => {
     const parsedLimit = Number(limit);
     const parsedOffset = Number(offset);
 
-    let query = supabase
-      .from(TABLE_NAME)
-      .select('*', { count: 'exact' });
+    let query = supabase.from(TABLE_NAME).select('*', { count: 'exact' });
 
-    // Basic equality filters
-    if (status) {
-      query = query.eq('status', status);
-    }
+    if (status) query = query.eq('status', status);
+    if (assigned_department) query = query.eq('assigned_department', assigned_department);
+    if (priority) query = query.eq('priority', priority);
+    if (room_number) query = query.eq('room_number', room_number);
+    if (request_type) query = query.eq('request_type', request_type);
 
-    if (assigned_department) {
-      query = query.eq('assigned_department', assigned_department);
-    }
-
-    if (priority) {
-      query = query.eq('priority', priority);
-    }
-
-    if (room_number) {
-      query = query.eq('room_number', room_number);
-    }
-
-    if (request_type) {
-      query = query.eq('request_type', request_type);
-    }
-
-    // IN filters
     const statusIn = parseCsvParam(status_in);
-    if (statusIn) {
-      query = query.in('status', statusIn);
-    }
+    if (statusIn) query = query.in('status', statusIn);
 
     const priorityIn = parseCsvParam(priority_in);
-    if (priorityIn) {
-      query = query.in('priority', priorityIn);
-    }
+    if (priorityIn) query = query.in('priority', priorityIn);
 
     const deptIn = parseCsvParam(assigned_department_in);
-    if (deptIn) {
-      query = query.in('assigned_department', deptIn);
-    }
+    if (deptIn) query = query.in('assigned_department', deptIn);
 
-    // Assignment filters
-    if (assigned_employee_id) {
-      query = query.eq('assigned_employee_id', assigned_employee_id);
-    }
+    if (assigned_employee_id) query = query.eq('assigned_employee_id', assigned_employee_id);
+    if (unassigned === 'true') query = query.is('assigned_employee_id', null);
 
-    if (unassigned === 'true') {
-      query = query.is('assigned_employee_id', null);
-    }
+    const hasExplicitStatus = status || statusIn;
 
-    // Logical filters for open/closed
-    const hasExplicitStatusFilter =
-      !!status || !!statusIn;
-
-    if (!hasExplicitStatusFilter && is_open === 'true') {
+    if (!hasExplicitStatus && is_open === 'true') {
       query = query.in('status', ['open', 'in_progress']);
     }
 
-    if (!hasExplicitStatusFilter && is_closed === 'true') {
+    if (!hasExplicitStatus && is_closed === 'true') {
       query = query.eq('status', 'done');
     }
 
-    // Date range filters
-    if (created_from) {
-      query = query.gte('created_at', created_from);
-    }
-    if (created_to) {
-      query = query.lte('created_at', created_to);
-    }
+    if (created_from) query = query.gte('created_at', created_from);
+    if (created_to) query = query.lte('created_at', created_to);
+    if (updated_from) query = query.gte('updated_at', updated_from);
+    if (updated_to) query = query.lte('updated_at', updated_to);
+    if (closed_from) query = query.gte('closed_at', closed_from);
+    if (closed_to) query = query.lte('closed_at', closed_to);
 
-    if (updated_from) {
-      query = query.gte('updated_at', updated_from);
-    }
-    if (updated_to) {
-      query = query.lte('updated_at', updated_to);
-    }
-
-    if (closed_from) {
-      query = query.gte('closed_at', closed_from);
-    }
-    if (closed_to) {
-      query = query.lte('closed_at', closed_to);
-    }
-
-    // Text search
     if (search) {
       const term = `%${search}%`;
-      // Requires Postgres & Supabase "or" support
       query = query.or(
         `request_details.ilike.${term},room_number.ilike.${term},request_type.ilike.${term}`
       );
     }
 
-    // Sorting
     const sortField = ALLOWED_SORT_FIELDS.includes(sort_by)
       ? sort_by
       : 'task_id';
 
-    const sortAscending = String(sort_dir).toLowerCase() !== 'desc';
+    const sortAsc = String(sort_dir).toLowerCase() !== 'desc';
 
     query = query
-      .order(sortField, { ascending: sortAscending })
-      .range(
-        Number.isNaN(parsedOffset) ? 0 : parsedOffset,
-        (Number.isNaN(parsedOffset) ? 0 : parsedOffset) +
-          (Number.isNaN(parsedLimit) ? 100 : parsedLimit) -
-          1
-      );
+      .order(sortField, { ascending: sortAsc })
+      .range(parsedOffset, parsedOffset + parsedLimit - 1);
 
     const { data, error, count } = await query;
 
     if (error) {
-      console.error('Error fetching tasks:', error);
       return res.status(500).json({ error: 'Failed to fetch tasks' });
     }
 
     return res.json({ tasks: data, total: count });
   } catch (err) {
-    console.error('Unexpected error in GET /api/tasks:', err);
     return res.status(500).json({ error: 'Unexpected server error' });
   }
 });
 
-/**
+/*
  * GET /api/tasks/:task_id
+ * Fetches a single task by ID
  */
 router.get('/:task_id', async (req, res) => {
   try {
-    const { task_id } = req.params;
-    const numericId = Number(task_id);
+    const taskId = Number(req.params.task_id);
 
-    if (Number.isNaN(numericId)) {
+    if (Number.isNaN(taskId)) {
       return res.status(400).json({ error: 'task_id must be a number' });
     }
 
     const { data, error } = await supabase
       .from(TABLE_NAME)
       .select('*')
-      .eq('task_id', numericId)
+      .eq('task_id', taskId)
       .single();
 
     if (error || !data) {
-      console.error('Task not found or error:', error);
       return res.status(404).json({ error: 'Task not found' });
     }
 
     return res.json(data);
   } catch (err) {
-    console.error('Unexpected error in GET /api/tasks/:task_id:', err);
     return res.status(500).json({ error: 'Unexpected server error' });
   }
 });
 
-/**
+/*
  * POST /api/tasks
+ * Creates new task
  */
 router.post('/', async (req, res) => {
   try {
@@ -270,7 +254,7 @@ router.post('/', async (req, res) => {
 
     if (!room_number || !request_type || !assigned_department) {
       return res.status(400).json({
-        error: 'room_number, request_type, and assigned_department are required'
+        error: 'room_number, request_type and assigned_department are required'
       });
     }
 
@@ -296,26 +280,24 @@ router.post('/', async (req, res) => {
       .single();
 
     if (error) {
-      console.error('Error creating task:', error);
       return res.status(500).json({ error: 'Failed to create task' });
     }
 
     return res.status(201).json(data);
   } catch (err) {
-    console.error('Unexpected error in POST /api/tasks:', err);
     return res.status(500).json({ error: 'Unexpected server error' });
   }
 });
 
-/**
+/*
  * PATCH /api/tasks/:task_id
+ * Updates fields for an existing task
  */
 router.patch('/:task_id', async (req, res) => {
   try {
-    const { task_id } = req.params;
-    const numericId = Number(task_id);
+    const taskId = Number(req.params.task_id);
 
-    if (Number.isNaN(numericId)) {
+    if (Number.isNaN(taskId)) {
       return res.status(400).json({ error: 'task_id must be a number' });
     }
 
@@ -333,23 +315,18 @@ router.patch('/:task_id', async (req, res) => {
     } = req.body;
 
     const updatePayload = {};
+
     if (room_number !== undefined) updatePayload.room_number = room_number;
     if (request_type !== undefined) updatePayload.request_type = request_type;
-    if (assigned_department !== undefined)
-      updatePayload.assigned_department = assigned_department;
-    if (internal_notes !== undefined)
-    updatePayload.internal_notes = internal_notes;
+    if (assigned_department !== undefined) updatePayload.assigned_department = assigned_department;
+    if (internal_notes !== undefined) updatePayload.internal_notes = internal_notes;
     if (status !== undefined) updatePayload.status = status;
     if (priority !== undefined) updatePayload.priority = priority;
-    if (assigned_employee_id !== undefined)
-      updatePayload.assigned_employee_id = assigned_employee_id;
-    if (request_details !== undefined)
-      updatePayload.request_details = request_details;
-    if (opening_channel !== undefined)
-      updatePayload.opening_channel = opening_channel;
+    if (assigned_employee_id !== undefined) updatePayload.assigned_employee_id = assigned_employee_id;
+    if (request_details !== undefined) updatePayload.request_details = request_details;
+    if (opening_channel !== undefined) updatePayload.opening_channel = opening_channel;
     if (closed_at !== undefined) updatePayload.closed_at = closed_at;
 
-    // Always update updated_at when patching
     updatePayload.updated_at = new Date().toISOString();
 
     if (Object.keys(updatePayload).length === 0) {
@@ -359,47 +336,43 @@ router.patch('/:task_id', async (req, res) => {
     const { data, error } = await supabase
       .from(TABLE_NAME)
       .update(updatePayload)
-      .eq('task_id', numericId)
+      .eq('task_id', taskId)
       .select()
       .single();
 
     if (error || !data) {
-      console.error('Error updating task:', error);
       return res.status(500).json({ error: 'Failed to update task' });
     }
 
     return res.json(data);
   } catch (err) {
-    console.error('Unexpected error in PATCH /api/tasks/:task_id:', err);
     return res.status(500).json({ error: 'Unexpected server error' });
   }
 });
 
-/**
+/*
  * DELETE /api/tasks/:task_id
+ * Deletes a task
  */
 router.delete('/:task_id', async (req, res) => {
   try {
-    const { task_id } = req.params;
-    const numericId = Number(task_id);
+    const taskId = Number(req.params.task_id);
 
-    if (Number.isNaN(numericId)) {
+    if (Number.isNaN(taskId)) {
       return res.status(400).json({ error: 'task_id must be a number' });
     }
 
     const { error } = await supabase
       .from(TABLE_NAME)
       .delete()
-      .eq('task_id', numericId);
+      .eq('task_id', taskId);
 
     if (error) {
-      console.error('Error deleting task:', error);
       return res.status(500).json({ error: 'Failed to delete task' });
     }
 
     return res.status(204).send();
   } catch (err) {
-    console.error('Unexpected error in DELETE /api/tasks/:task_id:', err);
     return res.status(500).json({ error: 'Unexpected server error' });
   }
 });
