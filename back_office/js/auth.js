@@ -43,8 +43,9 @@ if (form) {
     const submitBtn = form.querySelector(".auth-button");
     if (submitBtn) submitBtn.disabled = true;
 
-    try {
-      const response = await fetch("/api/reservations/verify-guest", {
+       try {
+        const response = await fetch("https://smart-hotel-tasks-api.onrender.com/api/reservations/verify-guest",
+        {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -74,7 +75,7 @@ if (form) {
       // Redirect to Concierge AI page
       setTimeout(() => {
         // עדכן לנתיב האמיתי של מסך ה-AI שלך
-        window.location.href = "/ai_concierge/public/index.html";
+        window.location.href = "https://smart-hotel-concierge.onrender.com/";
       }, 900);
 
     } catch (err) {
