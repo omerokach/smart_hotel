@@ -67,7 +67,6 @@ async function loadConversations() {
       if (newest && (!lastSeen || newest > lastSeen)) {
         const badge = document.createElement("div");
         badge.classList.add("new-badge");
-        badge.textContent = "NEW";
         item.appendChild(badge);
       }
 
