@@ -14,12 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
   loadConversations();
   setupSendButton();
 
-  // Refresh every 3 seconds
+  // Refresh conversations list every 3 seconds
   setInterval(loadConversations, 3000);
 });
 
 /* ----------------------------------------------------------
-   Load list of conversations
+   Load conversations (only escalation + open tasks)
 ----------------------------------------------------------- */
 async function loadConversations() {
   const listEl = document.getElementById("conversations-list");
@@ -32,14 +32,12 @@ async function loadConversations() {
 
     if (!Array.isArray(tasks)) return;
 
-    // Keep only open tasks
     const openTasks = tasks.filter(t => t.status !== "closed");
 
-    // Always re-render (פשוט, יציב, עובד תמיד)
     listEl.innerHTML = "";
 
     openTasks.forEach(task => {
-      // Latest message timestamp (if provided from API)
+      // Save latest message time if exists
       if (task.last_message_time) {
         taskLastMessage[task.task_id] = task.last_message_time;
       }
@@ -48,23 +46,20 @@ async function loadConversations() {
       item.classList.add("conversation-item");
       item.dataset.taskId = task.task_id;
 
+      // Proper clean HTML template (NO duplication!)
       item.innerHTML = `
-        <div class="conversation-room">Room ${task.room_number}</div>
-        <div class="conversation-meta">Task #${task.task_id}</div>
-      
-       item.innerHTML = `
         <div class="conversation-title">
           <span class="room">Room ${task.room_number}</span>
           <span class="task">Task #${task.task_id}</span>
         </div>
-        `;
+      `;
 
-
-      // NEW badge
+      // NEW badge (blue dot)
       const lastSeen = lastSeenTimestamp[task.task_id];
       const newest = taskLastMessage[task.task_id];
+      const isNew = newest && (!lastSeen || newest > lastSeen);
 
-      if (newest && (!lastSeen || newest > lastSeen)) {
+      if (isNew) {
         const badge = document.createElement("div");
         badge.classList.add("new-badge");
         item.appendChild(badge);
@@ -91,19 +86,17 @@ function selectConversation(task) {
   document.getElementById("messages-client-name").textContent =
     `Room ${task.room_number}`;
 
-  // Enable chat
   document.getElementById("messages-input").disabled = false;
   document.getElementById("send-btn").disabled = false;
 
   loadMessages(activeTaskId);
 
-  // Restart live polling
   if (pollingMessages) clearInterval(pollingMessages);
   pollingMessages = setInterval(() => loadMessages(activeTaskId, true), 2000);
 
   highlightActiveConversation(task.task_id);
 
-  // Mark conversation as read
+  // Mark as seen
   lastSeenTimestamp[task.task_id] = new Date().toISOString();
 }
 
@@ -120,13 +113,12 @@ function highlightActiveConversation(taskId) {
 }
 
 /* ----------------------------------------------------------
-   Load messages for selected task
+   Load messages
 ----------------------------------------------------------- */
 async function loadMessages(taskId, silent = false) {
   if (!taskId) return;
 
   const box = document.getElementById("messages-box");
-
   if (!silent) box.innerHTML = "<p class='loading'>Loading...</p>";
 
   try {
@@ -135,7 +127,6 @@ async function loadMessages(taskId, silent = false) {
 
     if (!Array.isArray(messages)) return;
 
-    // Save newest message timestamp
     if (messages.length > 0) {
       taskLastMessage[taskId] = messages[messages.length - 1].timestamp;
     }
@@ -189,7 +180,7 @@ async function sendMessage() {
 }
 
 /* ----------------------------------------------------------
-   Setup send button and Enter key
+   Setup enter + send button
 ----------------------------------------------------------- */
 function setupSendButton() {
   document.getElementById("send-btn").addEventListener("click", sendMessage);
@@ -201,7 +192,7 @@ function setupSendButton() {
 }
 
 /* ----------------------------------------------------------
-   Helpers
+   Format time
 ----------------------------------------------------------- */
 function formatTime(ts) {
   const d = new Date(ts);
