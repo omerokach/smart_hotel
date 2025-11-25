@@ -28,24 +28,34 @@ async function loadConversations() {
 
     if (!Array.isArray(tasks)) return;
 
+    // Filter out closed tasks
+    const openTasks = tasks.filter(t => t.status !== "closed");
+
+    // Detect if there was any change
+    if (JSON.stringify(openTasks) === JSON.stringify(lastConversations)) {
+      return; // No changes → no re-render
+    }
+
+    // Save new list
+    lastConversations = openTasks;
+
+    // Clear UI and rebuild
     listEl.innerHTML = "";
 
-    tasks.forEach(task => {
+    openTasks.forEach(task => {
       const item = document.createElement("div");
       item.classList.add("conversation-item");
       item.dataset.taskId = task.task_id;
-
-      // Detect newest message timestamp known from DB (per room)
-      const latest = taskLastMessage[task.task_id];
 
       item.innerHTML = `
         <div class="conversation-room">Room ${task.room_number}</div>
         <div class="conversation-meta">Task #${task.task_id}</div>
       `;
 
-      // NEW indicator
+      // NEW badge logic
       const lastSeen = lastSeenTimestamp[task.task_id];
-      const isNew = latest && (!lastSeen || latest > lastSeen);
+      const newest = taskLastMessage[task.task_id];
+      const isNew = newest && (!lastSeen || newest > lastSeen);
 
       if (isNew) {
         const badge = document.createElement("div");
