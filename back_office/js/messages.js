@@ -32,14 +32,16 @@ async function loadConversations() {
 
     if (!Array.isArray(tasks)) return;
 
+    // keep only open tasks
     const openTasks = tasks.filter(t => t.status !== "closed");
+
     listEl.innerHTML = "";
 
+    openTasks.forEach(task => {
       const item = document.createElement("div");
       item.classList.add("conversation-item");
       item.dataset.taskId = task.task_id;
 
-      // HTML  
       item.innerHTML = `
         <div class="conversation-title">
           <span class="room">Room ${task.room_number}</span>
@@ -47,7 +49,7 @@ async function loadConversations() {
         </div>
       `;
 
-      // Bubble NEW 
+      // NEW badge logic
       const lastSeen = lastSeenTimestamp[task.task_id];
       const info = taskLastMessage[task.task_id];
 
@@ -62,7 +64,6 @@ async function loadConversations() {
         item.appendChild(badge);
       }
 
-
       item.addEventListener("click", () => selectConversation(task));
 
       listEl.appendChild(item);
@@ -74,7 +75,6 @@ async function loadConversations() {
     console.error("Failed loading tasks:", err);
   }
 }
-
 
 /* ----------------------------------------------------------
    Select conversation
