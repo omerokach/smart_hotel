@@ -273,6 +273,7 @@ router.post('/', async (req, res) => {
       opening_channel = null,
       created_at = null,
       updated_at = null,
+      escalation = false,
       closed_at = null
     } = req.body;
 
@@ -294,6 +295,7 @@ router.post('/', async (req, res) => {
       opening_channel,
       created_at,
       updated_at,
+      escalation,
       closed_at
     };
 
@@ -335,6 +337,7 @@ router.patch('/:task_id', async (req, res) => {
       request_details,
       opening_channel,
       closed_at,
+      escalation,
       internal_notes
     } = req.body;
 
