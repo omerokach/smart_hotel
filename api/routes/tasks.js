@@ -61,7 +61,7 @@ router.get('/:task_id/messages', async (req, res) => {
 
   try {
     const { data, error } = await supabase
-      .from('TaskMessages')
+      .from('Taskmessages')
       .select('*')
       .eq('task_id', taskId)
       .order('timestamp', { ascending: true });
@@ -94,12 +94,13 @@ router.post('/:task_id/messages', async (req, res) => {
 
   try {
     const { data, error } = await supabase
-      .from('TaskMessages')
+      .from('Taskmessages')
       .insert([
         {
           task_id: taskId,
           sender,
           message,
+          room_number,
           timestamp: new Date().toISOString()
         }
       ])
