@@ -1,7 +1,100 @@
+/* ===============================
+   GENERAL CHAT LAYOUT
+   =============================== */
+.dashboard-wrapper {
+  display: flex;
+  gap: 20px;
+  font-family: 'Wix Madefor Text', sans-serif;
+}
+
+/* ===============================
+   LEFT PANEL – Conversations List
+   =============================== */
+.conversations-panel {
+  width: 260px;
+  background: #f5f7f8;
+  border-radius: 12px;
+  padding: 16px;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.conversations-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Conversation item container */
+.conversation-item {
+  padding: 14px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e2e2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* Hover */
+.conversation-item:hover {
+  background: #eef4ff;
+}
+
+/* Active item highlight */
+.conversation-item.active {
+  background-color: #e8f1ff;
+  border-color: #c9dcff;
+}
+
+/* Inner text structure */
+.conversation-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Room number */
+.conversation-room {
+  font-size: 15px;
+  font-weight: 500;
+  color: #222;
+}
+
+/* Task number */
+.conversation-meta {
+  font-size: 13px;
+  opacity: 0.6;
+  color: #333;
+}
+
+/* NEW badge – small clean dot */
+.new-badge {
+  width: 10px;
+  height: 10px;
+  background-color: #1a73e8;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ===============================
+   RIGHT SIDE – Chat Panel
+   =============================== */
+.chat-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header above messages */
 .messages-header {
   margin-bottom: 20px;
 }
 
+/* Messages container */
 .messages-box {
   height: 60vh;
   background: #fff;
@@ -11,6 +104,9 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
+/* ===============================
+   CHAT MESSAGES BUBBLES
+   =============================== */
 .msg {
   max-width: 65%;
   padding: 12px 16px;
@@ -20,26 +116,33 @@
   position: relative;
 }
 
+/* Text block */
 .msg p {
   margin: 0 0 6px 0;
 }
 
+/* Timestamp */
 .msg span {
   font-size: 12px;
   opacity: 0.6;
 }
 
+/* Guest bubble */
 .msg-client {
   background: #e9eeff;
   margin-right: auto;
 }
 
+/* Staff bubble */
 .msg-staff {
   background: #116dff;
   color: white;
   margin-left: auto;
 }
 
+/* ===============================
+   INPUT SECTION
+   =============================== */
 .messages-input {
   margin-top: 16px;
   display: flex;
@@ -63,67 +166,21 @@
   border-radius: 12px;
   font-size: 15px;
   cursor: pointer;
-}
-
-.dashboard-wrapper {
-  display: flex;
-  gap: 20px;
-}
-
-/* Left panel */
-.conversations-panel {
-  width: 260px;
-  background: #f5f7f8;
-  border-radius: 12px;
-  padding: 16px;
-  height: calc(100vh - 120px);
-  overflow-y: auto;
-}
-
-.conversations-list {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.conversation-item {
-  padding: 12px;
-  background: white;
-  border-radius: 10px;
-  cursor: pointer;
   transition: 0.2s;
-  border: 1px solid #e2e2e2;
 }
 
-.conversation-item:hover {
-  background: #eef4ff;
-}
-
-.conversation-item.active {
-  border-color: #1a73e8;
-  background: #e8f1ff;
-}
-
-/* Chat panel stays the same but with fixed width */
-.chat-panel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.conversations-panel,
-.conversations-list,
-.conversation-item {
-  font-family: 'Wix Madefor Text', sans-serif;
+.messages-input button:hover {
+  background: #0a57d4;
 }
 
 .new-badge {
-  background: #ff3b30;
-  color: white;
-  padding: 3px 6px;
-  border-radius: 8px;
-  font-size: 10px;
-  font-weight: 600;
-  margin-left: 6px;
+  width: 10px;
+  height: 10px;
+  background-color: #1a73e8;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-left: 12px;
 }
+
+
+

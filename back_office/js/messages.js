@@ -3,24 +3,27 @@ const API_BASE = "https://smart-hotel-tasks-api.onrender.com";
 
 let activeTaskId = null;
 let pollingMessages = null;
+
 let lastSeenTimestamp = {};   // { taskId: timestamp }
 let taskLastMessage = {};     // { taskId: timestamp }
-let lastConversations = [];
 
-// Load conversations + start polling
+/* ----------------------------------------------------------
+   On page load
+----------------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
   loadConversations();
   setupSendButton();
 
-  // Poll for NEW conversations & updates
+  // Refresh conversations list every 3 seconds
   setInterval(loadConversations, 3000);
 });
 
 /* ----------------------------------------------------------
-   Load list of conversations (escalation only)
+   Load conversations (only escalation + open tasks)
 ----------------------------------------------------------- */
 async function loadConversations() {
   const listEl = document.getElementById("conversations-list");
+  if (!listEl) return;
 
   try {
     const res = await fetch(`${API_BASE}/api/tasks?escalation=true`);
@@ -29,42 +32,35 @@ async function loadConversations() {
 
     if (!Array.isArray(tasks)) return;
 
-    // Filter out closed tasks
+    // keep only open tasks
     const openTasks = tasks.filter(t => t.status !== "closed");
 
-    // Detect if there was any change
-    if (JSON.stringify(openTasks) === JSON.stringify(lastConversations)) {
-      return; // No changes → no re-render
-    }
-
-    // Save new list
-    lastConversations = openTasks;
-
-    // Clear UI and rebuild
     listEl.innerHTML = "";
 
     openTasks.forEach(task => {
-      if (task.last_message_time) {
-        taskLastMessage[task.task_id] = task.last_message_time;
-      }
       const item = document.createElement("div");
       item.classList.add("conversation-item");
       item.dataset.taskId = task.task_id;
 
       item.innerHTML = `
-        <div class="conversation-room">Room ${task.room_number}</div>
-        <div class="conversation-meta">Task #${task.task_id}</div>
+        <div class="conversation-title">
+          <span class="room">Room ${task.room_number}</span>
+          <span class="task">Task #${task.task_id}</span>
+        </div>
       `;
 
       // NEW badge logic
       const lastSeen = lastSeenTimestamp[task.task_id];
-      const newest = taskLastMessage[task.task_id];
-      const isNew = newest && (!lastSeen || newest > lastSeen);
+      const info = taskLastMessage[task.task_id];
+
+      const isNew =
+        info &&
+        info.sender === "guest" &&
+        (!lastSeen || info.timestamp > lastSeen);
 
       if (isNew) {
         const badge = document.createElement("div");
         badge.classList.add("new-badge");
-        badge.textContent = "NEW";
         item.appendChild(badge);
       }
 
@@ -88,6 +84,7 @@ function selectConversation(task) {
 
   document.getElementById("messages-client-name").textContent =
     `Room ${task.room_number}`;
+
   document.getElementById("messages-input").disabled = false;
   document.getElementById("send-btn").disabled = false;
 
@@ -103,7 +100,7 @@ function selectConversation(task) {
 }
 
 /* ----------------------------------------------------------
-   Highlight selected chat
+   Highlight active conversation
 ----------------------------------------------------------- */
 function highlightActiveConversation(taskId) {
   document.querySelectorAll(".conversation-item").forEach(item => {
@@ -129,11 +126,13 @@ async function loadMessages(taskId, silent = false) {
 
     if (!Array.isArray(messages)) return;
 
-    // Save latest message timestamp
-    if (messages.length > 0) {
-      const latest = messages[messages.length - 1].timestamp;
-      taskLastMessage[taskId] = latest;
-    }
+   if (messages.length > 0) {
+     const lastMsg = messages[messages.length - 1];
+     taskLastMessage[taskId] = {
+       timestamp: lastMsg.timestamp,
+       sender: lastMsg.sender
+     };
+   }
 
     box.innerHTML = "";
 
@@ -166,10 +165,7 @@ async function sendMessage() {
 
   if (!text || !activeTaskId) return;
 
-  const payload = {
-    sender: "staff",
-    message: text
-  };
+  const payload = { sender: "staff", message: text };
 
   try {
     await fetch(`${API_BASE}/api/tasks/${activeTaskId}/messages`, {
@@ -187,7 +183,19 @@ async function sendMessage() {
 }
 
 /* ----------------------------------------------------------
-   Helpers
+   Setup enter + send button
+----------------------------------------------------------- */
+function setupSendButton() {
+  document.getElementById("send-btn").addEventListener("click", sendMessage);
+
+  document.getElementById("messages-input")
+    .addEventListener("keypress", e => {
+      if (e.key === "Enter") sendMessage();
+    });
+}
+
+/* ----------------------------------------------------------
+   Format time
 ----------------------------------------------------------- */
 function formatTime(ts) {
   const d = new Date(ts);
