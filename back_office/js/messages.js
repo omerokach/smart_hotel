@@ -8,13 +8,13 @@ let lastSeenTimestamp = {};   // { taskId: timestamp }
 let taskLastMessage = {};     // { taskId: timestamp }
 
 /* ----------------------------------------------------------
-   Load page
+   On page load
 ----------------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
   loadConversations();
   setupSendButton();
 
-  // Refresh conversation list continuously
+  // Refresh every 3 seconds
   setInterval(loadConversations, 3000);
 });
 
@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
 ----------------------------------------------------------- */
 async function loadConversations() {
   const listEl = document.getElementById("conversations-list");
+  if (!listEl) return;
 
   try {
     const res = await fetch(`${API_BASE}/api/tasks?escalation=true`);
@@ -31,33 +32,32 @@ async function loadConversations() {
 
     if (!Array.isArray(tasks)) return;
 
-    // Filter out closed tasks
+    // Keep only open tasks
     const openTasks = tasks.filter(t => t.status !== "closed");
 
-    // Always re-render (otherwise new ones לא יופיעו)
+    // Always re-render (פשוט, יציב, עובד תמיד)
     listEl.innerHTML = "";
 
     openTasks.forEach(task => {
-      const item = document.createElement("div");
-      item.classList.add("conversation-item");
-      item.dataset.taskId = task.task_id;
-
-      // Save latest msg timestamp from API (if provided)
+      // Latest message timestamp (if provided from API)
       if (task.last_message_time) {
         taskLastMessage[task.task_id] = task.last_message_time;
       }
+
+      const item = document.createElement("div");
+      item.classList.add("conversation-item");
+      item.dataset.taskId = task.task_id;
 
       item.innerHTML = `
         <div class="conversation-room">Room ${task.room_number}</div>
         <div class="conversation-meta">Task #${task.task_id}</div>
       `;
 
-      // NEW badge logic
+      // NEW badge
       const lastSeen = lastSeenTimestamp[task.task_id];
       const newest = taskLastMessage[task.task_id];
-      const isNew = newest && (!lastSeen || newest > lastSeen);
 
-      if (isNew) {
+      if (newest && (!lastSeen || newest > lastSeen)) {
         const badge = document.createElement("div");
         badge.classList.add("new-badge");
         badge.textContent = "NEW";
@@ -84,21 +84,22 @@ function selectConversation(task) {
 
   document.getElementById("messages-client-name").textContent =
     `Room ${task.room_number}`;
+
+  // Enable chat
   document.getElementById("messages-input").disabled = false;
   document.getElementById("send-btn").disabled = false;
 
   loadMessages(activeTaskId);
 
+  // Restart live polling
   if (pollingMessages) clearInterval(pollingMessages);
   pollingMessages = setInterval(() => loadMessages(activeTaskId, true), 2000);
 
   highlightActiveConversation(task.task_id);
 
-  // Mark NEW as seen — remove from memory
+  // Mark conversation as read
   lastSeenTimestamp[task.task_id] = new Date().toISOString();
-  delete taskLastMessage[task.task_id]; 
 }
-
 
 /* ----------------------------------------------------------
    Highlight active conversation
@@ -113,12 +114,13 @@ function highlightActiveConversation(taskId) {
 }
 
 /* ----------------------------------------------------------
-   Load messages
+   Load messages for selected task
 ----------------------------------------------------------- */
 async function loadMessages(taskId, silent = false) {
   if (!taskId) return;
 
   const box = document.getElementById("messages-box");
+
   if (!silent) box.innerHTML = "<p class='loading'>Loading...</p>";
 
   try {
@@ -127,7 +129,7 @@ async function loadMessages(taskId, silent = false) {
 
     if (!Array.isArray(messages)) return;
 
-    // Save latest timestamp
+    // Save newest message timestamp
     if (messages.length > 0) {
       taskLastMessage[taskId] = messages[messages.length - 1].timestamp;
     }
@@ -179,16 +181,18 @@ async function sendMessage() {
     console.error("Failed sending message:", err);
   }
 }
+
+/* ----------------------------------------------------------
+   Setup send button and Enter key
+----------------------------------------------------------- */
 function setupSendButton() {
   document.getElementById("send-btn").addEventListener("click", sendMessage);
 
-  // שולח גם עם Enter
   document.getElementById("messages-input")
     .addEventListener("keypress", e => {
       if (e.key === "Enter") sendMessage();
     });
 }
-
 
 /* ----------------------------------------------------------
    Helpers
