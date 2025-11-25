@@ -5,10 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>MILEY · messages</title>
 
-  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Wix+Madefor+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- CSS -->
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/messages.css">
 </head>
@@ -53,34 +51,29 @@
     <main class="content">
       <div class="dashboard-wrapper">
 
-        <!-- messages Header -->
-        <header class="messages-header">
-          <div>
-            <h2 id="messages-client-name">Guest: Emma Stone</h2>
-            <p class="sub" id="messages-status">Online now</p>
-          </div>
-        </header>
-
-        <!-- messages Container -->
-        <div class="messages-box" id="messages-box">
-
-          <!-- Example messages -->
-          <div class="msg msg-client">
-            <p>Hello, I need towels please 🙂</p>
-            <span>12:58</span>
-          </div>
-
-          <div class="msg msg-staff">
-            <p>Of course! Sending someone now.</p>
-            <span>13:00</span>
-          </div>
-
+        <!-- LEFT PANEL: Conversations -->
+        <div class="conversations-panel" id="conversations-panel">
+          <h3 class="panel-title">Open conversations</h3>
+          <div id="conversations-list" class="conversations-list"></div>
         </div>
 
-        <!-- Input -->
-        <div class="messages-input">
-          <input type="text" id="messages-input" placeholder="Write a message..." />
-          <button id="send-btn">Send</button>
+        <!-- RIGHT PANEL: Chat -->
+        <div class="chat-panel">
+
+          <header class="messages-header">
+            <div>
+              <h2 id="messages-client-name">Select a conversation</h2>
+              <p class="sub" id="messages-status"> </p>
+            </div>
+          </header>
+
+          <div class="messages-box" id="messages-box"></div>
+
+          <div class="messages-input">
+            <input type="text" id="messages-input" placeholder="Write a message..." disabled />
+            <button id="send-btn" disabled>Send</button>
+          </div>
+
         </div>
 
       </div>
@@ -90,6 +83,6 @@
 
 </section>
 
-<script src="messages.js"></script>
+<script src="js/messages.js"></script>
 </body>
 </html>

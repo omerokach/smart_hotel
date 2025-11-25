@@ -64,3 +64,56 @@
   font-size: 15px;
   cursor: pointer;
 }
+
+.dashboard-wrapper {
+  display: flex;
+  gap: 20px;
+}
+
+/* Left panel */
+.conversations-panel {
+  width: 260px;
+  background: #f5f7f8;
+  border-radius: 12px;
+  padding: 16px;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.conversations-list {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.conversation-item {
+  padding: 12px;
+  background: white;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 1px solid #e2e2e2;
+}
+
+.conversation-item:hover {
+  background: #eef4ff;
+}
+
+.conversation-item.active {
+  border-color: #1a73e8;
+  background: #e8f1ff;
+}
+
+/* Chat panel stays the same but with fixed width */
+.chat-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.conversations-panel,
+.conversations-list,
+.conversation-item {
+  font-family: 'Wix Madefor Text', sans-serif;
+}
