@@ -44,7 +44,7 @@ if (form) {
     if (submitBtn) submitBtn.disabled = true;
 
        try {
-        const response = await fetch("smart-hotel-tasks-api.onrender.com/api/reservations/verify-guest",
+        const response = await fetch("https://smart-hotel-tasks-api.onrender.com/api/reservations/verify-guest",
         {
         method: "POST",
         headers: { "Content-Type": "application/json" },
