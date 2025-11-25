@@ -30,6 +30,78 @@ function parseCsvParam(value) {
 }
 
 /**
+ * GET /api/tasks/:task_id/messages
+ * Get all messages for a task
+ */
+router.get('/:task_id/messages', async (req, res) => {
+  const taskId = Number(req.params.task_id);
+
+  if (Number.isNaN(taskId)) {
+    return res.status(400).json({ error: 'task_id must be a number' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('TaskMessages')
+      .select('*')
+      .eq('task_id', taskId)
+      .order('timestamp', { ascending: true });
+
+    if (error) {
+      console.error('Error fetching messages:', error);
+      return res.status(500).json({ error: 'Failed to fetch messages' });
+    }
+
+    return res.json(data);
+  } catch (err) {
+    console.error('Unexpected error fetching messages:', err);
+    return res.status(500).json({ error: 'Unexpected server error' });
+  }
+});
+
+/**
+ * POST /api/tasks/:task_id/messages
+ * Create new message for task
+ */
+router.post('/:task_id/messages', async (req, res) => {
+  const taskId = Number(req.params.task_id);
+  const { sender, message } = req.body;
+
+  if (Number.isNaN(taskId)) {
+    return res.status(400).json({ error: 'task_id must be a number' });
+  }
+
+  if (!sender || !message) {
+    return res.status(400).json({ error: 'sender and message are required' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('TaskMessages')
+      .insert([
+        {
+          task_id: taskId,
+          sender,
+          message,
+          timestamp: new Date().toISOString()
+        }
+      ])
+      .select('*')
+      .single();
+
+    if (error) {
+      console.error('Error inserting message:', error);
+      return res.status(500).json({ error: 'Failed to create message' });
+    }
+
+    return res.status(201).json(data);
+  } catch (err) {
+    console.error('Unexpected error creating message:', err);
+    return res.status(500).json({ error: 'Unexpected server error' });
+  }
+});
+
+/**
  * GET /api/tasks
  * Supports:
  *   Basic filters:
