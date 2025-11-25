@@ -52,15 +52,21 @@ async function loadConversations() {
         </div>
       `;
 
-      // Bubble NEW — נקודה בלבד
+      // Bubble NEW 
       const lastSeen = lastSeenTimestamp[task.task_id];
-      const newest = taskLastMessage[task.task_id];
-
-      if (newest && (!lastSeen || newest > lastSeen)) {
+      const lastInfo = taskLastMessage[task.task_id];
+      
+      const isNew =
+        lastInfo &&
+        lastInfo.sender === "guest" &&        // רק הודעת אורח!
+        (!lastSeen || lastInfo.timestamp > lastSeen);
+      
+      if (isNew) {
         const badge = document.createElement("div");
         badge.classList.add("new-badge");
         item.appendChild(badge);
       }
+
 
       item.addEventListener("click", () => selectConversation(task));
 
@@ -125,9 +131,13 @@ async function loadMessages(taskId, silent = false) {
 
     if (!Array.isArray(messages)) return;
 
-    if (messages.length > 0) {
-      taskLastMessage[taskId] = messages[messages.length - 1].timestamp;
-    }
+   if (messages.length > 0) {
+     const lastMsg = messages[messages.length - 1];
+     taskLastMessage[taskId] = {
+       timestamp: lastMsg.timestamp,
+       sender: lastMsg.sender
+     };
+   }
 
     box.innerHTML = "";
 
