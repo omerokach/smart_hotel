@@ -9,7 +9,7 @@ import { getMenu } from './tools/roomService.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const API_URL = process.env.TASKS_API_URL || 'http://localhost:3001';
+const API_URL = "https://smart-hotel-tasks-api.onrender.com/api/tasks" || 'http://localhost:3001';
 
 // Middleware
 app.use(cors());
