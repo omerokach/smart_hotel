@@ -6,6 +6,7 @@ import { run } from '@openai/agents';
 import { hotelConciergeAgent } from './agent.js';
 import { getAndClearLastServiceToolExecution, getAndClearLastEscalationExecution } from './toolExecutionTracker.js';
 import { getMenu } from './tools/roomService.js';
+import { setCurrentRoomNumber } from './sessionContext.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -100,6 +101,7 @@ interface Session {
   escalated: boolean;
   taskId: number | null;
   lastMessageCheck: Date | null;
+  roomNumber: string;
 }
 
 const sessions = new Map<string, Session>();
@@ -107,7 +109,7 @@ const sessions = new Map<string, Session>();
 // Chat endpoint
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, sessionId = 'default' } = req.body;
+    const { message, sessionId = 'default', roomNumber = '103' } = req.body;
     
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Message is required' });
@@ -119,8 +121,10 @@ app.post('/api/chat', async (req, res) => {
         messages: [], 
         escalated: false, 
         taskId: null, 
-        lastMessageCheck: null 
+        lastMessageCheck: null,
+        roomNumber: roomNumber 
       });
+      console.log(`🏨 New session created with room number: ${roomNumber}`);
     }
     
     const session = sessions.get(sessionId)!;
@@ -136,7 +140,7 @@ app.post('/api/chat', async (req, res) => {
       console.log('');
       
       // Save guest message to TaskMessages
-      await saveMessageToTask(session.taskId, 'guest', message);
+      await saveMessageToTask(session.taskId, 'guest', message, session.roomNumber);
       
       // Check for new agent messages
       const newAgentMessages = await getNewAgentMessages(session.taskId, session.lastMessageCheck);
@@ -176,6 +180,9 @@ app.post('/api/chat', async (req, res) => {
     
     // NORMAL AI FLOW - Session not escalated
     console.log('Session has', session.messages.length, 'messages');
+    
+    // Set current room number for tools to access
+    setCurrentRoomNumber(session.roomNumber);
     
     // Create context from recent history (last 4 messages)
     const recentHistory = session.messages.slice(-5, -1); // Exclude current message
@@ -223,7 +230,7 @@ app.post('/api/chat', async (req, res) => {
       console.log(`💾 Saving ${historyToSave.length} conversation messages to task ${escalatedTaskId}...`);
       
       for (const msg of historyToSave) {
-        await saveMessageToTask(escalatedTaskId, 'guest', msg.content);
+        await saveMessageToTask(escalatedTaskId, 'guest', msg.content, session.roomNumber);
       }
       
       // Update session to escalated state
@@ -353,7 +360,7 @@ app.post('/api/chat', async (req, res) => {
       // Create task via API
       try {
         const taskPayload = {
-          room_number: "103",
+          room_number: session.roomNumber,
           request_type: requestType,
           assigned_department: assignedDepartment,
           status: "open",

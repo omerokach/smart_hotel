@@ -442,7 +442,10 @@
         const messageInput = document.getElementById('message-input');
         const sendButton = document.getElementById('send-button');
         const sessionId = 'web-' + Math.random().toString(36).substr(2, 9);
+        const roomNumber = localStorage.getItem('guest_room_number') || '103';
         let isFirstMessage = true;
+        
+        console.log('🏨 Room number:', roomNumber);
 
         function addMessage(content, role) {
             if (isFirstMessage) {
@@ -517,7 +520,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ message, sessionId }),
+                    body: JSON.stringify({ message, sessionId, roomNumber }),
                 });
 
                 if (!response.ok) {

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { EscalationRequest } from '../types.js';
+import { getCurrentRoomNumber } from '../sessionContext.js';
 
 export const escalationSchema = z.object({
   requestType: z.string().describe('Brief category of the request (e.g., "billing issue", "maintenance", "special accommodation")'),
@@ -27,8 +28,9 @@ export async function escalateToHuman(params: z.infer<typeof escalationSchema>):
       'high': 'Urgent'
     };
     
+    const roomNumber = getCurrentRoomNumber();
     const taskPayload = {
-      room_number: "103",
+      room_number: roomNumber,
       request_type: "escalation",
       assigned_department: "Chat",
       internal_notes: `Escalation Type: ${params.requestType}\nDescription: ${params.description}\nUrgency: ${params.urgency}`,
@@ -60,7 +62,7 @@ export async function escalateToHuman(params: z.infer<typeof escalationSchema>):
     console.log('║                   ESCALATION TASK CREATED                    ║');
     console.log('╚══════════════════════════════════════════════════════════════╝');
     console.log('📋 TASK ID:', taskId);
-    console.log('🏨 Room Number: 103');
+    console.log('🏨 Room Number:', roomNumber);
     console.log('🏷️  Request Type: escalation');
     console.log('👥 Department: Chat');
     console.log('⚡ Priority:', priorityMap[params.urgency]);
