@@ -443,9 +443,19 @@
         const sendButton = document.getElementById('send-button');
         const sessionId = 'web-' + Math.random().toString(36).substr(2, 9);
         const roomNumber = localStorage.getItem('guest_room_number');
+        const guestName = localStorage.getItem('guest_name');
         let isFirstMessage = true;
         
         console.log('🏨 Room number:', roomNumber);
+        console.log('👤 Guest name:', guestName);
+        
+        // Personalize welcome message with guest name
+        if (guestName) {
+            const welcomeHeader = document.querySelector('.welcome-message h2');
+            if (welcomeHeader) {
+                welcomeHeader.textContent = `Welcome, ${guestName}!`;
+            }
+        }
 
         function addMessage(content, role) {
             if (isFirstMessage) {
