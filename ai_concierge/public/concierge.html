@@ -442,7 +442,7 @@
         const messageInput = document.getElementById('message-input');
         const sendButton = document.getElementById('send-button');
         const sessionId = 'web-' + Math.random().toString(36).substr(2, 9);
-        const roomNumber = localStorage.getItem('guest_room_number') || '103';
+        const roomNumber = localStorage.getItem('guest_room_number');
         let isFirstMessage = true;
         
         console.log('🏨 Room number:', roomNumber);
