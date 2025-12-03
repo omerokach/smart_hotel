@@ -93,7 +93,7 @@ if (form) {
       console.log("Saved name:", localStorage.getItem("guest_name"));
 
       setTimeout(() => {
-        window.location.href = "https://smart-hotel-concierge.onrender.com/concierge.html";
+        window.location.href = "/concierge.html";
       }, 900);
 
     } catch (err) {

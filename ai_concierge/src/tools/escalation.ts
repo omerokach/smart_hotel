@@ -14,7 +14,7 @@ export async function escalateToHuman(params: z.infer<typeof escalationSchema>):
   console.log('📄 Description:', params.description);
   console.log('⚡ Urgency:', params.urgency);
   
-  const API_URL = process.env.TASKS_API_URL || 'http://localhost:3001';
+  const API_URL = 'https://smart-hotel-tasks-api.onrender.com';
   const ticketId = generateTicketId();
   const estimatedResponse = getEstimatedResponseTime(params.urgency);
   
