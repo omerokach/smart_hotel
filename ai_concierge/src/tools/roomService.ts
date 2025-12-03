@@ -30,7 +30,12 @@ ROOM SERVICE FLOW:
    → Ask: "Excellent choice. Would you like to add any special instructions for your order?"
 
 3. IF (User answers special instructions) OR (Already answered):
-   → Say: "Let me confirm your order: [items with prices]. Is this correct? Please confirm so I can proceed."
+   → Confirm naturally: "[Item name](, [special instructions if any]). That will be $[price]. Should I place this order for you?"
+   → Examples:
+      • "Cheesecake, no spicy. That will be $10. Should I place this order for you?"
+      • "Caesar Salad with extra dressing. That will be $16. Should I place this order for you?"
+      • "Club Sandwich and a Cappuccino. That will be $24. Should I place this order for you?"
+   → Keep it conversational and friendly, not robotic.
 
 4. IF (User confirms e.g. "Yes", "Correct"):
    → EXECUTE TOOL: orderRoomService
@@ -40,6 +45,7 @@ CRITICAL:
 - DO NOT loop back to previous steps.
 - DO NOT ask "How can I assist you?".
 - EXECUTE the tool immediately upon confirmation.
+- Keep confirmations SHORT and NATURAL - avoid phrases like "with no spicy instructions" or "Let me confirm your order:".
 `;
 
 export function getRoomServiceMenu() {
