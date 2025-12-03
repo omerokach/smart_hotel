@@ -35,7 +35,7 @@ router.post('/verify-guest', async (req, res) => {
 
     const { data, error } = await supabase
       .from(TABLE_NAME)
-      .select('reservation_id, room_number, phone_number, guest_full_name')
+      .select('reservation_id, room_number, phone_number, guest_full_name, guest_email')
       .eq('room_number', room_number)
       .eq('phone_number', normalizedPhone)
       .maybeSingle();
@@ -58,7 +58,8 @@ router.post('/verify-guest', async (req, res) => {
     return res.json({
       success: true,
       guest_full_name: data.guest_full_name || null,
-      room_number: data.room_number
+      room_number: data.room_number,
+      guest_email: data.guest_email
     });
 
   } catch (err) {

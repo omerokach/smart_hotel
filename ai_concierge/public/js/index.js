@@ -85,12 +85,16 @@ if (form) {
 
       // SAVE DETAILS → LocalStorage
       console.log("API RESULT:", result);
+
       localStorage.setItem("guest_room_number", result.room_number);
       localStorage.setItem("guest_name", result.guest_full_name || "");
+      localStorage.setItem("guest_email", result.guest_email || "");
 
       // Debug logs
       console.log("Saved room:", localStorage.getItem("guest_room_number"));
       console.log("Saved name:", localStorage.getItem("guest_name"));
+      console.log("Saved email:", localStorage.getItem("guest_email"));
+
 
       setTimeout(() => {
         window.location.href = "/concierge.html";
