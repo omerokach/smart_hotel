@@ -164,12 +164,10 @@ app.post('/api/chat', async (req, res) => {
           escalated: true,
         });
       } else {
-        // No agent response yet
-        const waitingMessage = "Your message has been sent to our representative. They will respond shortly.";
-        session.messages.push({ role: 'assistant', content: waitingMessage });
-        
+        // No agent response yet - don't send any AI message, just acknowledge silently
+        // The guest's message was already saved to TaskMessages above
         return res.json({
-          response: waitingMessage,
+          response: null,  // No response to display
           sessionId,
           chatEnded: false,
           taskId: session.taskId,
