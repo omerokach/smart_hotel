@@ -7,6 +7,7 @@ import { hotelConciergeAgent } from './agent.js';
 import { getAndClearLastServiceToolExecution, getAndClearLastEscalationExecution } from './toolExecutionTracker.js';
 import { getMenu } from './tools/roomService.js';
 import { setCurrentRoomNumber } from './sessionContext.js';
+import { sendSpaCalendarInvite } from './integrations/googleCalendar.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -102,6 +103,8 @@ interface Session {
   taskId: number | null;
   lastMessageCheck: Date | null;
   roomNumber: string;
+  guestEmail?: string | null;
+  guestName?: string | null;
 }
 
 const sessions = new Map<string, Session>();
@@ -109,7 +112,7 @@ const sessions = new Map<string, Session>();
 // Chat endpoint
 app.post('/api/chat', async (req, res) => {
   try {
-    const { message, sessionId = 'default', roomNumber = '103' } = req.body;
+    const { message, sessionId = 'default', roomNumber = '103', guestEmail = null, guestName = null } = req.body;
     
     if (!message || typeof message !== 'string') {
       return res.status(400).json({ error: 'Message is required' });
@@ -122,12 +125,23 @@ app.post('/api/chat', async (req, res) => {
         escalated: false, 
         taskId: null, 
         lastMessageCheck: null,
-        roomNumber: roomNumber 
+        roomNumber,
+        guestEmail,
+        guestName,
       });
       console.log(`🏨 New session created with room number: ${roomNumber}`);
     }
     
     const session = sessions.get(sessionId)!;
+    if (roomNumber && session.roomNumber !== roomNumber) {
+      session.roomNumber = roomNumber;
+    }
+    if (guestEmail) {
+      session.guestEmail = guestEmail;
+    }
+    if (guestName) {
+      session.guestName = guestName;
+    }
     
     // Add user message to history
     session.messages.push({ role: 'user', content: message });
@@ -344,6 +358,36 @@ app.post('/api/chat', async (req, res) => {
         requestDetails = 'Service request from guest';
       }
       
+      if (serviceExecution.toolName === 'book_spa_appointment') {
+        const guestEmailForInvite = session.guestEmail;
+        if (!guestEmailForInvite) {
+          console.warn('⚠️ Guest email missing. Skipping Google Calendar invite.');
+        } else {
+          const spaArgs = serviceExecution.args || {};
+          const spaResult = serviceExecution.result || {};
+          const durationFromArgs = spaArgs.duration ? parseInt(spaArgs.duration, 10) : null;
+          const durationFromResult = spaResult.duration ? parseInt(spaResult.duration, 10) : null;
+          
+          try {
+            const inviteResult = await sendSpaCalendarInvite({
+              guestEmail: guestEmailForInvite,
+              guestName: session.guestName,
+              treatment: spaArgs.treatment || spaResult.treatment || 'Spa Treatment',
+              preferredTime: spaArgs.preferredTime || spaResult.preferredTime || 'Preferred time not specified',
+              durationMinutes: durationFromArgs || durationFromResult || undefined,
+              confirmationCode: spaResult.confirmationCode,
+              roomNumber: session.roomNumber,
+            });
+            
+            if (!inviteResult.success) {
+              console.warn('⚠️ Calendar invite not sent:', inviteResult.message);
+            }
+          } catch (inviteError) {
+            console.error('❌ Error sending Google Calendar invite:', inviteError);
+          }
+        }
+      }
+      
       // Map tool names to departments
       const departmentMap: Record<string, string> = {
         'request_housekeeping': 'Maintenance',
@@ -481,4 +525,3 @@ app.listen(PORT, () => {
 });
 
 export default app;
-

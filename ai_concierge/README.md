@@ -14,7 +14,7 @@ An intelligent hotel customer service agent built with the [OpenAI Agents SDK](h
   - **Room Service**: Order food and beverages
   - **Housekeeping**: Request room cleaning (full-clean, quick-tidy, turndown)
   - **Towels**: Request additional towels (bath, hand, pool, or assorted)
-  - **Spa Booking**: Schedule spa treatments and appointments
+  - **Spa Booking**: Schedule spa treatments and appointments with automatic Google Calendar invites for guests
 
 ## 🚀 Quick Start
 
@@ -102,6 +102,25 @@ Guest: "I want to book a massage for tomorrow afternoon. Room 501."
 Agent: "Wonderful! What time would work best for you tomorrow afternoon?"
 ```
 
+## 📅 Google Calendar Invites
+
+Spa bookings can automatically email guests a Google Calendar invitation. Choose one of the following auth options and add the variables to `.env`:
+
+**Option A – OAuth (recommended for personal Gmail calendars):**
+- `GOOGLE_OAUTH_CLIENT_ID` / `GOOGLE_OAUTH_CLIENT_SECRET` – From your OAuth client
+- `GOOGLE_REFRESH_TOKEN` – Generated via `npx ts-node scripts/get-google-token.ts`
+- `GOOGLE_OAUTH_REDIRECT_URI` *(optional)* – Defaults to `http://localhost:3000/oauth2callback`
+
+**Option B – Service Account (works best with Workspace calendars):**
+- `GOOGLE_SERVICE_ACCOUNT_EMAIL` – Service account email with calendar access
+- `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` – Private key (wrap in quotes, convert newlines to `\n`)
+
+**Shared settings (required for both options):**
+- `SPA_CALENDAR_ID` – Calendar ID where spa events should be created
+- `SPA_CALENDAR_TIMEZONE` *(optional)* – Defaults to `America/New_York`
+
+If these values are missing, the concierge will still create spa tasks but will skip the calendar invite step.
+
 ## 🏗️ Project Structure
 
 ```
@@ -118,6 +137,8 @@ smartHotel/
 │   │   ├── spa-menu.json             # Spa treatments menu
 │   │   ├── events.json               # Hotel events
 │   │   └── activity-hours.json       # Facility hours
+│   ├── integrations/
+│   │   └── googleCalendar.ts         # Google Calendar invite helper
 │   └── tools/
 │       ├── roomService.ts            # Room service tool
 │       ├── housekeeping.ts           # Housekeeping tool
@@ -325,4 +346,3 @@ Feel free to submit issues and enhancement requests!
 ---
 
 Built with ❤️ using the [OpenAI Agents SDK](https://openai.github.io/openai-agents-js)
-

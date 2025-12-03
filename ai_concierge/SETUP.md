@@ -55,6 +55,35 @@ Replace `sk-your-actual-key-here` with your actual API key.
 
 Choose one of these options:
 
+### (Optional) Configure Google Calendar Invites
+
+To email guests a Google Calendar invitation for spa bookings, add the relevant environment variables:
+
+**Option A – OAuth (ideal for regular Gmail calendars)**
+```bash
+GOOGLE_OAUTH_CLIENT_ID=your_client_id.apps.googleusercontent.com
+GOOGLE_OAUTH_CLIENT_SECRET=your_client_secret
+GOOGLE_REFRESH_TOKEN=token_from_get-google-token_script
+# Optional
+GOOGLE_OAUTH_REDIRECT_URI=http://localhost:3000/oauth2callback
+```
+
+Generate the refresh token by running `npx ts-node scripts/get-google-token.ts` after setting the client ID and secret.
+
+**Option B – Service Account (works best with Workspace)**
+```bash
+GOOGLE_SERVICE_ACCOUNT_EMAIL=service-account@project.iam.gserviceaccount.com
+GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+```
+
+**Required for both options**
+```bash
+SPA_CALENDAR_ID=your_calendar_id@group.calendar.google.com
+SPA_CALENDAR_TIMEZONE=America/New_York  # optional override
+```
+
+If none of these values are set, the concierge will skip the invite step but still create the regular service task.
+
 #### 🌐 Web Interface (Best for demos)
 ```bash
 npm run web
@@ -155,4 +184,3 @@ Once your setup is working:
 ---
 
 Ready to build? Start with: `npm run web` 🚀
-

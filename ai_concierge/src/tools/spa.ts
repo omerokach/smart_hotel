@@ -56,9 +56,6 @@ export const spaBookingSchema = z.object({
 });
 
 export async function bookSpaAppointment(params: z.infer<typeof spaBookingSchema>): Promise<SpaAppointment> {
-  // Track this service tool execution
-  trackServiceToolExecution('book_spa_appointment', params);
-  
   // Simulate API call to spa booking system
   console.log('💆 Processing spa booking...', params);
   
@@ -79,7 +76,10 @@ export async function bookSpaAppointment(params: z.infer<typeof spaBookingSchema
     duration: `${defaultDuration} minutes`,
     confirmationCode,
   };
-  
+
+  // Track this service tool execution with the appointment result
+  trackServiceToolExecution('book_spa_appointment', params, appointment);
+
   return appointment;
 }
 
@@ -95,4 +95,3 @@ function inferDuration(treatment: string): string {
   if (lowerTreatment.includes('body wrap')) return '90';
   return '60'; // default
 }
-

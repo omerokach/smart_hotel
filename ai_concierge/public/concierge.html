@@ -444,6 +444,7 @@
         const sessionId = 'web-' + Math.random().toString(36).substr(2, 9);
         const roomNumber = localStorage.getItem('guest_room_number') || '103'; // Default to room 103 if not set
         const guestName = localStorage.getItem('guest_name');
+        const guestEmail = localStorage.getItem('guest_email');
         let isFirstMessage = true;
         
         console.log('🏨 Room number:', roomNumber);
@@ -530,7 +531,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ message, sessionId, roomNumber }),
+                    body: JSON.stringify({ message, sessionId, roomNumber, guestName, guestEmail }),
                 });
 
                 if (!response.ok) {
@@ -648,4 +649,3 @@
     </script>
 </body>
 </html>
-
