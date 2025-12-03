@@ -28,19 +28,25 @@ STEP 1: INITIAL REQUEST (User clicks button or says "Book Spa")
 
 STEP 2: GUEST SELECTS TREATMENT (User says "Deep Tissue Massage")
 → CRITICAL: Do NOT show the menu again.
-→ Response: "A [treatment name] is an excellent choice. When would you like to book this treatment? All slots are currently available for your convenience. (Please state your preferred date and time)."
+→ Response: "Great choice! When would you like to schedule your [treatment name]?"
 
-STEP 3: GUEST PROVIDES TIME (User says "6:30 PM")
-→ Response: "Let me confirm your request: A [treatment name], at [time]. Is this correct? Please confirm so I can proceed with the reservation."
+STEP 3: GUEST PROVIDES TIME (User says "tomorrow at 6:30 PM")
+→ Confirm naturally: "[Treatment name], [day/time]. Should I book it for you?"
+→ Examples:
+   • "Deep Tissue Massage, tomorrow at 6:30 PM. Should I book it for you?"
+   • "Swedish Massage, today at 3:00 PM. Should I book it for you?"
+   • "Signature Facial, Friday at 11:00 AM. Should I book it for you?"
+→ Keep it SHORT and conversational.
 
 STEP 4: CONFIRMATION (User says "Yes/Confirm")
 → Execute spaTool
-→ Response: "Wonderful. Your treatment has been successfully booked for [time]. We look forward to seeing you. Have a wonderful day and enjoy your stay with us!"
+→ Response: "You're all set! Your [treatment name] is booked for [time]. We look forward to seeing you at the spa!"
 
 CRITICAL RULES:
 - If user ALREADY selected treatment (e.g., "I want a massage"), SKIP Step 1 and go STRAIGHT to Step 2.
 - NEVER show the menu if the guest has already named their treatment.
 - Execute tool ONLY after Step 4 (Guest confirms).
+- Keep confirmations SHORT and NATURAL - avoid "Let me confirm your request:" or robotic phrasing.
 `;
 
 export const spaBookingSchema = z.object({

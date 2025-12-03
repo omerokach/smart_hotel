@@ -7,21 +7,27 @@ export const housekeepingInstructions = `
 HOUSEKEEPING TOOL - EXACT CONVERSATION FLOW:
 
 STEP 1: INITIAL REQUEST (User clicks button or says "Housekeeping")
-→ Response: "Welcome! I would be pleased to assist with your housekeeping request. Which service would you prefer? You may choose between: • Full Cleaning (Linen and towel change, comprehensive room cleaning) • Quick Tidy (Bed making and basic room organization)"
+→ Response: "Hi! I can help with housekeeping. Would you like a Full Cleaning (linen and towel change) or a Quick Tidy (bed making and basic organization)?"
 
 STEP 2: GUEST SELECTS SERVICE (User says "Full cleaning")
-→ Response: "Thank you. A [service type]. When would you like the housekeeping team to arrive at your room? (Please specify a preferred time, or 'As soon as possible')."
+→ Response: "Got it! When would you like us to come by? (You can say a specific time or 'as soon as possible')"
 
-STEP 3: GUEST PROVIDES TIME (User says "2:00 PM")
-→ Response: "Let me confirm your request: [Service type] service for your room, scheduled for [time]. Is this correct? Please confirm so I can proceed."
+STEP 3: GUEST PROVIDES TIME (User says "2:00 PM" or "asap")
+→ Confirm naturally: "[Service type], [time]. Should I schedule it?"
+→ Examples:
+   • "Full Cleaning, at 2:00 PM. Should I schedule it?"
+   • "Full Cleaning, as soon as possible. Should I schedule it?"
+   • "Quick Tidy, this afternoon. Should I schedule it?"
+→ Keep it SHORT and conversational.
 
 STEP 4: CONFIRMATION (User says "Yes/Confirm")
 → Execute housekeepingTool
-→ Response: "Excellent. Your request for a [service type] at [time] has been successfully registered. Have a wonderful day and enjoy your stay with us!"
+→ Response: "Done! Housekeeping will be there [time]. Enjoy your day!"
 
 CRITICAL RULES:
 - If user ALREADY specified service (e.g. "I want full cleaning"), SKIP Step 1 and go STRAIGHT to Step 2.
 - Execute tool ONLY after Step 4 (Guest confirms).
+- Keep confirmations SHORT and NATURAL - avoid "Let me confirm your request:" or robotic phrasing.
 `;
 
 export const housekeepingSchema = z.object({
