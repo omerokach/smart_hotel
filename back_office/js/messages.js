@@ -12,7 +12,8 @@ let taskLastMessage = {};     // { taskId: timestamp }
    On page load
 ----------------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
-  loadConversations();
+  showLoader();
+  loadConversations(true);
   setupSendButton();
   setupCreateTaskButton();
 
@@ -23,9 +24,11 @@ document.addEventListener("DOMContentLoaded", () => {
 /* ----------------------------------------------------------
    Load conversations (only escalation + open tasks)
 ----------------------------------------------------------- */
-async function loadConversations() {
+async function loadConversations(silent = false) {
   const listEl = document.getElementById("conversations-list");
   if (!listEl) return;
+
+  if (!silent) showLoader();
 
   try {
     const res = await fetch(`${API_BASE}/api/tasks?escalation=true`);
@@ -34,11 +37,9 @@ async function loadConversations() {
 
     if (!Array.isArray(tasks)) return;
 
-    // keep only open tasks
     const openTasks = tasks.filter(t => t.status !== "closed");
 
     listEl.innerHTML = "";
-
     openTasks.forEach(task => {
       const item = document.createElement("div");
       item.classList.add("conversation-item");
@@ -51,13 +52,9 @@ async function loadConversations() {
         </div>
       `;
 
-      // NEW badge logic
       const lastSeen = lastSeenTimestamp[task.task_id];
       const info = taskLastMessage[task.task_id];
-
-      const isNew =
-        info &&
-        info.sender === "guest" &&
+      const isNew = info && info.sender === "guest" &&
         (!lastSeen || info.timestamp > lastSeen);
 
       if (isNew) {
@@ -67,7 +64,6 @@ async function loadConversations() {
       }
 
       item.addEventListener("click", () => selectConversation(task));
-
       listEl.appendChild(item);
     });
 
@@ -75,6 +71,8 @@ async function loadConversations() {
 
   } catch (err) {
     console.error("Failed loading tasks:", err);
+  } finally {
+    if (!silent) hideLoader();
   }
 }
 
@@ -122,12 +120,7 @@ async function loadMessages(taskId, silent = false) {
   if (!taskId) return;
 
   const box = document.getElementById("messages-box");
-
-  if (!silent) {
-    console.log("showLoader from loadMessages");  // בדיקה
-    showLoader();
-    box.innerHTML = "<p class='loading'>Loading...</p>";
-  }
+  if (!silent) box.innerHTML = "<p class='loading'>Loading...</p>";
 
   try {
     const res = await fetch(`${API_BASE}/api/tasks/${taskId}/messages`);
@@ -135,21 +128,19 @@ async function loadMessages(taskId, silent = false) {
 
     if (!Array.isArray(messages)) return;
 
-    if (messages.length > 0) {
-      const lastMsg = messages[messages.length - 1];
-      taskLastMessage[taskId] = {
-        timestamp: lastMsg.timestamp,
-        sender: lastMsg.sender
-      };
-    }
+   if (messages.length > 0) {
+     const lastMsg = messages[messages.length - 1];
+     taskLastMessage[taskId] = {
+       timestamp: lastMsg.timestamp,
+       sender: lastMsg.sender
+     };
+   }
 
     box.innerHTML = "";
+
     messages.forEach(msg => {
       const div = document.createElement("div");
-      div.classList.add(
-        "msg",
-        msg.sender === "staff" ? "msg-staff" : "msg-client"
-      );
+      div.classList.add("msg", msg.sender === "staff" ? "msg-staff" : "msg-client");
 
       div.innerHTML = `
         <p>${msg.message}</p>
@@ -164,11 +155,6 @@ async function loadMessages(taskId, silent = false) {
   } catch (err) {
     console.error("Failed loading messages:", err);
     box.innerHTML = "<p>Error loading messages.</p>";
-  } finally {
-    if (!silent) {
-      console.log("hideLoader from loadMessages");  // בדיקה
-      hideLoader();
-    }
   }
 }
 
