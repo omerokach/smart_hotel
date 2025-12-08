@@ -257,8 +257,6 @@ router.post("/", async (req, res) => {
       assigned_employee_id = null,
       request_details = null,
       opening_channel = null,
-      created_at = null,
-      updated_at = null,
       escalation = false,
       closed_at = null
     } = req.body;
@@ -279,8 +277,6 @@ router.post("/", async (req, res) => {
       assigned_employee_id,
       request_details,
       opening_channel,
-      created_at,
-      updated_at,
       escalation,
       closed_at
     };
