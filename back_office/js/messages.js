@@ -12,8 +12,7 @@ let taskLastMessage = {};     // { taskId: timestamp }
    On page load
 ----------------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", () => {
-  showLoader();
-  loadConversations(true);
+  loadConversations();
   setupSendButton();
   setupCreateTaskButton();
 
