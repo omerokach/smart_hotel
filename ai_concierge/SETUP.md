@@ -151,8 +151,3 @@ Once your setup is working:
 - Read the full [README.md](./README.md)
 - Check [OpenAI Agents SDK Docs](https://openai.github.io/openai-agents-js)
 - Review the example code in `src/` directory
-
----
-
-Ready to build? Start with: `npm run web` 🚀
-
