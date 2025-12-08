@@ -94,7 +94,7 @@ export async function sendSpaCalendarInvite(details: SpaInviteDetails): Promise<
   }
 
   const calendarId = process.env.SPA_CALENDAR_ID || process.env.GOOGLE_CALENDAR_ID;
-  const timeZone = process.env.SPA_CALENDAR_TIMEZONE || 'Asia/Jerusalem';
+  const timeZone = 'Asia/Jerusalem';
 
   if (!calendarId) {
     console.warn('⚠️ Google Calendar ID missing. Set SPA_CALENDAR_ID or GOOGLE_CALENDAR_ID.');
