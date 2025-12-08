@@ -122,7 +122,10 @@ async function loadMessages(taskId, silent = false) {
   if (!taskId) return;
 
   const box = document.getElementById("messages-box");
-  if (!silent) box.innerHTML = "<p class='loading'>Loading...</p>";
+  if (!silent) {
+    showLoader();
+    box.innerHTML = "<p class='loading'>Loading...</p>";
+  }
 
   try {
     const res = await fetch(`${API_BASE}/api/tasks/${taskId}/messages`);
@@ -130,19 +133,21 @@ async function loadMessages(taskId, silent = false) {
 
     if (!Array.isArray(messages)) return;
 
-   if (messages.length > 0) {
-     const lastMsg = messages[messages.length - 1];
-     taskLastMessage[taskId] = {
-       timestamp: lastMsg.timestamp,
-       sender: lastMsg.sender
-     };
-   }
+    if (messages.length > 0) {
+      const lastMsg = messages[messages.length - 1];
+      taskLastMessage[taskId] = {
+        timestamp: lastMsg.timestamp,
+        sender: lastMsg.sender
+      };
+    }
 
     box.innerHTML = "";
-
     messages.forEach(msg => {
       const div = document.createElement("div");
-      div.classList.add("msg", msg.sender === "staff" ? "msg-staff" : "msg-client");
+      div.classList.add(
+        "msg",
+        msg.sender === "staff" ? "msg-staff" : "msg-client"
+      );
 
       div.innerHTML = `
         <p>${msg.message}</p>
@@ -157,8 +162,11 @@ async function loadMessages(taskId, silent = false) {
   } catch (err) {
     console.error("Failed loading messages:", err);
     box.innerHTML = "<p>Error loading messages.</p>";
+  } finally {
+    if (!silent) hideLoader();
   }
 }
+
 
 /* ----------------------------------------------------------
    Send message
