@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCreateTaskButton();
 
   // Refresh conversations list every 3 seconds
-  setInterval(loadConversations, 3000);
+  setInterval(() => loadConversations(true), 3000);
 });
 
 /* ----------------------------------------------------------
