@@ -117,7 +117,7 @@ Spa bookings can automatically email guests a Google Calendar invitation. Choose
 
 **Shared settings (required for both options):**
 - `SPA_CALENDAR_ID` – Calendar ID where spa events should be created
-- `SPA_CALENDAR_TIMEZONE` *(optional)* – Defaults to `America/New_York`
+- `SPA_CALENDAR_TIMEZONE` *(optional)* – Defaults to `Asia/Jerusalem`
 
 If these values are missing, the concierge will still create spa tasks but will skip the calendar invite step.
 
@@ -346,4 +346,3 @@ Feel free to submit issues and enhancement requests!
 ---
 
 Built with ❤️ using the [OpenAI Agents SDK](https://openai.github.io/openai-agents-js)
-

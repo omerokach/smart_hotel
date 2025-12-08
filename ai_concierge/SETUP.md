@@ -79,7 +79,7 @@ GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END P
 **Required for both options**
 ```bash
 SPA_CALENDAR_ID=your_calendar_id@group.calendar.google.com
-SPA_CALENDAR_TIMEZONE=America/New_York  # optional override
+SPA_CALENDAR_TIMEZONE=Asia/Jerusalem  # optional override
 ```
 
 If none of these values are set, the concierge will skip the invite step but still create the regular service task.
@@ -184,4 +184,3 @@ Once your setup is working:
 ---
 
 Ready to build? Start with: `npm run web` 🚀
-
