@@ -50,11 +50,11 @@ function getCalendarAuth() {
   return null;
 }
 
-function parsePreferredTime(preferredTime: string): Date | null {
+function parsePreferredTime(preferredTime: string, timeZone: string): Date | null {
   if (!preferredTime) {
     return null;
   }
-  const reference = new Date();
+  const reference = { instant: new Date(), timezone: timeZone };
   const parsed = chrono.parseDate(preferredTime, reference, { forwardDate: true });
   if (!parsed) {
     // Try direct Date parsing as a final fallback
@@ -101,7 +101,7 @@ export async function sendSpaCalendarInvite(details: SpaInviteDetails): Promise<
     return { success: false, message: 'Calendar configuration missing' };
   }
 
-  const startDate = parsePreferredTime(details.preferredTime);
+  const startDate = parsePreferredTime(details.preferredTime, timeZone);
   if (!startDate) {
     console.warn('⚠️ Unable to parse preferred spa time. Skipping calendar invite.');
     return { success: false, message: 'Unable to parse preferred time' };
