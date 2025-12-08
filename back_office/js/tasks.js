@@ -32,9 +32,7 @@ async function loadTasks() {
   const data = await response.json();
 
   // API מחזיר { tasks: [...] }
-  allTasks = (data.tasks || []).filter(task =>
-    task.assigned_department !== "Chat" || task.escalation === true || task.escalation === "true"
-  );  
+  allTasks = data.tasks || [];
   renderTasks(allTasks);
   hideLoader()
 }
