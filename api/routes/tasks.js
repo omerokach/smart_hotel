@@ -183,6 +183,8 @@ router.get("/", async (req, res) => {
       query = query.eq("escalation", true).neq("status", "closed");
     }
 
+    query = query.or("assigned_department.neq.Chat,escalation.eq.false");
+
     const sortField = ALLOWED_SORT_FIELDS.includes(sort_by)
       ? sort_by
       : "task_id";
