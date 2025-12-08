@@ -51,6 +51,7 @@ function renderTasks(tasks) {
   tbody.innerHTML = "";
 
   tasks.forEach(task => {
+    console.log("Rendering task:", task.task_id, task);
     tbody.innerHTML += `
       <tr>
         <td><input type="checkbox"></td>
@@ -116,6 +117,11 @@ function formatStatus(status) {
 ================================ */
 
 function openTask(id) {
+  console.log("Opening task with ID:", id);
+  if (!id || id === "undefined" || id === "null") {
+    alert("Invalid task ID: " + id);
+    return;
+  }
   window.location.href = `task-details.html?id=${id}`;
 }
 

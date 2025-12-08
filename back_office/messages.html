@@ -68,6 +68,7 @@
               <h2 id="messages-client-name">Select a conversation</h2>
               <p class="sub" id="messages-status"> </p>
             </div>
+            <button id="create-task-btn" class="create-task-btn">+ Create Task</button>
           </header>
 
           <div class="messages-box" id="messages-box"></div>
@@ -82,6 +83,51 @@
       </div>
     </main>
 
+  </div>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-icon">✓</div>
+      <p id="modal-message">Task created successfully!</p>
+      <button id="modal-ok-btn" class="modal-ok-btn">OK</button>
+    </div>
+  </div>
+
+  <!-- Create Task Popup -->
+  <div id="create-task-popup" class="popup-overlay">
+    <div class="popup-content">
+      <button class="popup-close" id="popup-close">&times;</button>
+      <h3>Create Task</h3>
+      <form id="create-task-form">
+        <label>Room</label>
+        <input type="text" id="task-room" readonly />
+        
+        <label>Request Type</label>
+        <select id="task-title" required>
+          <option value="">Select...</option>
+          <option value="Room Service">Room Service</option>
+          <option value="Housekeeping">Housekeeping</option>
+          <option value="Spa Service">Spa Service</option>
+          <option value="Transportation">Transportation</option>
+          <option value="Equipment Request">Equipment Request</option>
+          <option value="General Request">General Request</option>
+        </select>
+        
+        <label>Department</label>
+        <select id="task-department" required>
+          <option value="">Select...</option>
+          <option value="Front Desk">Front Desk</option>
+          <option value="Maintenance">Maintenance</option>
+          <option value="Housekeeping">Housekeeping</option>
+        </select>
+        
+        <label>Internal Notes</label>
+        <textarea id="task-notes" rows="3" placeholder="Add any internal notes..."></textarea>
+        
+        <button type="submit" class="popup-create-btn">Create</button>
+      </form>
+    </div>
   </div>
 
 </section>

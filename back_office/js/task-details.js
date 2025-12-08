@@ -3,6 +3,9 @@
 const params = new URLSearchParams(window.location.search);
 const taskId = params.get("id");
 
+console.log("Task ID from URL:", taskId);
+console.log("Full URL:", window.location.href);
+
 
 /* LOAD TASK FROM API */
 

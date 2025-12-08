@@ -2,6 +2,7 @@
 const API_BASE = "https://smart-hotel-tasks-api.onrender.com";
 
 let activeTaskId = null;
+let activeRoomNumber = null;
 let pollingMessages = null;
 
 let lastSeenTimestamp = {};   // { taskId: timestamp }
@@ -13,6 +14,7 @@ let taskLastMessage = {};     // { taskId: timestamp }
 document.addEventListener("DOMContentLoaded", () => {
   loadConversations();
   setupSendButton();
+  setupCreateTaskButton();
 
   // Refresh conversations list every 3 seconds
   setInterval(loadConversations, 3000);
@@ -81,12 +83,14 @@ async function loadConversations() {
 ----------------------------------------------------------- */
 function selectConversation(task) {
   activeTaskId = task.task_id;
+  activeRoomNumber = task.room_number;
 
   document.getElementById("messages-client-name").textContent =
     `Room ${task.room_number}`;
 
   document.getElementById("messages-input").disabled = false;
   document.getElementById("send-btn").disabled = false;
+  document.getElementById("create-task-btn").classList.add("visible");
 
   loadMessages(activeTaskId);
 
@@ -201,3 +205,134 @@ function formatTime(ts) {
   const d = new Date(ts);
   return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
+
+/* ----------------------------------------------------------
+   Setup Create Task Button
+----------------------------------------------------------- */
+function setupCreateTaskButton() {
+  const createBtn = document.getElementById("create-task-btn");
+  const closeBtn = document.getElementById("popup-close");
+  const form = document.getElementById("create-task-form");
+  const popup = document.getElementById("create-task-popup");
+
+  if (createBtn) {
+    createBtn.addEventListener("click", openCreateTaskPopup);
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeCreateTaskPopup);
+  }
+
+  if (popup) {
+    popup.addEventListener("click", (e) => {
+      if (e.target === popup) closeCreateTaskPopup();
+    });
+  }
+
+  if (form) {
+    form.addEventListener("submit", createTask);
+  }
+}
+
+/* ----------------------------------------------------------
+   Open Create Task Popup
+----------------------------------------------------------- */
+function openCreateTaskPopup() {
+  const popup = document.getElementById("create-task-popup");
+  const roomInput = document.getElementById("task-room");
+
+  if (roomInput && activeRoomNumber) {
+    roomInput.value = activeRoomNumber;
+  }
+
+  // Clear other fields
+  document.getElementById("task-title").value = "";
+  document.getElementById("task-department").value = "";
+  document.getElementById("task-notes").value = "";
+
+  popup.classList.add("active");
+}
+
+/* ----------------------------------------------------------
+   Close Create Task Popup
+----------------------------------------------------------- */
+function closeCreateTaskPopup() {
+  const popup = document.getElementById("create-task-popup");
+  popup.classList.remove("active");
+}
+
+/* ----------------------------------------------------------
+   Create Task via API
+----------------------------------------------------------- */
+async function createTask(e) {
+  e.preventDefault();
+
+  const room = document.getElementById("task-room").value;
+  const title = document.getElementById("task-title").value.trim();
+  const department = document.getElementById("task-department").value;
+  const notes = document.getElementById("task-notes").value.trim();
+
+  if (!room || !title || !department) {
+    alert("Please fill in all required fields.");
+    return;
+  }
+
+  const payload = {
+    room_number: room,
+    request_type: title,
+    assigned_department: department,
+    internal_notes: notes || null,
+    status: "open",
+    priority: "Normal",
+    opening_channel: "backoffice"
+  };
+
+  console.log("Creating task with payload:", payload);
+  console.log("Notes value:", notes);
+
+  try {
+    const res = await fetch(`${API_BASE}/api/tasks`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to create task");
+    }
+
+    const result = await res.json();
+    console.log("Task created:", result);
+
+    closeCreateTaskPopup();
+    showSuccessModal(`Task #${result.task_id || result.id} created successfully!`);
+
+  } catch (err) {
+    console.error("Failed to create task:", err);
+    showSuccessModal("Failed to create task. Please try again.");
+  }
+}
+
+/* ----------------------------------------------------------
+   Success Modal
+----------------------------------------------------------- */
+function showSuccessModal(message) {
+  const modal = document.getElementById("success-modal");
+  const messageEl = document.getElementById("modal-message");
+  
+  messageEl.textContent = message;
+  modal.classList.add("active");
+}
+
+function closeSuccessModal() {
+  const modal = document.getElementById("success-modal");
+  modal.classList.remove("active");
+}
+
+// Setup modal close button
+document.addEventListener("DOMContentLoaded", () => {
+  const modalOkBtn = document.getElementById("modal-ok-btn");
+  if (modalOkBtn) {
+    modalOkBtn.addEventListener("click", closeSuccessModal);
+  }
+});
