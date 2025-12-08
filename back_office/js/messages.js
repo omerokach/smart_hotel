@@ -122,7 +122,9 @@ async function loadMessages(taskId, silent = false) {
   if (!taskId) return;
 
   const box = document.getElementById("messages-box");
+
   if (!silent) {
+    console.log("showLoader from loadMessages");  // בדיקה
     showLoader();
     box.innerHTML = "<p class='loading'>Loading...</p>";
   }
@@ -163,10 +165,12 @@ async function loadMessages(taskId, silent = false) {
     console.error("Failed loading messages:", err);
     box.innerHTML = "<p>Error loading messages.</p>";
   } finally {
-    if (!silent) hideLoader();
+    if (!silent) {
+      console.log("hideLoader from loadMessages");  // בדיקה
+      hideLoader();
+    }
   }
 }
-
 
 /* ----------------------------------------------------------
    Send message
