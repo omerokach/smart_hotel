@@ -181,9 +181,11 @@ router.get("/", async (req, res) => {
 
     if (escalation === "true") {
       query = query.eq("escalation", true).neq("status", "closed");
+    } else if (escalation === "false") {
+      query = query.eq("escalation", false);
+    } else {
+      query = query.or("assigned_department.neq.Chat,escalation.eq.false");
     }
-
-    query = query.or("assigned_department.neq.Chat,escalation.eq.false");
 
     const sortField = ALLOWED_SORT_FIELDS.includes(sort_by)
       ? sort_by
