@@ -1,5 +1,6 @@
 import { google } from 'googleapis';
 import * as chrono from 'chrono-node';
+import { DateTime } from 'luxon';
 
 type InviteResult = {
   success: boolean;
@@ -54,17 +55,47 @@ function parsePreferredTime(preferredTime: string, timeZone: string): Date | nul
   if (!preferredTime) {
     return null;
   }
+
   const reference = { instant: new Date(), timezone: timeZone };
-  const parsed = chrono.parseDate(preferredTime, reference, { forwardDate: true });
-  if (!parsed) {
-    // Try direct Date parsing as a final fallback
-    const direct = new Date(preferredTime);
-    if (!Number.isNaN(direct.getTime())) {
-      return direct;
+  const [result] = chrono.parse(preferredTime, reference, { forwardDate: true });
+
+  if (result?.start) {
+    const getComponent = (component: chrono.Component, fallback: number) =>
+      result.start.get(component) ?? fallback;
+
+    const year = result.start.get('year');
+    const month = result.start.get('month');
+    const day = result.start.get('day');
+
+    if (year && month && day) {
+      const zoned = DateTime.fromObject(
+        {
+          year,
+          month,
+          day,
+          hour: getComponent('hour', 12),
+          minute: getComponent('minute', 0),
+          second: getComponent('second', 0),
+          millisecond: getComponent('millisecond', 0),
+        },
+        { zone: timeZone },
+      );
+      if (zoned.isValid) {
+        return zoned.toJSDate();
+      }
     }
-    return null;
   }
-  return parsed;
+
+  const isoFallback = DateTime.fromISO(preferredTime, { zone: timeZone, setZone: true });
+  if (isoFallback.isValid) {
+    return isoFallback.toJSDate();
+  }
+
+  const direct = new Date(preferredTime);
+  if (!Number.isNaN(direct.getTime())) {
+    return direct;
+  }
+  return null;
 }
 
 function buildDescription(details: SpaInviteDetails) {
