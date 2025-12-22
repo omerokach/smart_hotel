@@ -1,10 +1,9 @@
-
+/* Page wrapper */
 .reports-page {
-  /* hook לסגנון הדף */
+  /* page-level hook */
 }
 
-/* כותרת דף ופילטרים */
-
+/* Page header and filters */
 .reports-page .reports-header {
   display: flex;
   align-items: center;
@@ -47,8 +46,7 @@
   background: #ffffff;
 }
 
-/* טווחים מהירים */
-
+/* Quick date range chips */
 .reports-page .reports-chip-group {
   display: flex;
   gap: 6px;
@@ -71,8 +69,7 @@
   background: #e5f0ff;
 }
 
-/* כפתורי דוחות */
-
+/* Report action buttons */
 .reports-page .reports-btn {
   border-radius: 999px;
   padding: 7px 16px;
@@ -98,8 +95,7 @@
   color: var(--ink);
 }
 
-/* כרטיסי KPI */
-
+/* KPI cards */
 .reports-page .reports-kpi-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -143,8 +139,7 @@
   color: rgba(60, 60, 67, 0.6);
 }
 
-/* מקטעי דוחות */
-
+/* Report sections */
 .reports-page .reports-section {
   margin-bottom: 32px;
 }
@@ -168,8 +163,7 @@
   color: rgba(60, 60, 67, 0.6);
 }
 
-/* גרפים / טרנדים */
-
+/* Trend cards and charts */
 .reports-page .reports-trend-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -202,8 +196,7 @@
   color: rgba(60, 60, 67, 0.6);
 }
 
-/* ברים */
-
+/* Bar visuals */
 .reports-page .reports-bars {
   display: flex;
   flex-direction: column;
@@ -217,7 +210,6 @@
   gap: 6px;
   font-size: 0.8rem;
 }
-
 
 .reports-page .reports-bar-row.dual {
   grid-template-columns: 60px 1fr;
@@ -247,8 +239,7 @@
   color: rgba(60, 60, 67, 0.8);
 }
 
-/* שני ערכים על אותה שורה (created/completed) */
-
+/* Dual bars (created vs completed) */
 .reports-page .reports-bar-dual {
   position: relative;
   width: 100%;
@@ -270,8 +261,7 @@
   opacity: 0.9;
 }
 
-/* מקרא */
-
+/* Legend */
 .reports-page .reports-legend {
   display: flex;
   align-items: center;
@@ -299,8 +289,7 @@
   color: rgba(60, 60, 67, 0.8);
 }
 
-/* כרטיסי דוחות */
-
+/* Report cards */
 .reports-page .reports-card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -341,8 +330,7 @@
   margin-top: 12px;
 }
 
-/* טבלת דוחות מתוזמנים */
-
+/* Scheduled reports table */
 .reports-page .reports-table-wrapper {
   background: var(--card-bg);
   border-radius: var(--radius);
@@ -379,8 +367,7 @@
   background: #e9f0ff;
 }
 
-/* סטטוס דוח מתוזמן */
-
+/* Scheduled report status */
 .reports-page .reports-status {
   display: inline-flex;
   align-items: center;
@@ -400,8 +387,7 @@
   color: #b54708;
 }
 
-/* רספונסיביות קלה */
-
+/* Light responsiveness */
 @media (max-width: 768px) {
   .reports-page .reports-header {
     flex-direction: column;

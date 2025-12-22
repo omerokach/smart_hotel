@@ -1,9 +1,10 @@
+/* Main task details container */
 .task-details-card {
   background: #fff;
   padding: 30px;
   border-radius: 18px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   margin-top: 40px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .task-details-card h3 {
@@ -12,16 +13,20 @@
   font-weight: 700;
 }
 
+/* Status badge next to the title */
 .status-pill {
   display: inline-block;
   margin-left: 12px;
   padding: 6px 14px;
   border-radius: 10px;
   font-size: 13px;
-  background: #e9eeff;
+  background: #eef3ff;
   color: #000;
+  text-transform: capitalize;
+  font-weight: 600;
 }
 
+/* Two-column layout for task fields */
 .task-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -36,14 +41,13 @@
   gap: 18px;
 }
 
+/* Field that spans both columns */
 .full-col {
-  grid-column: 1 / 3; /* תופס את שתי העמודות */
+  grid-column: 1 / 3;
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
-
-
 
 .task-grid label {
   font-weight: 600;
@@ -54,11 +58,11 @@
 .task-grid select,
 .task-grid textarea {
   width: 100%;
-  border: 1px solid #dbe3ff;
-  border-radius: 10px;
   padding: 12px;
   font-size: 14px;
-  font-family: "Wix Madefor Text", sans-serif; 
+  border-radius: 10px;
+  border: 1px solid #dbe3ff;
+  font-family: "Wix Madefor Text", sans-serif;
   outline: none;
 }
 
@@ -67,6 +71,7 @@ textarea {
   height: 170px;
 }
 
+/* Action buttons section */
 .task-actions {
   margin-top: 25px;
   display: flex;
@@ -93,6 +98,7 @@ textarea {
   cursor: pointer;
 }
 
+/* Read-only text boxes */
 .readonly-box {
   background: #ffffff;
   border: 1px solid #e4e9f7;
@@ -106,36 +112,28 @@ textarea {
 
 textarea::placeholder {
   font-family: 'Wix Madefor Text', sans-serif;
-  color: #999;
   font-size: 14px;
-}
-
- 
-.status-pill {
-  text-transform: capitalize;
-  font-weight: 600;
-  background: #eef3ff;
+  color: #999;
 }
 
 .request-text {
   margin: 0;
+  padding: 4px 0;
   font-size: 14px;
   color: #555;
-  padding: 4px 0;
 }
 
+/* Header area (title + status) */
 .task-header {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
+/* Generic modal styling */
 .modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0, 0, 0, 0.15);
   display: flex;
   justify-content: center;
@@ -148,13 +146,13 @@ textarea::placeholder {
 }
 
 .modal-content {
-  background: white;
+  background: #fff;
   padding: 28px 34px;
   border-radius: 16px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-  text-align: center;
   min-width: 280px;
+  text-align: center;
   font-family: 'Wix Madefor Text', sans-serif;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
 }
 
 .modal-content p {
@@ -170,8 +168,8 @@ textarea::placeholder {
   border: none;
   padding: 10px 24px;
   border-radius: 30px;
-  cursor: pointer;
   font-size: 14px;
+  cursor: pointer;
 }
 
 #modal-close:hover {

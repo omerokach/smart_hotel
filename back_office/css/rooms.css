@@ -3,7 +3,7 @@
   margin-top: 40px;
 }
 
-/* Table */
+/* Main table */
 .table-section table {
   width: 100%;
   background: #ffffff;
@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 
-/* Header */
+/* Table header */
 .table-section thead tr {
   background: #f4f7ff;
 }
@@ -28,7 +28,7 @@
   border-bottom: 2px solid #e6ebff;
 }
 
-/* Rows */
+/* Table rows */
 .table-section td {
   padding: 16px 22px;
   font-size: 15px;
@@ -36,17 +36,18 @@
   border-bottom: 1px solid #f0f2f8;
 }
 
-/* צבע רקע שורה עדין */
+/* Subtle alternating row background */
 .table-section tbody tr:nth-child(even) {
   background: #fafcff;
 }
 
-/* הובר על שורה */
+/* Row hover state */
 .table-section tbody tr:hover {
   background: #f1f6ff;
   transition: 0.2s ease;
 }
 
+/* Room status pill */
 .room-status {
   display: inline-block;
   padding: 6px 14px;
@@ -82,6 +83,7 @@
   color: #3a47d5;
 }
 
+/* Last column emphasis */
 td:last-child {
   font-weight: 600;
   color: #000624;

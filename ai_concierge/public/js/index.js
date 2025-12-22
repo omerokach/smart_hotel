@@ -1,6 +1,4 @@
-// ===============================
 // Guest Authentication Logic
-// ===============================
 
 // Get form and message elements
 const form = document.getElementById("guest-auth-form");
@@ -83,7 +81,7 @@ if (form) {
       // SUCCESS
       showSuccessBubble("Authentication successful");
 
-      // SAVE DETAILS → LocalStorage
+      // SAVE DETAILS to LocalStorage
       console.log("API RESULT:", result);
 
       localStorage.setItem("guest_room_number", result.room_number);

@@ -1,10 +1,10 @@
-/* עיצוב טבלת המשימות */
+/* Task table wrapper */
 .task-table {
   background: #fff;
   border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-top: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .task-table table {
@@ -30,7 +30,7 @@
   background-color: #f8faff;
 }
 
-/* סטטוסים */
+/* Status pills */
 .status {
   padding: 4px 10px;
   border-radius: 8px;
@@ -58,7 +58,7 @@
   color: #0052cc;
 }
 
-/* כפתור View */
+/* View task button */
 .view-btn {
   background: #e9eeff;
   border: none;
@@ -74,30 +74,34 @@
   background: #d8e0ff;
 }
 
-/* פילטרים */
+/* Filters container */
 .filters-container {
-    display: flex;
-    justify-content: flex-end;
-    gap: 16px;
-    margin-bottom: 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-bottom: 12px;
 }
 
+/* Custom select styling */
 .filter-select {
-    padding: 10px 16px;
-    border-radius: 22px;
-    border: 1.5px solid #BFD3F2;
-    background-color: white;
-    font-size: 14px;
-    color: #4a4a4a;
-    cursor: pointer;
-    min-width: 160px;
+  padding: 10px 16px;
+  min-width: 160px;
+  border-radius: 22px;
+  border: 1.5px solid #bfd3f2;
+  background-color: #fff;
+  font-size: 14px;
+  color: #4a4a4a;
+  cursor: pointer;
 
-    appearance: none;
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 14px center;
+  appearance: none;
+  -webkit-appearance: none;
+
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" height="16" viewBox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
 }
 
+/* Clickable sortable headers */
 .sortable {
   cursor: pointer;
   user-select: none;

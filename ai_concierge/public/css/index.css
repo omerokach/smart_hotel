@@ -1,6 +1,4 @@
-/* =========================================
-   Guest Authentication Screen
-   ========================================= */
+/* Guest Authentication Screen */
 
 :root {
   --text:#090909;
@@ -82,7 +80,7 @@ body {
   background: #ffffff;
   border-radius: 12px 0 0 12px;
 }
-/* תיקון יישור עמודים */
+/* straight collums */
 .dashboard-layout {
   display: flex;
   align-items: flex-start; 
@@ -162,7 +160,7 @@ body {
   overflow: hidden;
 }
 
-/* ================= HERO TOP AREA =============== */
+/*  HERO TOP AREA  */
 
 .auth-hero {
   position: relative;
@@ -172,7 +170,7 @@ body {
   overflow: hidden;
 }
 
-/* Remove pattern tint so the color stays pure */
+/* Remove pattern tint so the color stays nice and [ure */
 .auth-hero-pattern {
   display: none;
 }
@@ -189,14 +187,13 @@ body {
 
 /* Logo */
 .hero-logo {
-  width: 180px;          /* bigger logo */
+  width: 180px;
   height: auto;
   display: block;
   position: relative;
   z-index: 3;
   opacity: 0.98;
-  margin-top: -10px;     /* moves the logo UP */
-
+  margin-top: -10px;  /* moves the logo up a bit */
   /* background behind logo matches hero color exactly */
   background: #BDD7D5;
 }
@@ -210,11 +207,11 @@ body {
   transform: translateX(-50%);
   width: 140%;
   height: 120px;
-  background: var(--card-bg); /* keeps the nice white curve */
+  background: var(--card-bg);
   border-radius: 50%;
 }
 
-/* ================= CONTENT AREA ================= */
+/*  CONTENT AREA  */
 
 .auth-content {
   position: relative;
@@ -336,16 +333,14 @@ body {
   }
 }
 
-/* ============================
-   SUCCESS BUBBLE
-============================ */
+/* SUCCESS BUBBLE */
 
 .success-bubble {
   position: fixed;
   top: 20px;
   right: 50%;
   transform: translateX(50%) translateY(-20px);
-  background: #4CAF50; /* Green success */
+  background: #4CAF50;
   color: white;
   padding: 12px 22px;
   border-radius: 999px;
@@ -375,16 +370,14 @@ body {
   display: inline-block;
 }
 
-/* ============================
-   ERROR BUBBLE
-============================ */
+/* ERROR BUBBLE */
 
 .error-bubble {
   position: fixed;
   top: 20px;
   right: 50%;
   transform: translateX(50%) translateY(-20px);
-  background: #E53935;  /* red */
+  background: #E53935;
   color: white;
   padding: 12px 22px;
   border-radius: 999px;

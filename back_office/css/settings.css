@@ -1,9 +1,9 @@
-
+/* Page wrapper */
 .settings-page {
-  /* hook לסגנון הדף */
+  /* page-level hook */
 }
 
-/* כותרת עליונה */
+/* Header section (title + actions) */
 .settings-page .settings-header {
   display: flex;
   align-items: center;
@@ -18,11 +18,10 @@
 .settings-page .settings-subtitle {
   margin: 4px 0 0;
   font-size: 0.9rem;
-  color: rgba(60, 60, 67, 0.6); 
+  color: rgba(60, 60, 67, 0.6);
 }
 
-/* כפתורים */
-
+/* Buttons */
 .settings-page .settings-btn {
   border-radius: 999px;
   padding: 8px 18px;
@@ -43,8 +42,7 @@
   color: var(--ink);
 }
 
-/* כפתור יציאה */
-
+/* Sign-out / warning actions */
 .settings-page .settings-btn-warning {
   background: #ffd28a;
   color: #5a3b00;
@@ -55,8 +53,7 @@
   font-size: 0.8rem;
 }
 
-/* גריד וכרטיסים */
-
+/* Grid layout and cards */
 .settings-page .settings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -82,8 +79,7 @@
   color: rgba(60, 60, 67, 0.6);
 }
 
-/* טפסים */
-
+/* Forms */
 .settings-page .settings-form {
   margin-top: 4px;
 }
@@ -101,8 +97,7 @@
   font-weight: 500;
 }
 
-/* שורה בשתי עמודות (אזור זמן / מטבע) */
-
+/* Two-column row (e.g. timezone / currency) */
 .settings-page .settings-form-row-2col {
   display: flex;
   gap: 16px;
@@ -137,8 +132,7 @@
   gap: 12px;
 }
 
-/* טוגל והתראות */
-
+/* Toggles and helper text */
 .settings-page .settings-toggle-row {
   display: flex;
   align-items: center;
@@ -158,8 +152,7 @@
   color: rgba(60, 60, 67, 0.6);
 }
 
-/* סוויצ'ים */
-
+/* Switch component */
 .settings-page .settings-switch {
   position: relative;
   display: inline-block;
@@ -175,8 +168,8 @@
 
 .settings-page .settings-slider {
   position: absolute;
-  cursor: pointer;
   inset: 0;
+  cursor: pointer;
   background-color: #ccc;
   border-radius: 999px;
   transition: 0.2s;
@@ -185,10 +178,10 @@
 .settings-page .settings-slider:before {
   content: "";
   position: absolute;
-  height: 16px;
-  width: 16px;
   left: 3px;
   bottom: 3px;
+  width: 16px;
+  height: 16px;
   background-color: #ffffff;
   border-radius: 50%;
   transition: 0.2s;
@@ -202,8 +195,7 @@
   transform: translateX(18px);
 }
 
-/* DIV ויציאה */
-
+/* Divider and sign-out section */
 .settings-page .settings-divider {
   margin: 16px 0;
   border: none;
