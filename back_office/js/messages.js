@@ -1,4 +1,3 @@
-// messages.js
 const API_BASE = "https://smart-hotel-tasks-api.onrender.com";
 
 let activeTaskId = null;
@@ -8,9 +7,10 @@ let pollingMessages = null;
 let lastSeenTimestamp = {};   // { taskId: timestamp }
 let taskLastMessage = {};     // { taskId: timestamp }
 
-/* ----------------------------------------------------------
-   On page load
------------------------------------------------------------ */
+/* ===============================
+  ON PAGE LOAD
+================================ */
+
 document.addEventListener("DOMContentLoaded", () => {
   loadConversations();
   setupSendButton();
@@ -20,9 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(() => loadConversations(true), 3000);
 });
 
-/* ----------------------------------------------------------
-   Load conversations (only escalation + open tasks)
------------------------------------------------------------ */
+/* ===============================
+  LOAD CONVERSATION - only escalation + open tasks
+================================ */
+
 async function loadConversations(silent = false) {
   const listEl = document.getElementById("conversations-list");
   if (!listEl) return;
@@ -75,9 +76,10 @@ async function loadConversations(silent = false) {
   }
 }
 
-/* ----------------------------------------------------------
-   Select conversation
------------------------------------------------------------ */
+/* ===============================
+  SELECT CONVERSATION
+================================ */
+
 function selectConversation(task) {
   activeTaskId = task.task_id;
   activeRoomNumber = task.room_number;
@@ -100,9 +102,10 @@ function selectConversation(task) {
   lastSeenTimestamp[task.task_id] = new Date().toISOString();
 }
 
-/* ----------------------------------------------------------
-   Highlight active conversation
------------------------------------------------------------ */
+/* ===============================
+  HIGHLIGHT ACTIVE CONVERSATION
+================================ */
+
 function highlightActiveConversation(taskId) {
   document.querySelectorAll(".conversation-item").forEach(item => {
     item.classList.toggle(
@@ -112,9 +115,9 @@ function highlightActiveConversation(taskId) {
   });
 }
 
-/* ----------------------------------------------------------
-   Load messages
------------------------------------------------------------ */
+/* ===============================
+  LOAD MESSAGES
+================================ */
 async function loadMessages(taskId, silent = false) {
   if (!taskId) return;
 
@@ -157,9 +160,10 @@ async function loadMessages(taskId, silent = false) {
   }
 }
 
-/* ----------------------------------------------------------
-   Send message
------------------------------------------------------------ */
+/* ===============================
+  SEND MESSAGE
+================================ */
+
 async function sendMessage() {
   const input = document.getElementById("messages-input");
   const text = input.value.trim();
@@ -183,9 +187,10 @@ async function sendMessage() {
   }
 }
 
-/* ----------------------------------------------------------
-   Setup enter + send button
------------------------------------------------------------ */
+/* ===============================
+  SETUP ENTER + SEND BUTTON
+================================ */
+
 function setupSendButton() {
   document.getElementById("send-btn").addEventListener("click", sendMessage);
 
@@ -195,17 +200,18 @@ function setupSendButton() {
     });
 }
 
-/* ----------------------------------------------------------
-   Format time
------------------------------------------------------------ */
+/* ===============================
+  FORMAT TIME
+================================ */
 function formatTime(ts) {
   const d = new Date(ts);
   return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-/* ----------------------------------------------------------
-   Setup Create Task Button
------------------------------------------------------------ */
+/* ===============================
+  CREATE TASK BUTTON
+================================ */
+
 function setupCreateTaskButton() {
   const createBtn = document.getElementById("create-task-btn");
   const closeBtn = document.getElementById("popup-close");
@@ -231,9 +237,10 @@ function setupCreateTaskButton() {
   }
 }
 
-/* ----------------------------------------------------------
-   Open Create Task Popup
------------------------------------------------------------ */
+/* ===============================
+  CREATE TASK POPUP
+================================ */
+
 function openCreateTaskPopup() {
   const popup = document.getElementById("create-task-popup");
   const roomInput = document.getElementById("task-room");
@@ -250,17 +257,13 @@ function openCreateTaskPopup() {
   popup.classList.add("active");
 }
 
-/* ----------------------------------------------------------
-   Close Create Task Popup
------------------------------------------------------------ */
+   // Close Create Task Popup
 function closeCreateTaskPopup() {
   const popup = document.getElementById("create-task-popup");
   popup.classList.remove("active");
 }
 
-/* ----------------------------------------------------------
-   Create Task via API
------------------------------------------------------------ */
+   // Create Task via API
 async function createTask(e) {
   e.preventDefault();
 
@@ -310,9 +313,10 @@ async function createTask(e) {
   }
 }
 
-/* ----------------------------------------------------------
-   Success Modal
------------------------------------------------------------ */
+/* ===============================
+  SUCCESS MODAL
+================================ */
+
 function showSuccessModal(message) {
   const modal = document.getElementById("success-modal");
   const messageEl = document.getElementById("modal-message");
