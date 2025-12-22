@@ -1,5 +1,5 @@
 // ===============================
-// Guest Authentication Logic
+    AUTHENTICATION LOGIC
 // ===============================
 
 // Get form and message elements
