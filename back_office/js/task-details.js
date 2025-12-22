@@ -26,30 +26,30 @@ async function loadTask() {
       return;
     }
 
-    /* Title */
+    // Title 
     document.getElementById("task-title").textContent =
       `${task.assigned_department} — Room ${task.room_number}`;
 
-    /* Status Pill */
+    // Status Pill 
     updateStatusPill(task.status);
 
-    /* Department */
+    // Department 
     document.getElementById("department").value =
       task.assigned_department || "Housekeeping";
 
-    /* Urgency */
+    // Urgency 
     document.getElementById("urgency").value =
       task.priority || "Normal";
 
-    /* Status */
+    // Status 
     document.getElementById("status").value =
       task.status || "open";
 
-    /* Guest Description - not editable */
+    // Guest Description - not editable 
     document.getElementById("request-description").textContent =
       task.request_details || "No description provided.";
 
-    /* Internal notes */
+    // Internal notes 
     const notesField = document.getElementById("notes");
 
     if (task.internal_notes && task.internal_notes.trim() !== "") {
