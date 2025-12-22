@@ -1,3 +1,4 @@
+// messages.js
 const API_BASE = "https://smart-hotel-tasks-api.onrender.com";
 
 let activeTaskId = null;
@@ -5,23 +6,29 @@ let activeRoomNumber = null;
 let pollingMessages = null;
 
 let lastSeenTimestamp = {};   // { taskId: timestamp }
-let taskLastMessage = {};     // { taskId: timestamp }
+let taskLastMessage = {};     // { taskId: { timestamp, sender } }
 
 /* ===============================
   ON PAGE LOAD
 ================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-  loadConversations();
+  loadConversations(); // initial load (shows global loader)
   setupSendButton();
   setupCreateTaskButton();
 
-  // Refresh conversations list every 3 seconds
+  // Setup success modal close button (merged from separate DOMContentLoaded)
+  const modalOkBtn = document.getElementById("modal-ok-btn");
+  if (modalOkBtn) {
+    modalOkBtn.addEventListener("click", closeSuccessModal);
+  }
+
+  // Refresh conversations list every 3 seconds (silent refresh - no loader)
   setInterval(() => loadConversations(true), 3000);
 });
 
 /* ===============================
-  LOAD CONVERSATION - only escalation + open tasks
+  LOAD CONVERSATIONS - only escalation tasks
 ================================ */
 
 async function loadConversations(silent = false) {
@@ -33,13 +40,13 @@ async function loadConversations(silent = false) {
   try {
     const res = await fetch(`${API_BASE}/api/tasks?escalation=true`);
     const data = await res.json();
-    const tasks = data.tasks;
+    const tasks = Array.isArray(data.tasks) ? data.tasks : [];
 
-    if (!Array.isArray(tasks)) return;
-
+    // Keep only open tasks 
     const openTasks = tasks.filter(t => t.status !== "closed");
 
     listEl.innerHTML = "";
+
     openTasks.forEach(task => {
       const item = document.createElement("div");
       item.classList.add("conversation-item");
@@ -52,9 +59,13 @@ async function loadConversations(silent = false) {
         </div>
       `;
 
+      // Badge logic 
       const lastSeen = lastSeenTimestamp[task.task_id];
       const info = taskLastMessage[task.task_id];
-      const isNew = info && info.sender === "guest" &&
+
+      const isNew =
+        info &&
+        info.sender === "guest" &&
         (!lastSeen || info.timestamp > lastSeen);
 
       if (isNew) {
@@ -84,8 +95,7 @@ function selectConversation(task) {
   activeTaskId = task.task_id;
   activeRoomNumber = task.room_number;
 
-  document.getElementById("messages-client-name").textContent =
-    `Room ${task.room_number}`;
+  document.getElementById("messages-client-name").textContent = `Room ${task.room_number}`;
 
   document.getElementById("messages-input").disabled = false;
   document.getElementById("send-btn").disabled = false;
@@ -118,6 +128,7 @@ function highlightActiveConversation(taskId) {
 /* ===============================
   LOAD MESSAGES
 ================================ */
+
 async function loadMessages(taskId, silent = false) {
   if (!taskId) return;
 
@@ -130,13 +141,14 @@ async function loadMessages(taskId, silent = false) {
 
     if (!Array.isArray(messages)) return;
 
-   if (messages.length > 0) {
-     const lastMsg = messages[messages.length - 1];
-     taskLastMessage[taskId] = {
-       timestamp: lastMsg.timestamp,
-       sender: lastMsg.sender
-     };
-   }
+    // Track last message for NEW badge logic (unchanged)
+    if (messages.length > 0) {
+      const lastMsg = messages[messages.length - 1];
+      taskLastMessage[taskId] = {
+        timestamp: lastMsg.timestamp,
+        sender: lastMsg.sender
+      };
+    }
 
     box.innerHTML = "";
 
@@ -192,17 +204,27 @@ async function sendMessage() {
 ================================ */
 
 function setupSendButton() {
-  document.getElementById("send-btn").addEventListener("click", sendMessage);
+  const sendBtn = document.getElementById("send-btn");
+  const input = document.getElementById("messages-input");
 
-  document.getElementById("messages-input")
-    .addEventListener("keypress", e => {
-      if (e.key === "Enter") sendMessage();
+  if (sendBtn) {
+    sendBtn.addEventListener("click", sendMessage);
+  }
+
+  if (input) {
+    input.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+      }
     });
+  }
 }
 
 /* ===============================
   FORMAT TIME
 ================================ */
+
 function formatTime(ts) {
   const d = new Date(ts);
   return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -218,13 +240,8 @@ function setupCreateTaskButton() {
   const form = document.getElementById("create-task-form");
   const popup = document.getElementById("create-task-popup");
 
-  if (createBtn) {
-    createBtn.addEventListener("click", openCreateTaskPopup);
-  }
-
-  if (closeBtn) {
-    closeBtn.addEventListener("click", closeCreateTaskPopup);
-  }
+  if (createBtn) createBtn.addEventListener("click", openCreateTaskPopup);
+  if (closeBtn) closeBtn.addEventListener("click", closeCreateTaskPopup);
 
   if (popup) {
     popup.addEventListener("click", (e) => {
@@ -232,9 +249,7 @@ function setupCreateTaskButton() {
     });
   }
 
-  if (form) {
-    form.addEventListener("submit", createTask);
-  }
+  if (form) form.addEventListener("submit", createTask);
 }
 
 /* ===============================
@@ -257,13 +272,15 @@ function openCreateTaskPopup() {
   popup.classList.add("active");
 }
 
-   // Close Create Task Popup
 function closeCreateTaskPopup() {
   const popup = document.getElementById("create-task-popup");
   popup.classList.remove("active");
 }
 
-   // Create Task via API
+/* ===============================
+  CREATE TASK VIA API
+================================ */
+
 async function createTask(e) {
   e.preventDefault();
 
@@ -287,9 +304,6 @@ async function createTask(e) {
     opening_channel: "backoffice"
   };
 
-  console.log("Creating task with payload:", payload);
-  console.log("Notes value:", notes);
-
   try {
     const res = await fetch(`${API_BASE}/api/tasks`, {
       method: "POST",
@@ -297,12 +311,9 @@ async function createTask(e) {
       body: JSON.stringify(payload)
     });
 
-    if (!res.ok) {
-      throw new Error("Failed to create task");
-    }
+    if (!res.ok) throw new Error("Failed to create task");
 
     const result = await res.json();
-    console.log("Task created:", result);
 
     closeCreateTaskPopup();
     showSuccessModal(`Task #${result.task_id || result.id} created successfully!`);
@@ -320,7 +331,7 @@ async function createTask(e) {
 function showSuccessModal(message) {
   const modal = document.getElementById("success-modal");
   const messageEl = document.getElementById("modal-message");
-  
+
   messageEl.textContent = message;
   modal.classList.add("active");
 }
@@ -329,11 +340,3 @@ function closeSuccessModal() {
   const modal = document.getElementById("success-modal");
   modal.classList.remove("active");
 }
-
-// Setup modal close button
-document.addEventListener("DOMContentLoaded", () => {
-  const modalOkBtn = document.getElementById("modal-ok-btn");
-  if (modalOkBtn) {
-    modalOkBtn.addEventListener("click", closeSuccessModal);
-  }
-});
