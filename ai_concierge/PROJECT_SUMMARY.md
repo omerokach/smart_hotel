@@ -28,8 +28,13 @@ smartHotel/
 │   └── tools/                # Hotel service tools
 │       ├── roomService.ts    # 🍽️  Food & beverage orders
 │       ├── housekeeping.ts   # 🧹 Room cleaning services
-│       ├── towels.ts         # 🛁 Towel requests
-│       └── spa.ts            # 💆 Spa bookings
+│       ├── spa.ts            # 💆 Spa bookings (w/ optional calendar invites)
+│       ├── taxi.ts           # 🚕 Transportation bookings
+│       ├── extraEquipment.ts # 📦 Extra items (towels/blankets/toiletries)
+│       ├── activityHours.ts  # 🕒 Facility hours
+│       ├── events.ts         # 🎉 Hotel events
+│       ├── wifi.ts           # 📡 WiFi credentials
+│       └── escalation.ts     # 🆘 Escalation to human
 │
 └── 📁 public/                # Web interface
     └── index.html            # Beautiful chat UI
@@ -48,11 +53,11 @@ export OPENAI_API_KEY=sk-your-key-here
 npm run web
 # Then open: http://localhost:3000
 
-# Or run the CLI chat
-npm run chat
+# Or run the CLI chat (manual)
+npx tsx src/chat-cli.ts
 
-# Or run a quick demo
-npm run dev
+# Or run a quick demo (single turn)
+npx tsx src/index.ts
 ```
 
 ## 🛠️ What Each Tool Does
@@ -70,18 +75,43 @@ npm run dev
 - **Example**: "Can someone clean my room? I'm in 412"
 - **Returns**: Request ID and scheduled time
 
-### 3. Towel Request Tool (`towels.ts`)
-- **What it does**: Delivers additional towels to rooms
-- **When used**: Guest needs more towels
-- **Towel types**: Bath, hand, pool, or assorted
-- **Example**: "I need 4 bath towels in room 208"
-- **Returns**: Delivery request ID
-
-### 4. Spa Booking Tool (`spa.ts`)
+### 3. Spa Booking Tool (`spa.ts`)
 - **What it does**: Books spa treatments and appointments
 - **When used**: Guest wants massage, facial, or other spa services
 - **Example**: "I want to book a massage for 3 PM tomorrow. Room 501"
 - **Returns**: Confirmation code and appointment details
+
+### 4. Taxi Tool (`taxi.ts`)
+- **What it does**: Books taxis with destination/time/passengers/notes
+- **When used**: Guest needs transportation
+- **Example**: "Taxi to airport at 6:15 AM for 2"
+- **Returns**: Booking confirmation
+
+### 5. Extra Equipment Tool (`extraEquipment.ts`)
+- **What it does**: Provides amenities (towels, blankets, toiletries, pillows, hangers, etc.)
+- **When used**: Guest needs supplies in room
+- **Example**: "Send 2 extra pillows and 1 blanket to room 410"
+- **Returns**: Delivery confirmation
+
+### 6. Activity Hours Tool (`activityHours.ts`)
+- **What it does**: Lists hours for pool, gym, bar, breakfast, etc.
+- **When used**: Guest asks “When does X open/close?”
+- **Returns**: Operating hours by facility
+
+### 7. Events Tool (`events.ts`)
+- **What it does**: Lists upcoming complimentary hotel events
+- **When used**: Guest asks about activities/things to do
+- **Returns**: Event name/time/description
+
+### 8. WiFi Tool (`wifi.ts`)
+- **What it does**: Always shares WiFi credentials
+- **When used**: Any mention of wifi/internet/network/password
+- **Returns**: Network + password
+
+### 9. Escalation Tool (`escalation.ts`)
+- **What it does**: Opens human handoff for requests outside current tools
+- **When used**: Billing/issues/maintenance/complaints/special cases
+- **Returns**: Escalation confirmation
 
 ## 🧠 How the AI Agent Works
 
@@ -298,4 +328,3 @@ Then open http://localhost:3000 and say hi to your AI concierge! 🏨
 **Built with ❤️ using the OpenAI Agents SDK**
 
 Questions? Check the documentation files or the OpenAI Agents SDK docs!
-

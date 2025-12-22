@@ -1,6 +1,6 @@
 # 🏨 Smart Hotel AI Concierge
 
-An intelligent hotel customer service agent built with the [OpenAI Agents SDK](https://openai.github.io/openai-agents-js). This AI-powered concierge helps hotel guests with room service, housekeeping, towel requests, and spa bookings through a natural conversational interface.
+An intelligent hotel customer service agent built with the [OpenAI Agents SDK](https://openai.github.io/openai-agents-js). This AI-powered concierge helps hotel guests with room service, housekeeping, spa bookings, taxis, extra equipment, activity hours, events, and WiFi through a natural conversational interface.
 
 ## ✨ Features
 
@@ -13,8 +13,13 @@ An intelligent hotel customer service agent built with the [OpenAI Agents SDK](h
 - **🎯 Hotel Services**:
   - **Room Service**: Order food and beverages
   - **Housekeeping**: Request room cleaning (full-clean, quick-tidy, turndown)
-  - **Towels**: Request additional towels (bath, hand, pool, or assorted)
-  - **Spa Booking**: Schedule spa treatments and appointments with automatic Google Calendar invites for guests
+  - **Spa Booking**: Schedule spa treatments (optional Google Calendar invites)
+  - **Taxi**: Book transportation with time/passenger count/destination
+  - **Extra Equipment**: Blankets, towels, toiletries, pillows, hangers, etc.
+  - **Activity Hours**: Operating hours for hotel facilities
+  - **Events**: Upcoming complimentary hotel events
+  - **WiFi**: Always-on credentials helper
+  - **Escalation**: Route edge cases to a human
 
 ## 🚀 Quick Start
 
@@ -27,7 +32,7 @@ An intelligent hotel customer service agent built with the [OpenAI Agents SDK](h
 
 1. **Clone or navigate to the project directory**:
 ```bash
-cd smartHotel
+cd smart_hotel/ai_concierge
 ```
 
 2. **Install dependencies**:
@@ -64,14 +69,14 @@ Then open your browser to: **http://localhost:3000**
 
 For a terminal-based chat:
 ```bash
-npm run chat
+npx tsx src/chat-cli.ts
 ```
 
 #### Option 3: Simple Demo
 
 Run a single example interaction:
 ```bash
-npm run dev
+npx tsx src/index.ts
 ```
 
 ## 🎮 Usage Examples
@@ -90,16 +95,28 @@ Guest: "Can someone clean my room? I'm in 412."
 Agent: "Of course! What type of cleaning would you prefer? We offer full-clean, quick-tidy, or turndown service."
 ```
 
-**Towels**:
+**Extra Equipment (includes towels)**:
 ```
-Guest: "I need more towels in room 208."
-Agent: "I'd be happy to help! How many towels would you like, and what type?"
+Guest: "I need 4 bath towels in room 208."
+Agent: "Of course! I'll arrange 4 bath towels to room 208. Is that correct?"
 ```
 
 **Spa Booking**:
 ```
 Guest: "I want to book a massage for tomorrow afternoon. Room 501."
 Agent: "Wonderful! What time would work best for you tomorrow afternoon?"
+```
+
+**Taxi**:
+```
+Guest: "Book me a taxi to the airport for 6:15 AM, two passengers. Room 410."
+Agent: "Great. Confirming: taxi to the airport at 6:15 AM for 2 passengers. Confirm?"
+```
+
+**Activity Hours / Events / WiFi**:
+```
+Guest: "What time does the pool open? Also what's the wifi?"
+Agent: "Pool: 6:00–22:00. WiFi: SmartHotel_Guest / Welcome2025!Luxury"
 ```
 
 ## 📅 Google Calendar Invites
@@ -203,7 +220,7 @@ The agent processes messages using the `run` function:
 ```typescript
 const result = await run(hotelConciergeAgent, userMessage);
 console.log(result.finalOutput); // Agent's response
-console.log(result.toolCalls);   // Tools that were used
+console.log(result.newItems);    // Items such as tool calls/outputs
 ```
 
 ## 🔌 REST API

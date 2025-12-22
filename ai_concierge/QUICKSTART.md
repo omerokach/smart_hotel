@@ -37,10 +37,11 @@ Once running, try saying:
 ## 📝 All Commands
 
 ```bash
-npm run web     # Web interface (http://localhost:3000)
-npm run chat    # CLI chat in terminal
-npm run dev     # Simple demo example
-npm run build   # Build for production
+npm run web               # Web interface (http://localhost:3000)
+npm run build             # Build for production
+npm start                 # Serve from dist/ (after build)
+npx tsx src/chat-cli.ts   # CLI chat in terminal
+npx tsx src/index.ts      # Simple single-turn demo
 ```
 
 ---
@@ -75,4 +76,3 @@ PORT=3001 npm run web
 ---
 
 That's it! You're ready to go! 🎉
-

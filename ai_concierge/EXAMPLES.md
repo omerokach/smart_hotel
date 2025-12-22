@@ -194,6 +194,42 @@ Agent: "I've scheduled a massage for room 1001 at 6:00 PM tomorrow:
         to confirm arrangements for a couple's treatment setup."
 ```
 
+## 🚕 Taxi Examples
+
+### Airport Ride
+```
+Guest: "Book me a taxi to the airport at 6:15 AM for two passengers. Room 410."
+Agent: "Confirming: taxi to the airport at 6:15 AM for 2 passengers. Any notes for the driver?"
+```
+
+### Dinner Reservation
+```
+Guest: "I need a taxi to Claro restaurant at 7:45 PM, 3 people, room 225."
+Agent: "Great. I'll book a taxi to Claro at 7:45 PM for 3 passengers. Add notes for the driver?"
+```
+
+## 📦 Extra Equipment Examples (towels, blankets, toiletries, etc.)
+```
+Guest: "Send 2 extra pillows and a blanket to room 512."
+Agent: "I'll send 2 pillows and 1 blanket to room 512. Confirm?"
+```
+
+```
+Guest: "I need 4 bath towels and 2 hand towels in room 305."
+Agent: "Got it. 4 bath towels and 2 hand towels to room 305. Confirm?"
+```
+
+## 🕒 Activity Hours & 🎉 Events & 📡 WiFi
+```
+Guest: "What time does the pool close? Also, what's the WiFi?"
+Agent: "Pool: 06:00–22:00. WiFi: SmartHotel_Guest / Welcome2025!Luxury"
+```
+
+```
+Guest: "Anything happening tonight?"
+Agent: "Yes—here are tonight's complimentary events: [...] Would you like details on any?"
+```
+
 ## 🎯 Multi-Service Requests
 
 ### Combined Requests
@@ -297,4 +333,3 @@ These features can easily be added by creating new tools!
 ---
 
 These examples show the flexibility and natural language understanding of the AI concierge. The system handles various phrasings, maintains context, and provides helpful, professional responses.
-

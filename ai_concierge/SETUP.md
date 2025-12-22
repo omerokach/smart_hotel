@@ -92,13 +92,13 @@ Then open: http://localhost:3000
 
 #### 💻 CLI Chat (Best for testing)
 ```bash
-npm run chat
+npx tsx src/chat-cli.ts
 ```
 Type your messages directly in the terminal.
 
 #### ⚡ Quick Demo
 ```bash
-npm run dev
+npx tsx src/index.ts
 ```
 Runs a single example interaction.
 
@@ -116,7 +116,7 @@ Once running, try these test messages:
    "Can someone clean my room? I'm in 412 and need a full cleaning."
    ```
 
-3. **Towels Test**:
+3. **Extra Equipment / Towels Test**:
    ```
    "I need 4 bath towels delivered to room 208."
    ```
@@ -124,6 +124,11 @@ Once running, try these test messages:
 4. **Spa Test**:
    ```
    "I want to book a massage for tomorrow at 3 PM. I'm in room 501."
+   ```
+
+5. **Taxi Test**:
+   ```
+   "Book a taxi to the airport at 6:15 AM for 2 passengers. Room 410."
    ```
 
 ## ✅ Verification Checklist

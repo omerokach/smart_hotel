@@ -15,8 +15,20 @@ async function main() {
   console.log('\n📝 Agent Response:');
   console.log(result.finalOutput);
   
-  console.log('\n\n🔧 Tools Used:');
-  console.log(JSON.stringify(result.toolCalls, null, 2));
+  // `@openai/agents` RunResult doesn't expose `toolCalls`, so we extract tool items from newItems
+  const toolItems = result.newItems?.filter(
+    (item: any) => item.type === 'tool_call_item' || item.type === 'tool_call_output_item',
+  ) ?? [];
+
+  if (toolItems.length > 0) {
+    console.log('\n\n🔧 Tools Used:');
+    toolItems.forEach((item: any, idx: number) => {
+      const name = item.rawItem?.name || item.rawItem?.toolName || 'unknown_tool';
+      console.log(`  ${idx + 1}. ${name} (${item.type})`);
+    });
+  } else {
+    console.log('\n\n🔧 Tools Used: none');
+  }
 }
 
 // Run only if this file is executed directly
@@ -25,4 +37,3 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 }
 
 export { hotelConciergeAgent };
-

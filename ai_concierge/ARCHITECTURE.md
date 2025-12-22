@@ -31,14 +31,16 @@ This application uses the OpenAI Agents SDK to create an intelligent hotel conci
 │     Tool     │    │     Tool     │   │     Tool     │
 └──────┬───────┘    └──────┬───────┘   └──────┬───────┘
        │                   │                   │
-       └───────────────────┼───────────────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │ Hotel Systems   │
-                  │ (Future: PMS,   │
-                  │  POS, CRM, etc) │
-                  └─────────────────┘
+       ├──────────────┬────┼──────────────┬────┴───────────┐
+       ▼              ▼    ▼              ▼                ▼
+┌──────────────┐┌──────────────┐┌──────────────┐┌──────────────┐┌─────────┐
+│   Taxi Tool  ││ Extra Equip. ││ Activity Hrs ││   Events     ││ WiFi    │
+└──────────────┘└──────────────┘└──────────────┘└──────────────┘└─────────┘
+       │
+       ▼
+┌──────────────┐
+│ Escalation   │
+└──────────────┘
 ```
 
 ## Key Components
@@ -82,25 +84,16 @@ Each tool represents a hotel service:
 
 #### Available Tools
 
-**Room Service** (`roomService.ts`)
-- Orders food and beverages
-- Parameters: room number, items, special instructions
-- Returns: order confirmation with estimated time
-
-**Housekeeping** (`housekeeping.ts`)
-- Requests cleaning services
-- Parameters: room number, service type, preferred time
-- Returns: request ID and scheduling info
-
-**Towels** (`towels.ts`)
-- Requests additional towels
-- Parameters: room number, quantity, towel type
-- Returns: delivery request ID
-
-**Spa Booking** (`spa.ts`)
-- Books spa treatments
-- Parameters: room number, treatment, time, duration
-- Returns: confirmation code and appointment details
+- **Room Service** (`roomService.ts`): Orders food and beverages
+- **Housekeeping** (`housekeeping.ts`): Cleaning/turndown scheduling
+- **Spa Booking** (`spa.ts`): Spa treatments (with Google Calendar invite helper)
+- **Taxi** (`taxi.ts`): Transportation bookings (destination/time/passengers/notes)
+- **Extra Equipment** (`extraEquipment.ts`): Towels, blankets, toiletries, pillows, hangers, etc.
+- **Activity Hours** (`activityHours.ts`): Facility hours lookup
+- **Events** (`events.ts`): Upcoming complimentary events
+- **WiFi** (`wifi.ts`): Always-on WiFi credentials
+- **Escalation** (`escalation.ts`): Handoff to a human representative
+- **Google Calendar integration** (`integrations/googleCalendar.ts`): Uses `chrono-node` + `luxon` to parse guest-preferred times and create invites via OAuth2 or service account
 
 ### 3. Interfaces
 
@@ -360,4 +353,3 @@ try {
 ---
 
 This architecture provides a solid foundation for building production-ready hotel AI agents. The modular design makes it easy to add services, integrate with existing systems, and scale as needed.
-
