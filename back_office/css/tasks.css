@@ -1,4 +1,4 @@
-// Task table wrapper
+/* Task table wrapper */
 .task-table {
   background: #fff;
   border-radius: 16px;
@@ -30,7 +30,7 @@
   background-color: #f8faff;
 }
 
-// Status pills
+/* Status pills */
 .status {
   padding: 4px 10px;
   border-radius: 8px;
@@ -58,7 +58,7 @@
   color: #0052cc;
 }
 
-// View task button
+/* View task button */
 .view-btn {
   background: #e9eeff;
   border: none;
@@ -74,7 +74,7 @@
   background: #d8e0ff;
 }
 
-// Filters container
+/* Filters container */
 .filters-container {
   display: flex;
   justify-content: flex-end;
@@ -82,7 +82,7 @@
   margin-bottom: 12px;
 }
 
-// Custom select styling
+/* Custom select styling */
 .filter-select {
   padding: 10px 16px;
   min-width: 160px;
@@ -101,7 +101,7 @@
   background-position: right 14px center;
 }
 
-// Clickable sortable headers
+/* Clickable sortable headers */
 .sortable {
   cursor: pointer;
   user-select: none;

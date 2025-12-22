@@ -1,4 +1,4 @@
-// Main task details container
+/* Main task details container */
 .task-details-card {
   background: #fff;
   padding: 30px;
@@ -13,7 +13,7 @@
   font-weight: 700;
 }
 
-// Status badge next to the title
+/* Status badge next to the title */
 .status-pill {
   display: inline-block;
   margin-left: 12px;
@@ -26,7 +26,7 @@
   font-weight: 600;
 }
 
-// Two-column layout for task fields
+/* Two-column layout for task fields */
 .task-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -41,7 +41,7 @@
   gap: 18px;
 }
 
-// Field that spans both columns
+/* Field that spans both columns */
 .full-col {
   grid-column: 1 / 3;
   display: flex;
@@ -71,7 +71,7 @@ textarea {
   height: 170px;
 }
 
-// Action buttons section
+/* Action buttons section */
 .task-actions {
   margin-top: 25px;
   display: flex;
@@ -98,7 +98,7 @@ textarea {
   cursor: pointer;
 }
 
-// Read-only text boxes
+/* Read-only text boxes */
 .readonly-box {
   background: #ffffff;
   border: 1px solid #e4e9f7;
@@ -123,14 +123,14 @@ textarea::placeholder {
   color: #555;
 }
 
-// Header area (title + status)
+/* Header area (title + status) */
 .task-header {
   display: flex;
   align-items: center;
   gap: 14px;
 }
 
-// Generic modal styling
+/* Generic modal styling */
 .modal {
   position: fixed;
   inset: 0;
