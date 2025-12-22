@@ -1,4 +1,4 @@
-/*  כללי  */
+/*  General  */
 body {
   margin: 0;
   font-family: "Wix Madefor Text", sans-serif;
@@ -12,14 +12,13 @@ body {
   flex-direction: column;
 }
 
-/* פריסת לוח הבקרה */
 .dashboard-layout {
   display: flex;
   height: 100%;
 }
 
 
-/* תוכן ראשי */
+/* Main content */
 .content {
   flex: 1;
   padding: 40px 60px;
@@ -33,7 +32,6 @@ body {
   width: 100%;
 }
 
-/* כותרת עליונה */
 .header {
   display: flex;
   justify-content: space-between;
@@ -67,7 +65,7 @@ body {
   width: 160px;
 }
 
-/* אזור הסטטיסטיקות */
+/* Stats Area */
 .stats {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
@@ -89,7 +87,7 @@ body {
   font-weight: 600;
 }
 
-/* גרף */
+/* Graph */
 .stat-card canvas {
   width: 120px;
   height: 120px;
@@ -98,15 +96,13 @@ body {
 }
 
 
-
-/* מספר גדול */
 .big-number {
   font-size: 28px;
   color: #116dff;
   font-weight: 700;
 }
 
-/* טבלת אורחים */
+/* Guest Table*/
 .guests-table {
   display: flex;
   flex-direction: column;
@@ -140,7 +136,7 @@ body {
 
 .guests-table tbody {
   display: block;
-  max-height: 180px; /* שטח פנימי לגלילה */
+  max-height: 180px; /* Inner scroling section */
   overflow-y: auto;
   width: 100%;
 }
@@ -160,7 +156,7 @@ body {
   background: #eef3ff;
 }
 
-/* כפתורי פעולה */
+/*  Action Buttons */
 .actions-row {
   display: flex;
   gap: 20px;
@@ -217,7 +213,7 @@ body {
   font-weight: 600;
 }
 
-/* רספונסיביות */
+/* responsiveness */
 @media (max-width: 900px) {
   .stats {
     grid-template-columns: 1fr;
@@ -230,7 +226,7 @@ body {
     width: 80%;
   }
 }
-/* מקרא של הגרף */
+/* graph keys */
 .chart-legend {
   margin-top: 10px;
   font-size: 14px;

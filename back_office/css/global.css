@@ -78,7 +78,7 @@ body {
   background: #ffffff;
   border-radius: 12px 0 0 12px;
 }
-/* תיקון יישור עמודים */
+/* Straighten collumns */
 .dashboard-layout {
   display: flex;
   align-items: flex-start; 

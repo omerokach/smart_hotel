@@ -6,7 +6,7 @@
   background: #fff;
 }
 
-/* צד שמאל */
+/* Left side */
 .login-left {
   background: #BDD7D5;
   display: flex;
@@ -101,7 +101,7 @@
   text-align: center;
 }
 
-/* גריד מדויק של תמונות */
+/* Precised Image Grid */
 .image-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -112,7 +112,7 @@
   margin: 0 auto 32px;
 }
 
-/* כל תמונה */
+/* כל every img */
 .image-grid img {
   width: 100%;
   height: 100%;
@@ -126,7 +126,7 @@
   box-shadow: 0 8px 16px rgba(0,0,0,0.12);
 }
 
-/* גדלים קצת שונים לשבירת הסימטריה */
+/* Different sizes to break simetry */
 .image-grid img:nth-child(1) { grid-row: span 2; height: 380px; }
 .image-grid img:nth-child(4) { grid-column: span 2; height: 200px; }
 
@@ -150,7 +150,7 @@
   text-decoration: none;
 }
 
-/* התאמה למסכים קטנים */
+/* fit for smaller screens */
 @media (max-width: 850px) {
   .login-container {
     grid-template-columns: 1fr;
