@@ -1,5 +1,6 @@
 // Page wrapper
 .reports-page {
+  /* page-level hook */
 }
 
 // Page header and filters
@@ -69,4 +70,331 @@
 }
 
 // Report action buttons
-.reports
+.reports-page .reports-btn {
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 0.85rem;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.reports-page .reports-btn-primary {
+  background: var(--ink);
+  color: #ffffff;
+}
+
+.reports-page .reports-btn-secondary {
+  background: #f2f2f7;
+  color: var(--ink);
+}
+
+.reports-page .reports-btn-ghost {
+  background: transparent;
+  color: var(--ink);
+}
+
+// KPI cards
+.reports-page .reports-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.reports-page .reports-kpi-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+}
+
+.reports-page .reports-kpi-label {
+  margin: 0 0 4px;
+  font-size: 0.85rem;
+  color: rgba(60, 60, 67, 0.7);
+}
+
+.reports-page .reports-kpi-value {
+  margin: 0 0 4px;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.reports-page .reports-kpi-trend {
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.reports-page .reports-kpi-trend.positive {
+  color: #1a7f37;
+}
+
+.reports-page .reports-kpi-trend.warning {
+  color: #b54708;
+}
+
+.reports-page .reports-kpi-trend.neutral {
+  color: rgba(60, 60, 67, 0.6);
+}
+
+// Report sections
+.reports-page .reports-section {
+  margin-bottom: 32px;
+}
+
+.reports-page .reports-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 14px;
+}
+
+.reports-page .reports-section-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.reports-page .reports-section-subtitle {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(60, 60, 67, 0.6);
+}
+
+// Trend cards and charts
+.reports-page .reports-trend-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.reports-page .reports-trend-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+}
+
+.reports-page .reports-trend-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.reports-page .reports-trend-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.reports-page .reports-trend-caption {
+  font-size: 0.8rem;
+  color: rgba(60, 60, 67, 0.6);
+}
+
+// Bar visuals
+.reports-page .reports-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reports-page .reports-bar-row {
+  display: grid;
+  grid-template-columns: 110px 1fr 45px;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+}
+
+.reports-page .reports-bar-row.dual {
+  grid-template-columns: 60px 1fr;
+}
+
+.reports-page .reports-bar-label {
+  color: rgba(60, 60, 67, 0.8);
+}
+
+.reports-page .reports-bar-bg {
+  position: relative;
+  width: 100%;
+  height: 8px;
+  border-radius: 999px;
+  background: #edf0f5;
+  overflow: hidden;
+}
+
+.reports-page .reports-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.reports-page .reports-bar-value {
+  text-align: right;
+  color: rgba(60, 60, 67, 0.8);
+}
+
+// Dual bars (created vs completed)
+.reports-page .reports-bar-dual {
+  position: relative;
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: #edf0f5;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.reports-page .reports-bar-fill.created {
+  background: #116dff;
+  opacity: 0.8;
+}
+
+.reports-page .reports-bar-fill.completed {
+  background: #1a7f37;
+  opacity: 0.9;
+}
+
+// Legend
+.reports-page .reports-legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+}
+
+.reports-page .reports-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+}
+
+.reports-page .reports-dot.created {
+  background: #116dff;
+}
+
+.reports-page .reports-dot.completed {
+  background: #1a7f37;
+}
+
+.reports-page .reports-legend-label {
+  margin-right: 4px;
+  color: rgba(60, 60, 67, 0.8);
+}
+
+// Report cards
+.reports-page .reports-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.reports-page .reports-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 150px;
+}
+
+.reports-page .reports-card-title {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+}
+
+.reports-page .reports-card-text {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  color: rgba(60, 60, 67, 0.8);
+}
+
+.reports-page .reports-card-meta {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(60, 60, 67, 0.6);
+}
+
+.reports-page .reports-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+// Scheduled reports table
+.reports-page .reports-table-wrapper {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 12px 16px 16px;
+}
+
+.reports-page .reports-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.reports-page .reports-table thead {
+  background: #eef4ff;
+}
+
+.reports-page .reports-table th,
+.reports-page .reports-table td {
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.reports-page .reports-table th {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.reports-page .reports-table tbody tr:nth-child(even) {
+  background: #f7fafc;
+}
+
+.reports-page .reports-table tbody tr:hover {
+  background: #e9f0ff;
+}
+
+// Scheduled report status
+.reports-page .reports-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+.reports-page .reports-status-active {
+  background: #e5f7eb;
+  color: #1a7f37;
+}
+
+.reports-page .reports-status-paused {
+  background: #fff4e5;
+  color: #b54708;
+}
+
+// Light responsiveness
+@media (max-width: 768px) {
+  .reports-page .reports-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .reports-page .reports-controls {
+    justify-content: flex-start;
+  }
+}
