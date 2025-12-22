@@ -91,7 +91,7 @@ function inferDuration(treatment: string): string {
   const lowerTreatment = treatment.toLowerCase();
   if (lowerTreatment.includes('massage')) return '60';
   if (lowerTreatment.includes('facial')) return '60';
-  if (lowerTreatment.includes('manicure') || lowerTreatment.includes('pedicure')) return '45';
+  if (lowerTreatment.includes('manicure') || lowerTreatment.includes('pedicure')) return '30';
   if (lowerTreatment.includes('body wrap')) return '90';
   return '60'; // default
 }
