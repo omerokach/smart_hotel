@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Guest Authentication | Miley Hotel</title>
 
+<!-- Fonts & Styles -->
   <link rel="stylesheet" href="css/global.css" />
   <link rel="stylesheet" href="css/auth.css" />
 </head>
@@ -30,12 +31,11 @@
         <div class="auth-hero-pattern"></div>
 
         <div class="auth-hero-content">
-          <!-- Centered logo -->
           <img src="assets/logo/miley-logo.png" alt="Miley Hotel Logo" class="hero-logo" />
         </div>
       </div>
 
-      <!-- WHITE CONTENT AREA -->
+      <!-- White content area -->
       <div class="auth-content">
 
         <div class="auth-header">
@@ -44,7 +44,6 @@
           <p class="auth-subtitle">Please enter your room number and mobile phone.</p>
         </div>
 
-        <!-- שים לב: אין method / אין action -->
         <form class="auth-form" id="guest-auth-form">
           <div class="field">
             <label for="room_number" class="field-label">Room number</label>
@@ -75,7 +74,7 @@
           <button type="submit" class="auth-button">Continue</button>
         </form>
 
-        <!-- כאן הודעת ההצלחה/שגיאה -->
+        <!-- Error message -->
         <div id="auth-message" class="auth-message"></div>
 
         <div class="auth-footer">
@@ -86,7 +85,6 @@
     </div>
   </div>
 
-  <!-- חשוב: הנתיב צריך להתאים למיקום האמיתי של הקובץ -->
   <script src="js/auth.js"></script>
 </body>
 </html>
