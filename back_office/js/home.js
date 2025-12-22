@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setInterval(monitorNewTasks, 5000); // poll every 5s
 });
 
-/* Fetch room status counts for the chart */
+// Fetch room status counts for the chart 
 async function loadRoomStats() {
   try {
     const res = await fetch("https://smart-hotel-tasks-api.onrender.com/api/rooms");
@@ -29,7 +29,7 @@ async function loadRoomStats() {
   }
 }
 
-/* Render Chart.js donut chart */
+// Render Chart.js donut chart 
 function drawOccupancyChart(counts) {
   const ctx = document.getElementById("occupancyChart").getContext("2d");
 
@@ -77,7 +77,7 @@ function drawOccupancyChart(counts) {
   });
 }
 
-/* Fetch number of open requests */
+// Fetch number of open requests 
 async function loadPendingRequests() {
   try {
     const res = await fetch("https://smart-hotel-tasks-api.onrender.com/api/tasks");
@@ -127,7 +127,7 @@ async function monitorNewTasks() {
   }
 }
 
-/* Toast */
+// Toast 
 function showNewTaskToast() {
   const toast = document.getElementById("new-task-toast");
   toast.classList.add("show");
