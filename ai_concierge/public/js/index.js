@@ -1,6 +1,4 @@
-// ===============================
 // Guest Authentication Logic
-// ===============================
 
 // Get form and message elements
 const form = document.getElementById("guest-auth-form");
