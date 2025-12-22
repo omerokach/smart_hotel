@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function loadRooms() {
-  showLoader(); // 👈 מפעיל לואדר גלובלי
+  // Show global loader while fetching rooms
+  showLoader();
 
   try {
     const res = await fetch("https://smart-hotel-tasks-api.onrender.com/api/rooms");
@@ -16,14 +17,12 @@ async function loadRooms() {
     console.error("Error loading rooms:", err);
   }
 
-  hideLoader(); // 👈 מכבה לואדר
+  // Hide loader once data is processed
+  hideLoader();
 }
 
 function renderRooms(rooms) {
-      showLoader(); // 👈 מפעיל לואדר גלובלי
-
   const tbody = document.querySelector("table tbody");
-
   tbody.innerHTML = "";
 
   rooms.forEach(room => {
@@ -31,23 +30,16 @@ function renderRooms(rooms) {
       <tr>
         <td>${room.room_number}</td>
         <td>${room.room_type || "N/A"}</td>
-
         <td>
           <span class="room-status ${mapRoomStatus(room.room_status)}">
             ${formatRoomStatus(room.room_status)}
           </span>
         </td>
-
         <td>${room.capacity !== undefined ? room.capacity : "-"}</td>
       </tr>
     `;
-      hideLoader(); // 👈 מכבה לואדר
-
   });
 }
-
-
-
 
 function mapRoomStatus(status) {
   if (!status) return "ready";
@@ -67,8 +59,6 @@ function mapRoomStatus(status) {
       return "ready";
   }
 }
-
-
 
 function formatRoomStatus(status) {
   if (!status) return "-";

@@ -1,4 +1,6 @@
-/* GET TASK ID FROM URL */
+/* ===============================
+  GET TASK ID FROM URL
+================================ */
 
 const params = new URLSearchParams(window.location.search);
 const taskId = params.get("id");
@@ -6,8 +8,9 @@ const taskId = params.get("id");
 console.log("Task ID from URL:", taskId);
 console.log("Full URL:", window.location.href);
 
-
-/* LOAD TASK FROM API */
+/* ===============================
+   LOAD TASK FROM API
+================================ */
 
 async function loadTask() {
   showLoader();
@@ -17,44 +20,44 @@ async function loadTask() {
 
     console.log("Loaded task:", task);
 
-    // אם אין משימה
+    // If no task
     if (!task || !task.task_id) {
       document.getElementById("task-title").textContent = "Task not found";
       return;
     }
 
-    /* Title */
+    // Title 
     document.getElementById("task-title").textContent =
       `${task.assigned_department} — Room ${task.room_number}`;
 
-    /* Status Pill */
+    // Status Pill 
     updateStatusPill(task.status);
 
-    /* Department */
+    // Department 
     document.getElementById("department").value =
       task.assigned_department || "Housekeeping";
 
-    /* Urgency */
+    // Urgency 
     document.getElementById("urgency").value =
       task.priority || "Normal";
 
-    /* Status */
+    // Status 
     document.getElementById("status").value =
       task.status || "open";
 
-    /* Guest Description (not editable) */
+    // Guest Description - not editable 
     document.getElementById("request-description").textContent =
       task.request_details || "No description provided.";
 
-    /* Internal notes */
+    // Internal notes 
     const notesField = document.getElementById("notes");
 
     if (task.internal_notes && task.internal_notes.trim() !== "") {
-      // יש הערות — מציגים אותן
+      // Internal notes exist – populate the field
       notesField.value = task.internal_notes;
       notesField.placeholder = "";
     } else {
-      // אין internal_notes — מציגים placeholder
+      // No internal notes – show default placeholder
       notesField.value = "";
       notesField.placeholder = "Write any clarifications if needed";
     }
@@ -66,8 +69,9 @@ async function loadTask() {
   hideLoader()
 }
 
-
-/* UPDATE TASK */
+/* ===============================
+   UPDATE TASK
+================================ */
 
 async function updateTask() {
   showLoader()
@@ -101,8 +105,9 @@ async function updateTask() {
   hideLoader()
 }
 
-
-/* STATUS PILL UI */
+/* ===============================
+   STATUS PILL UI
+================================ */
 
 function updateStatusPill(status) {
   const pill = document.getElementById("task-status-pill");
@@ -127,7 +132,9 @@ function updateStatusPill(status) {
   }
 }
 
-/* SUCCESS MODAL */
+/* ===============================
+   SUCCESS MODAL
+================================ */
 
 function showSuccess(message) {
   document.getElementById("modal-message").textContent = message;
@@ -144,14 +151,18 @@ document.getElementById("modal-close").addEventListener("click", () => {
 });
 
 
-/* RETURN BUTTON */
+/* ===============================
+   RETURN BUTTON
+================================ */
 
 document.getElementById("btn-return")?.addEventListener("click", () => {
   window.location.href = "tasks.html";
 });
 
 
-/* INIT */
+/* ===============================
+   INIT
+================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
   loadTask();

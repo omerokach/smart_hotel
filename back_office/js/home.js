@@ -3,11 +3,11 @@ let lastTaskCount = null;
 document.addEventListener("DOMContentLoaded", () => {
   loadRoomStats();
   loadPendingRequests();
-  monitorNewTasks();               // בדיקה מיידית
-  setInterval(monitorNewTasks, 5000); // כל 5 שניות
+  monitorNewTasks();                 // run once on load
+  setInterval(monitorNewTasks, 5000); // poll every 5s
 });
 
-/* טוען סטטוס חדרים לגרף */
+// Fetch room status counts for the chart 
 async function loadRoomStats() {
   try {
     const res = await fetch("https://smart-hotel-tasks-api.onrender.com/api/rooms");
@@ -25,15 +25,15 @@ async function loadRoomStats() {
     drawOccupancyChart({ occupied, available });
 
   } catch (err) {
-    console.error("Error loading room stats:", err);
+    console.error("Failed to load room stats:", err);
   }
 }
 
-/* מצייר גרף Chart.js */
+// Render Chart.js donut chart 
 function drawOccupancyChart(counts) {
   const ctx = document.getElementById("occupancyChart").getContext("2d");
 
-  // Plugin – מספר באמצע הגרף
+  // Show occupied count in the center
   const centerTextPlugin = {
     id: "centerText",
     afterDraw(chart) {
@@ -77,28 +77,26 @@ function drawOccupancyChart(counts) {
   });
 }
 
-/* טוען מספר בקשות פתוחות */
+// Fetch number of open requests 
 async function loadPendingRequests() {
   try {
     const res = await fetch("https://smart-hotel-tasks-api.onrender.com/api/tasks");
     const data = await res.json();
 
-    // משימות פתוחות
+    // Open tasks = anything not marked as done
     const pending = data.tasks.filter(t => t.status !== "done").length;
 
     document.querySelector(".big-number").textContent = pending;
-
     return pending;
+
   } catch (err) {
-    console.error("Error loading pending requests:", err);
+    console.error("Failed to load pending requests:", err);
     return 0;
   }
 }
 
-
-
 let lastPendingCount = null;
-let firstRun = true; // מונע מההתראה לקפוץ בפעם ראשונה 
+let firstRun = true; // prevents toast on first poll
 
 async function monitorNewTasks() {
   try {
@@ -109,33 +107,27 @@ async function monitorNewTasks() {
 
     console.log("Monitoring → current:", currentPending, "last:", lastPendingCount);
 
-    // דילוג על הריצה הראשונה כדי לא לקפוץ התראה 
+    // Skip first run so we don't show a toast on page load
     if (firstRun) {
       lastPendingCount = currentPending;
       firstRun = false;
       return;
     }
 
-    //  זיהוי משימה חדשה (pending עלה)
+    // New task detected
     if (currentPending > lastPendingCount) {
       showNewTaskToast();
     }
 
-    //  עדכון בכל מקרה 
     document.querySelector(".big-number").textContent = currentPending;
-
-    //  שמירה לעתיד 
     lastPendingCount = currentPending;
 
   } catch (err) {
-    console.error("Error monitoring tasks:", err);
+    console.error("Failed to monitor tasks:", err);
   }
 }
 
-
-
-
-/* Toast */
+// Toast 
 function showNewTaskToast() {
   const toast = document.getElementById("new-task-toast");
   toast.classList.add("show");
