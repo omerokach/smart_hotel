@@ -31,7 +31,6 @@ async function loadTasks() {
   const response = await fetch(url);
   const data = await response.json();
 
-  // API מחזיר { tasks: [...] }
   allTasks = data.tasks || [];
   renderTasks(allTasks);
   hideLoader()
@@ -56,7 +55,7 @@ function renderTasks(tasks) {
       <tr>
         <td><input type="checkbox"></td>
 
-        <!-- Department במקום Task type -->
+        <!-- Department instead of Task type -->
         <td>${task.assigned_department || "-"}</td>
             
         <td>${task.request_type || '-'}</td>
