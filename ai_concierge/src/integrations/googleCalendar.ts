@@ -31,7 +31,8 @@ async function getCalendarAuth() {
 
   if (keyFile) {
     const auth = new google.auth.GoogleAuth({ keyFile, scopes: CALENDAR_SCOPES });
-    return { authClient: auth, type: 'service_account' as const };
+    const client = await auth.getClient();
+    return { authClient: client, type: 'service_account' as const };
   }
 
   const serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
@@ -157,7 +158,7 @@ export async function sendSpaCalendarInvite(details: SpaInviteDetails): Promise<
     if (authConfig.type === 'service_account' && 'authorize' in authConfig.authClient) {
       await authConfig.authClient.authorize();
     }
-    const calendar = google.calendar({ version: 'v3', auth: authConfig.authClient as any });
+    const calendar = google.calendar({ version: 'v3', auth: authConfig.authClient });
     
     const isServiceAccount = authConfig.type === 'service_account';
     const attendeeList = isServiceAccount
