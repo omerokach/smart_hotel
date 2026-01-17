@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "vivid-router-479916-v1",
+  "private_key_id": "4ac1099874b747795ddcc767efce70345b504639",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCg/f3EtkP9/Mjh\nKoLBThCi/FLZPtE4F/hGK06d8QUdJV1FvC9viSmuzXGktwSFidwqH/cj/Ygkp8ca\nBUjmPh6KzaP7+PAawFybrV0BhvIVNmbpxZcZwALW26Nsu/mBriip0gZoIKM1YO/b\nNrTwIM4BX7bjVpHuSDc/z6pHXPlXwzyfHaLzX8EWQKEtU1OBu8qWQu3XvK+P1DDV\n/bJFqzdCe2FTglDVCu6UWOQVuC3PrdHBUHrVJejyqjgBe9HioTXPU2+TY3g+GdwS\nJgwxMeKANHfUatTxnrCFm3+J6LV8DmOCCDEt5Qg2ilaEhvXBmzJAU+xA3dnOwh8i\n0ofQ09KjAgMBAAECggEAAJ9T47/c65Hx9koFthjiO7la/qNLLHrXPhWhfWOJEk+z\nvRt9opkbOFxHGvpouLVwOmG/ZXwCEqh9YzMB41qMjYj11vlRLgXd7KRubmZv8CV7\n6IJzQU4Dy6b8t/b27S4zZQr1UGHhoe2NXYrMq9eMn8IFd+g8sp2f2sTMQKbNbxvq\nnSy6799i7ZZ3YJqbK2Lk3VXc6RhLCkzTKrLC7fRjZC0aChiuleVFnGlNnWDc//2A\na+i2TlZt5ua3ABkClgpH8nHH0CmEER+j4Erftrfm1LjOA48ea8VPx7GKjBxY23f1\nIjQu7moNjn9HGrSW4N6mBnDOSX2T45oGg9HEUMECdQKBgQDLMmzJkVDei6tyzLqN\nCnuOBr4oakScy7mAX4eDJprYHCGiU5nmSrZqEseKphd/E5OYvVlhTrfmag1yzozp\nei648zeBaV2un0R+xqoRQNut3tfT8rPAu/Kw3A3dZ5Qt/I9P+wdVpStvsYh7D3/I\nvvoCJFxydRxoQ8Vt/MiV/F5hfQKBgQDK0+mJdH8ZkFGpb0PEYWPs8BLZY+F0ZR2c\nFhwy31/YoArb4qubQFoRfh40u5OZA5/6PhMHuFpH619OOsohTV869DOht8zT310y\nDwnwhldh+ZC6UiwFPKd4+yVQyQOCtExOnm2hjVwpCGLmhEcJeFFTYlzLRO1yX0OX\n0/s6tE0+nwKBgANlIUow4mAFh2TQpOFMZooV9MFqHSFdigjqD7KSR44K0kkLCow9\nfVTCYZEge04FPrcTmtW0YgA4j2b2qoYQI421ipzf7M/JG3TezuKg6cq66XJCINy8\nhy6LTrP/Ugt+p8pXUGUO8G3aUoRz2te40SaOAvlqmYHod/kBezx+TfllAoGAIXyD\nHhKBuXK+SL757T43BTNNqV54JoNbNB3iYfPHGzixEkSGGIezVxf/XK1rXOPgUaxV\n7/xby2vsvDmwjXb8tfsDWzvBMWm7NTyOY4uKeb5+SoSuh97Pt4WfT4sgbT/fKUu2\nxelUweGEkpJcOBAJPT8MGvMyUKOxwStaWwLRjfkCgYEAurjkMsg+PktjqTnLP8ux\nH8oPh45M3LuOZK/Vy40TYoivWTk3vk/ZpPatFTws+Vz8ykT/CMfrMRXnYzEMYS8t\ncR9UXhr/Q51GuWsOccv+i/kVcA2t0OMNV1UNYVQg2uh4qznidC4fIUmnRWZ2NsQn\n8i1B0vt1Ep0VH4JVvPLi180=\n-----END PRIVATE KEY-----\n",
+  "client_email": "smart-hotel-calendar@vivid-router-479916-v1.iam.gserviceaccount.com",
+  "client_id": "102926903257409568851",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/smart-hotel-calendar%40vivid-router-479916-v1.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
