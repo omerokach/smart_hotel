@@ -25,14 +25,15 @@ function normalizePrivateKey(key: string) {
   return key.replace(/\\n/g, '\n');
 }
 
-async function getCalendarAuth() {
-  const keyFile =
-    process.env.GOOGLE_SERVICE_ACCOUNT_KEYFILE || process.env.GOOGLE_APPLICATION_CREDENTIALS;
+function getCalendarAuth() {
+  const oauthClientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
+  const oauthClientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+  const oauthRefreshToken = process.env.GOOGLE_REFRESH_TOKEN;
 
-  if (keyFile) {
-    const auth = new google.auth.GoogleAuth({ keyFile, scopes: CALENDAR_SCOPES });
-    const client = await auth.getClient();
-    return { authClient: client, type: 'service_account' as const };
+  if (oauthClientId && oauthClientSecret && oauthRefreshToken) {
+    const oauth2Client = new google.auth.OAuth2(oauthClientId, oauthClientSecret, DEFAULT_REDIRECT_URI);
+    oauth2Client.setCredentials({ refresh_token: oauthRefreshToken });
+    return { authClient: oauth2Client, type: 'oauth' as const };
   }
 
   const serviceAccountEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
@@ -45,16 +46,6 @@ async function getCalendarAuth() {
       scopes: CALENDAR_SCOPES,
     });
     return { authClient: jwtClient, type: 'service_account' as const };
-  }
-
-  const oauthClientId = process.env.GOOGLE_OAUTH_CLIENT_ID;
-  const oauthClientSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
-  const oauthRefreshToken = process.env.GOOGLE_REFRESH_TOKEN;
-
-  if (oauthClientId && oauthClientSecret && oauthRefreshToken) {
-    const oauth2Client = new google.auth.OAuth2(oauthClientId, oauthClientSecret, DEFAULT_REDIRECT_URI);
-    oauth2Client.setCredentials({ refresh_token: oauthRefreshToken });
-    return { authClient: oauth2Client, type: 'oauth' as const };
   }
 
   return null;
@@ -112,10 +103,6 @@ function buildDescription(details: SpaInviteDetails) {
     `Thank you for booking a ${details.treatment} with our spa.`,
     `Preferred Time: ${details.preferredTime}`,
   ];
-  if (details.guestName || details.guestEmail) {
-    const guestParts = [details.guestName, details.guestEmail].filter(Boolean).join(' • ');
-    lines.push(`Guest: ${guestParts}`);
-  }
   if (details.roomNumber) {
     lines.push(`Room Number: ${details.roomNumber}`);
   }
@@ -131,7 +118,7 @@ export async function sendSpaCalendarInvite(details: SpaInviteDetails): Promise<
     return { success: false, message: 'Missing guest email' };
   }
 
-  const authConfig = await getCalendarAuth();
+  const authConfig = getCalendarAuth();
   if (!authConfig) {
     console.warn('⚠️ Google Calendar auth not configured. Skipping invite creation.');
     return { success: false, message: 'Calendar auth missing' };
@@ -155,21 +142,11 @@ export async function sendSpaCalendarInvite(details: SpaInviteDetails): Promise<
   const endDate = new Date(startDate.getTime() + durationMinutes * 60000);
 
   try {
-    if (authConfig.type === 'service_account' && 'authorize' in authConfig.authClient) {
+    if (authConfig.type === 'service_account') {
       await authConfig.authClient.authorize();
     }
     const calendar = google.calendar({ version: 'v3', auth: authConfig.authClient });
     
-    const isServiceAccount = authConfig.type === 'service_account';
-    const attendeeList = isServiceAccount
-      ? undefined
-      : [
-          {
-            email: details.guestEmail,
-            displayName: details.guestName || undefined,
-          },
-        ];
-
     const eventResponse = await calendar.events.insert({
       calendarId,
       requestBody: {
@@ -183,12 +160,17 @@ export async function sendSpaCalendarInvite(details: SpaInviteDetails): Promise<
           dateTime: endDate.toISOString(),
           timeZone,
         },
-        attendees: attendeeList,
+        attendees: [
+          {
+            email: details.guestEmail,
+            displayName: details.guestName || undefined,
+          },
+        ],
         reminders: {
           useDefault: true,
         },
       },
-      sendUpdates: isServiceAccount ? 'none' : 'all',
+      sendUpdates: 'all',
     });
 
     console.log('📅 Google Calendar invite created:', eventResponse.data.id);
