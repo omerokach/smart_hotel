@@ -1,7 +1,7 @@
 🏨 Smart Hotel System
 ---------------------
 
-This repository contains the foundations of a **Smart Hotel System**, built around three modular components:
+- This repository contains the foundations of a **Smart Hotel System**, built around three modular components:
 
 *   **AI Concierge** – an AI-powered guest-facing assistant.
     
